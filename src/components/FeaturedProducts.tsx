@@ -23,13 +23,13 @@ const products = [
 
 export default function FeaturedProducts() {
   return (
-    <div className="bg-white py-24">
+    <div className="bg-secondary/30 py-24">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center">
-          <h2 className="text-3xl font-serif tracking-tight text-neutral-900 sm:text-4xl">
+          <h2 className="text-3xl font-serif tracking-tight text-primary sm:text-4xl">
             Featured Pieces
           </h2>
-          <p className="mt-4 text-lg text-neutral-600">
+          <p className="mt-4 text-lg text-primary/80">
             Each piece is unique, hand-embroidered by our artisans.
           </p>
         </div>
@@ -37,7 +37,7 @@ export default function FeaturedProducts() {
         <div className="mt-16 grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-3 xl:gap-x-8">
           {products.map((product) => (
             <div key={product.id} className="group relative">
-              <div className="aspect-w-4 aspect-h-5 bg-neutral-100 overflow-hidden">
+              <div className="aspect-w-4 aspect-h-5 bg-white overflow-hidden rounded-lg">
                 <img
                   src={product.image}
                   alt={product.name}
@@ -46,8 +46,8 @@ export default function FeaturedProducts() {
               </div>
               <div className="mt-4 flex justify-between">
                 <div>
-                  <h3 className="text-sm text-neutral-700">{product.name}</h3>
-                  <p className="mt-1 text-sm text-neutral-500">{product.price}</p>
+                  <h3 className="text-sm text-primary">{product.name}</h3>
+                  <p className="mt-1 text-sm text-primary/80">{product.price}</p>
                 </div>
               </div>
             </div>

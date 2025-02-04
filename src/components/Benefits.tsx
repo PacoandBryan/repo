@@ -24,10 +24,10 @@ export default function Benefits() {
     <div className="bg-white py-24">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center">
-          <h2 className="text-3xl font-serif tracking-tight text-neutral-900 sm:text-4xl">
+          <h2 className="text-3xl font-serif tracking-tight text-primary sm:text-4xl">
             Why Choose Handmade?
           </h2>
-          <p className="mt-4 text-lg text-neutral-600 max-w-2xl mx-auto">
+          <p className="mt-4 text-lg text-primary/80 max-w-2xl mx-auto">
             Our commitment to handcrafted excellence goes beyond beauty – it's about 
             creating sustainable, meaningful pieces that support our community.
           </p>
@@ -37,14 +37,14 @@ export default function Benefits() {
           {benefits.map((benefit, index) => (
             <div key={index} className="text-center">
               <div className="flex justify-center">
-                <div className="text-neutral-900 p-4 bg-[#F3E5E0] rounded-full">
+                <div className="text-accent p-4 bg-primary-light rounded-full">
                   {benefit.icon}
                 </div>
               </div>
-              <h3 className="mt-6 text-xl font-serif text-neutral-900">
+              <h3 className="mt-6 text-xl font-serif text-primary">
                 {benefit.title}
               </h3>
-              <p className="mt-4 text-neutral-600">
+              <p className="mt-4 text-primary/80">
                 {benefit.description}
               </p>
             </div>
