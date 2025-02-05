@@ -1,8 +1,17 @@
 export default {
   nav: {
     courses: 'Cursos',
+    beginnerCourses: 'Cursos para Principiantes',
+    beginnerCoursesDesc: 'Comienza tu viaje en el bordado con nuestros cursos fundamentales',
+    advancedCourses: 'Cursos Avanzados',
+    advancedCoursesDesc: 'Domina técnicas y patrones complejos',
     sweetTable: 'Mesa Dulce',
+    tablecloths: 'Manteles',
+    napkins: 'Servilletas',
     purses: 'Bolsos',
+    crossbody: 'Bolsos Cruzados',
+    clutches: 'Clutches',
+    totes: 'Bolsos Tote',
     catalog: 'Catálogo',
     search: 'Buscar productos...'
   },

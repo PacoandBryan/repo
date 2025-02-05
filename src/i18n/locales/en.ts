@@ -1,8 +1,17 @@
 export default {
   nav: {
     courses: 'Courses',
+    beginnerCourses: 'Beginner Courses',
+    beginnerCoursesDesc: 'Start your embroidery journey with our foundational courses',
+    advancedCourses: 'Advanced Courses',
+    advancedCoursesDesc: 'Master complex techniques and patterns',
     sweetTable: 'Sweet Table',
+    tablecloths: 'Tablecloths',
+    napkins: 'Napkins',
     purses: 'Purses',
+    crossbody: 'Crossbody Bags',
+    clutches: 'Clutches',
+    totes: 'Tote Bags',
     catalog: 'Catalog',
     search: 'Search products...'
   },
