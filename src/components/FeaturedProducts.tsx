@@ -6,19 +6,19 @@ const products = [
     id: 1,
     name: 'Pink Floral Bag',
     price: '$2,800 MXN',
-    image: 'https://images.unsplash.com/photo-1528812969535-4bcefc3926bb?auto=format&fit=crop&q=80'
+    image: 'https://images.unsplash.com/photo-1528812969535-4bcefc3926bb?auto=format&fit=crop&q=80&w=800'
   },
   {
     id: 2,
     name: 'Embroidered Clutch',
     price: '$1,950 MXN',
-    image: 'https://images.unsplash.com/photo-1566150905458-1bf1fc113f0d?auto=format&fit=crop&q=80'
+    image: 'https://images.unsplash.com/photo-1566150905458-1bf1fc113f0d?auto=format&fit=crop&q=80&w=800'
   },
   {
     id: 3,
     name: 'Messenger Bag',
     price: '$3,200 MXN',
-    image: 'https://images.unsplash.com/photo-1590874103328-eac38a683ce7?auto=format&fit=crop&q=80'
+    image: 'https://images.unsplash.com/photo-1590874103328-eac38a683ce7?auto=format&fit=crop&q=80&w=800'
   }
 ];
 
@@ -44,6 +44,8 @@ export default function FeaturedProducts() {
                 <img
                   src={product.image}
                   alt={product.name}
+                  loading="lazy"
+                  decoding="async"
                   className="w-full h-[250px] sm:h-[300px] lg:h-[400px] object-cover object-center group-hover:opacity-75 transition-opacity duration-300"
                 />
               </div>

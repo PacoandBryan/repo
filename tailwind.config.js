@@ -18,6 +18,19 @@ export default {
         },
         accent: '#2F6D9E',
       },
+      animation: {
+        bounce: 'bounce 1s infinite',
+      },
+      keyframes: {
+        bounce: {
+          '0%, 100%': {
+            transform: 'translateY(0)',
+          },
+          '50%': {
+            transform: 'translateY(-10px)',
+          },
+        },
+      },
     },
   },
   plugins: [],

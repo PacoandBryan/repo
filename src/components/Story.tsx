@@ -10,8 +10,10 @@ export default function Story() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
           <div className="order-2 lg:order-1">
             <img
-              src="https://images.unsplash.com/photo-1604859347436-2e6925be8176?auto=format&fit=crop&q=80"
+              src="https://images.unsplash.com/photo-1604859347436-2e6925be8176?auto=format&fit=crop&q=80&w=1000"
               alt="Artisan working"
+              loading="lazy"
+              decoding="async"
               className="w-full h-[300px] sm:h-[400px] lg:h-[600px] object-cover rounded-lg shadow-md"
             />
           </div>

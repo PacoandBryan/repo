@@ -5,21 +5,21 @@ const testimonials = [
   {
     name: "María González",
     location: "Ciudad de México",
-    image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80",
+    image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=400",
     text: "The attention to detail in my embroidered bag is incredible. Each stitch tells a story, and I love supporting local artisans.",
     rating: 5
   },
   {
     name: "Isabella Martínez",
     location: "Guadalajara",
-    image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&q=80",
+    image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&q=80&w=400",
     text: "Not just a bag, but a piece of art. The quality is exceptional, and I receive compliments everywhere I go.",
     rating: 5
   },
   {
     name: "Sofia Rodriguez",
     location: "Oaxaca",
-    image: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80",
+    image: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=400",
     text: "Beautiful craftsmanship that honors our traditions. The personal touch makes each piece special.",
     rating: 5
   }
@@ -53,6 +53,8 @@ export default function Testimonials() {
                 <img
                   src={testimonial.image}
                   alt={testimonial.name}
+                  loading="lazy"
+                  decoding="async"
                   className="w-16 h-16 rounded-full object-cover border-2 border-[#fcdce4]"
                 />
                 <div>
