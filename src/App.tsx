@@ -4,6 +4,8 @@ import Hero from './components/Hero';
 import Benefits from './components/Benefits';
 import FeaturedProducts from './components/FeaturedProducts';
 import Story from './components/Story';
+import Testimonials from './components/Testimonials';
+import Newsletter from './components/Newsletter';
 import FAQ from './components/FAQ';
 import Footer from './components/Footer';
 
@@ -15,7 +17,9 @@ function App() {
       <Benefits />
       <FeaturedProducts />
       <Story />
+      <Testimonials />
       <FAQ />
+      <Newsletter />
       <Footer />
     </div>
   );

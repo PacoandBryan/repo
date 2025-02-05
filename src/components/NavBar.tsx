@@ -15,10 +15,10 @@ export default function NavBar() {
           </div>
           
           <div className="hidden md:flex items-center space-x-8">
-            <a href="#" className="text-primary/80 hover:text-primary">Collection</a>
-            <a href="#" className="text-primary/80 hover:text-primary">Artisans</a>
-            <a href="#" className="text-primary/80 hover:text-primary">Blog</a>
-            <a href="#" className="text-primary/80 hover:text-primary">Contact</a>
+            <a href="#" className="text-primary/80 hover:text-primary">Courses</a>
+            <a href="#" className="text-primary/80 hover:text-primary">Sweet Table</a>
+            <a href="#" className="text-primary/80 hover:text-primary">Purses</a>
+            <a href="#" className="text-primary/80 hover:text-primary">Catalog</a>
           </div>
 
           <div className="flex items-center space-x-4">
@@ -79,10 +79,10 @@ export default function NavBar() {
                 </div>
               </div>
             </div>
-            <a href="#" className="block px-3 py-2 text-primary/80 hover:text-primary">Collection</a>
-            <a href="#" className="block px-3 py-2 text-primary/80 hover:text-primary">Artisans</a>
-            <a href="#" className="block px-3 py-2 text-primary/80 hover:text-primary">Blog</a>
-            <a href="#" className="block px-3 py-2 text-primary/80 hover:text-primary">Contact</a>
+            <a href="#" className="block px-3 py-2 text-primary/80 hover:text-primary">Courses</a>
+            <a href="#" className="block px-3 py-2 text-primary/80 hover:text-primary">Sweet Table</a>
+            <a href="#" className="block px-3 py-2 text-primary/80 hover:text-primary">Purses</a>
+            <a href="#" className="block px-3 py-2 text-primary/80 hover:text-primary">Catalog</a>
           </div>
         </div>
       )}
