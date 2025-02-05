@@ -1,5 +1,6 @@
 import React from 'react';
 import { X } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 interface FilterSidebarProps {
   isOpen: boolean;
@@ -9,27 +10,27 @@ interface FilterSidebarProps {
 }
 
 const filterCategories = {
-  'Product Type': [
+  'productType': [
     'Purses',
     'Clutches',
     'Table Linens',
     'Napkins',
     'Accessories'
   ],
-  'Region': [
+  'region': [
     'Oaxaca',
     'Chiapas',
     'Puebla',
     'Yucatán',
     'Guerrero'
   ],
-  'Technique': [
+  'technique': [
     'Floral Embroidery',
     'Geometric Patterns',
     'Traditional Motifs',
     'Contemporary Designs'
   ],
-  'Price Range': [
+  'priceRange': [
     'Under $1,000',
     '$1,000 - $2,000',
     '$2,000 - $3,000',
@@ -43,6 +44,8 @@ export default function FilterSidebar({
   activeFilters,
   onToggleFilter
 }: FilterSidebarProps) {
+  const { t } = useTranslation();
+
   return (
     <>
       {/* Overlay */}
@@ -61,10 +64,10 @@ export default function FilterSidebar({
       >
         <div className="h-full flex flex-col">
           <div className="p-4 border-b border-primary/10 flex justify-between items-center">
-            <h2 className="text-xl font-serif text-primary">Filters</h2>
+            <h2 className="text-xl font-serif text-primary">{t('catalog.filters')}</h2>
             <button
               onClick={onClose}
-              className="text-primary/80 hover:text-primary transition-colors duration-200"
+              className="text-primary/80 hover:text-primary transition-colors duration-200 p-2 touch-manipulation"
             >
               <X className="w-6 h-6" />
             </button>
@@ -74,13 +77,13 @@ export default function FilterSidebar({
             {Object.entries(filterCategories).map(([category, filters]) => (
               <div key={category} className="mb-6">
                 <h3 className="text-lg font-medium text-primary mb-3">
-                  {category}
+                  {t(`catalog.filterCategories.${category}`)}
                 </h3>
-                <div className="space-y-2">
+                <div className="space-y-3">
                   {filters.map(filter => (
                     <label
                       key={filter}
-                      className="flex items-center space-x-3 text-primary/80 hover:text-primary cursor-pointer"
+                      className="flex items-center space-x-3 text-primary/80 hover:text-primary cursor-pointer touch-manipulation"
                     >
                       <input
                         type="checkbox"
@@ -88,7 +91,7 @@ export default function FilterSidebar({
                         onChange={() => onToggleFilter(filter)}
                         className="form-checkbox h-5 w-5 text-accent rounded border-secondary"
                       />
-                      <span>{filter}</span>
+                      <span className="select-none">{filter}</span>
                     </label>
                   ))}
                 </div>
@@ -99,9 +102,9 @@ export default function FilterSidebar({
           <div className="p-4 border-t border-primary/10">
             <button
               onClick={onClose}
-              className="btn btn-primary w-full"
+              className="btn btn-primary w-full touch-manipulation"
             >
-              Apply Filters
+              {t('catalog.applyFilters')}
             </button>
           </div>
         </div>

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Search, SlidersHorizontal, ChevronDown, X } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import ProductCard from './ProductCard';
 import FilterSidebar from './FilterSidebar';
 import QuickViewModal from './QuickViewModal';
@@ -42,11 +43,13 @@ const products: Product[] = [
 ];
 
 export default function CatalogPage() {
+  const { t } = useTranslation();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [sortBy, setSortBy] = useState<'newest' | 'price-asc' | 'price-desc'>('newest');
   const [activeFilters, setActiveFilters] = useState<string[]>([]);
+  const [isSearchVisible, setIsSearchVisible] = useState(false);
 
   const handleQuickView = (product: Product) => {
     setSelectedProduct(product);
@@ -69,38 +72,68 @@ export default function CatalogPage() {
       {/* Header */}
       <div className="bg-white shadow-soft sticky top-16 z-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-            <h1 className="text-3xl sm:text-4xl font-serif text-primary">Catalog</h1>
-            
-            <div className="flex items-center gap-4 w-full sm:w-auto">
-              <div className="relative flex-grow sm:flex-grow-0 sm:w-64">
-                <input
-                  type="text"
-                  placeholder="Search products..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="input pr-10"
-                />
-                <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 text-primary/40 w-5 h-5" />
-              </div>
-              
+          {/* Title and Search Toggle */}
+          <div className="flex items-center justify-between mb-4">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-serif text-primary">
+              {t('catalog.title')}
+            </h1>
+            <button
+              onClick={() => setIsSearchVisible(!isSearchVisible)}
+              className="sm:hidden text-primary/80 hover:text-primary"
+            >
+              <Search className="w-5 h-5" />
+            </button>
+          </div>
+
+          {/* Search Bar - Mobile */}
+          <div className={`sm:hidden mb-4 transition-all duration-300 ${
+            isSearchVisible ? 'max-h-20 opacity-100' : 'max-h-0 opacity-0 overflow-hidden'
+          }`}>
+            <div className="relative">
+              <input
+                type="text"
+                placeholder={t('catalog.search')}
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="input pr-10"
+              />
+              <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 text-primary/40 w-5 h-5" />
+            </div>
+          </div>
+
+          {/* Controls */}
+          <div className="flex flex-wrap gap-3 items-center">
+            {/* Search Bar - Desktop */}
+            <div className="hidden sm:block relative flex-grow sm:flex-grow-0 sm:w-64">
+              <input
+                type="text"
+                placeholder={t('catalog.search')}
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="input pr-10"
+              />
+              <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 text-primary/40 w-5 h-5" />
+            </div>
+
+            {/* Filter and Sort Controls */}
+            <div className="flex items-center gap-3 w-full sm:w-auto">
               <button
                 onClick={() => setIsSidebarOpen(true)}
-                className="btn btn-outline py-2 px-4"
+                className="btn btn-outline py-2 px-4 flex-1 sm:flex-none"
               >
                 <SlidersHorizontal className="w-5 h-5" />
-                <span className="ml-2 hidden sm:inline">Filters</span>
+                <span className="ml-2">{t('catalog.filters')}</span>
               </button>
 
-              <div className="relative">
+              <div className="relative flex-1 sm:flex-none">
                 <select
                   value={sortBy}
                   onChange={(e) => setSortBy(e.target.value as typeof sortBy)}
-                  className="input appearance-none pr-10 py-2"
+                  className="input appearance-none pr-10 py-2 w-full"
                 >
-                  <option value="newest">Newest</option>
-                  <option value="price-asc">Price: Low to High</option>
-                  <option value="price-desc">Price: High to Low</option>
+                  <option value="newest">{t('catalog.sortBy.newest')}</option>
+                  <option value="price-asc">{t('catalog.sortBy.priceLowHigh')}</option>
+                  <option value="price-desc">{t('catalog.sortBy.priceHighLow')}</option>
                 </select>
                 <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-primary/40 w-5 h-5 pointer-events-none" />
               </div>
@@ -110,22 +143,24 @@ export default function CatalogPage() {
           {/* Active Filters */}
           {activeFilters.length > 0 && (
             <div className="flex flex-wrap gap-2 mt-4">
-              {activeFilters.map(filter => (
+              <div className="w-full sm:w-auto flex flex-wrap gap-2 items-center">
+                {activeFilters.map(filter => (
+                  <button
+                    key={filter}
+                    onClick={() => toggleFilter(filter)}
+                    className="inline-flex items-center px-3 py-1 rounded-full bg-secondary/20 text-primary text-sm hover:bg-secondary/30 transition-colors duration-200"
+                  >
+                    {filter}
+                    <X className="w-4 h-4 ml-1" />
+                  </button>
+                ))}
                 <button
-                  key={filter}
-                  onClick={() => toggleFilter(filter)}
-                  className="inline-flex items-center px-3 py-1 rounded-full bg-secondary/20 text-primary text-sm hover:bg-secondary/30 transition-colors duration-200"
+                  onClick={() => setActiveFilters([])}
+                  className="text-sm text-primary/60 hover:text-primary transition-colors duration-200"
                 >
-                  {filter}
-                  <X className="w-4 h-4 ml-1" />
+                  {t('catalog.clearAll')}
                 </button>
-              ))}
-              <button
-                onClick={() => setActiveFilters([])}
-                className="text-sm text-primary/60 hover:text-primary transition-colors duration-200"
-              >
-                Clear all
-              </button>
+              </div>
             </div>
           )}
         </div>
@@ -133,7 +168,7 @@ export default function CatalogPage() {
 
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-6">
           {products.map(product => (
             <ProductCard
               key={product.id}
@@ -144,9 +179,9 @@ export default function CatalogPage() {
         </div>
 
         {/* Load More Button */}
-        <div className="mt-12 text-center">
-          <button className="btn btn-outline">
-            Load More Products
+        <div className="mt-8 sm:mt-12 text-center">
+          <button className="btn btn-outline w-full sm:w-auto">
+            {t('catalog.loadMore')}
           </button>
         </div>
       </div>

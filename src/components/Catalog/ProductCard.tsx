@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Eye, Heart } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { Product } from './types';
 
 interface ProductCardProps {
@@ -8,6 +9,7 @@ interface ProductCardProps {
 }
 
 export default function ProductCard({ product, onQuickView }: ProductCardProps) {
+  const { t } = useTranslation();
   const [isHovered, setIsHovered] = useState(false);
   const [isImageLoaded, setIsImageLoaded] = useState(false);
 
@@ -23,6 +25,8 @@ export default function ProductCard({ product, onQuickView }: ProductCardProps) 
       className="group relative"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
+      onTouchStart={() => setIsHovered(true)}
+      onTouchEnd={() => setIsHovered(false)}
     >
       <div className="card overflow-hidden">
         {/* Image */}
@@ -40,21 +44,21 @@ export default function ProductCard({ product, onQuickView }: ProductCardProps) 
           
           {/* Overlay */}
           <div className={`absolute inset-0 bg-black/40 flex items-center justify-center gap-4 transition-opacity duration-300 ${
-            isHovered ? 'opacity-100' : 'opacity-0'
+            isHovered ? 'opacity-100' : 'opacity-0 sm:group-hover:opacity-100'
           }`}>
             <button
               onClick={(e) => {
                 e.preventDefault();
                 onQuickView();
               }}
-              className="btn bg-white/90 hover:bg-white text-primary p-2 rounded-full"
-              aria-label="Quick view"
+              className="btn bg-white/90 hover:bg-white text-primary p-2 rounded-full touch-manipulation"
+              aria-label={t('catalog.quickView')}
             >
               <Eye className="w-5 h-5" />
             </button>
             <button
-              className="btn bg-white/90 hover:bg-white text-primary p-2 rounded-full"
-              aria-label="Add to wishlist"
+              className="btn bg-white/90 hover:bg-white text-primary p-2 rounded-full touch-manipulation"
+              aria-label={t('catalog.addToWishlist')}
             >
               <Heart className="w-5 h-5" />
             </button>
@@ -62,14 +66,14 @@ export default function ProductCard({ product, onQuickView }: ProductCardProps) 
         </div>
 
         {/* Content */}
-        <div className="p-4">
-          <h3 className="font-serif text-lg text-primary">
+        <div className="p-3 sm:p-4">
+          <h3 className="font-serif text-base sm:text-lg text-primary line-clamp-2">
             {product.name}
           </h3>
-          <p className="text-sm text-primary/60 mt-1">
-            By {product.artisan} from {product.region}
+          <p className="text-xs sm:text-sm text-primary/60 mt-1 line-clamp-1">
+            {t('catalog.by')} {product.artisan} {t('catalog.from')} {product.region}
           </p>
-          <p className="mt-2 font-medium text-primary">
+          <p className="mt-2 font-medium text-primary text-sm sm:text-base">
             {formatPrice(product.price)}
           </p>
           <div className="mt-2">

@@ -47,5 +47,31 @@ export default {
     content: 'At Diky, we believe in preserving and celebrating the art of Mexican embroidery. Each piece is created by talented artisans who have perfected their craft through generations, blending traditional techniques with contemporary designs.',
     commitment: 'Our commitment is to support artisanal communities while bringing these unique works of art to modern homes that appreciate authenticity and craftsmanship.',
     cta: 'Meet our artisans →'
+  },
+  catalog: {
+    title: 'Catalog',
+    search: 'Search products...',
+    filters: 'Filters',
+    sortBy: {
+      newest: 'Newest',
+      priceLowHigh: 'Price: Low to High',
+      priceHighLow: 'Price: High to Low'
+    },
+    filterCategories: {
+      productType: 'Product Type',
+      region: 'Region',
+      technique: 'Technique',
+      priceRange: 'Price Range'
+    },
+    clearAll: 'Clear all',
+    loadMore: 'Load More Products',
+    quickView: 'Quick View',
+    addToWishlist: 'Add to Wishlist',
+    addToCart: 'Add to Cart',
+    artisanStory: 'Artisan Story',
+    details: 'Details',
+    applyFilters: 'Apply Filters',
+    by: 'By',
+    from: 'from'
   }
-};
+}

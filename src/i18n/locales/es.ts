@@ -47,5 +47,31 @@ export default {
     content: 'En Diky, creemos en preservar y celebrar el arte del bordado mexicano. Cada pieza es creada por talentosos artesanos que han perfeccionado su oficio a través de generaciones, mezclando técnicas tradicionales con diseños contemporáneos.',
     commitment: 'Nuestro compromiso es apoyar a las comunidades artesanales mientras llevamos estas obras de arte únicas a hogares modernos que aprecian la autenticidad y la artesanía.',
     cta: 'Conoce a nuestros artesanos →'
+  },
+  catalog: {
+    title: 'Catálogo',
+    search: 'Buscar productos...',
+    filters: 'Filtros',
+    sortBy: {
+      newest: 'Más recientes',
+      priceLowHigh: 'Precio: Menor a Mayor',
+      priceHighLow: 'Precio: Mayor a Menor'
+    },
+    filterCategories: {
+      productType: 'Tipo de Producto',
+      region: 'Región',
+      technique: 'Técnica',
+      priceRange: 'Rango de Precio'
+    },
+    clearAll: 'Limpiar todo',
+    loadMore: 'Cargar Más Productos',
+    quickView: 'Vista Rápida',
+    addToWishlist: 'Añadir a Lista de Deseos',
+    addToCart: 'Añadir al Carrito',
+    artisanStory: 'Historia del Artesano',
+    details: 'Detalles',
+    applyFilters: 'Aplicar Filtros',
+    by: 'Por',
+    from: 'de'
   }
-};
+}
