@@ -7,9 +7,44 @@
 @layer base {
   html {
     font-family: 'Comfortaa', sans-serif;
+    @apply text-primary;
   }
   
   .font-serif {
     font-family: 'Cormorant Garamond', serif;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-serif;
+  }
+}
+
+@layer components {
+  .btn {
+    @apply inline-flex items-center justify-center px-6 py-3 rounded-md font-medium transition-all duration-300;
+  }
+
+  .btn-primary {
+    @apply bg-accent text-white hover:bg-accent-dark;
+  }
+
+  .btn-secondary {
+    @apply bg-secondary hover:bg-secondary-dark text-primary;
+  }
+
+  .btn-outline {
+    @apply border-2 border-accent text-accent hover:bg-accent hover:text-white;
+  }
+
+  .input {
+    @apply w-full px-4 py-2 rounded-md border-2 border-secondary/30 
+    placeholder-primary/50 text-primary 
+    focus:outline-none focus:border-secondary
+    focus:ring-2 focus:ring-secondary/20
+    transition-all duration-300;
+  }
+
+  .card {
+    @apply bg-white rounded-lg shadow-soft hover:shadow-medium transition-shadow duration-300;
   }
 }

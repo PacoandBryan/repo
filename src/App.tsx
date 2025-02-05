@@ -9,15 +9,15 @@ import Newsletter from './components/Newsletter';
 import FAQ from './components/FAQ';
 import Footer from './components/Footer';
 import LoadingScreen from './components/LoadingScreen';
+import CatalogPage from './components/Catalog/CatalogPage';
 
 function App() {
   const [isLoading, setIsLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState<'home' | 'catalog'>('home');
 
   useEffect(() => {
     Promise.all([
-      // Wait for fonts to load
       document.fonts.ready,
-      // Add a small minimum delay to ensure smooth transition
       new Promise(resolve => setTimeout(resolve, 200))
     ]).then(() => {
       setIsLoading(false);
@@ -30,14 +30,22 @@ function App() {
 
   return (
     <div className="min-h-screen bg-[#FDF8F6]">
-      <NavBar />
-      <Hero />
-      <Benefits />
-      <FeaturedProducts />
-      <Story />
-      <Testimonials />
-      <FAQ />
-      <Newsletter />
+      <NavBar onNavigate={(page: 'home' | 'catalog') => setCurrentPage(page)} />
+      
+      {currentPage === 'home' ? (
+        <>
+          <Hero />
+          <Benefits />
+          <FeaturedProducts />
+          <Story />
+          <Testimonials />
+          <FAQ />
+          <Newsletter />
+        </>
+      ) : (
+        <CatalogPage />
+      )}
+      
       <Footer />
     </div>
   );

@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Heart, ShoppingBag, Menu, Search, X, Globe, ChevronDown, ChevronRight } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import Logo from './Logo';
 
 type NavItem = {
   label: string;
@@ -12,7 +13,11 @@ type NavItem = {
   }[];
 };
 
-export default function NavBar() {
+interface NavBarProps {
+  onNavigate: (page: 'home' | 'catalog') => void;
+}
+
+export default function NavBar({ onNavigate }: NavBarProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -145,14 +150,28 @@ export default function NavBar() {
     );
   };
 
+  const handleNavigation = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    e.preventDefault();
+    if (href === '/') {
+      onNavigate('home');
+    } else if (href === '/catalog') {
+      onNavigate('catalog');
+    }
+    setIsMenuOpen(false);
+  };
+
   return (
     <>
       <nav className="bg-white/80 backdrop-blur-md fixed w-full z-50 border-b border-primary/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16 items-center">
-            <div className="flex-shrink-0 flex items-center">
-              <a href="/" className="text-xl sm:text-2xl font-serif text-primary hover:text-primary/80 transition-colors duration-300">
-                Diky
+            <div className="flex-shrink-0">
+              <a
+                href="/"
+                onClick={(e) => handleNavigation(e, '/')}
+                className="hover:opacity-90 transition-opacity duration-300"
+              >
+                <Logo />
               </a>
             </div>
             
@@ -166,6 +185,7 @@ export default function NavBar() {
                 >
                   <a
                     href={item.href}
+                    onClick={(e) => handleNavigation(e, item.href)}
                     className="flex items-center px-3 py-2 text-sm lg:text-base text-primary/80 hover:text-primary transition-colors duration-300"
                   >
                     {item.label}
@@ -207,7 +227,7 @@ export default function NavBar() {
                     placeholder={t('nav.search')}
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full pl-4 pr-12 py-2 text-sm rounded-full bg-[#fcdce4]/30 border-2 border-[#fcc4d4]/30 placeholder-primary/50 text-primary focus:outline-none focus:border-[#fcc4d4]/50 focus:bg-[#fcdce4]/40 transition-all duration-300"
+                    className="input pr-10"
                   />
                   <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
                     <Search size={16} className="text-primary/60" />
@@ -313,7 +333,7 @@ export default function NavBar() {
                   placeholder={t('nav.search')}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-4 pr-12 py-3 text-sm rounded-full bg-[#fcdce4]/30 border-2 border-[#fcc4d4]/30 placeholder-primary/50 text-primary focus:outline-none focus:border-[#fcc4d4]/50 focus:bg-[#fcdce4]/40 transition-all duration-300"
+                  className="input pr-10"
                 />
                 <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
                   <Search size={16} className="text-primary/60" />
@@ -328,6 +348,7 @@ export default function NavBar() {
                   <div className="flex items-center justify-between">
                     <a
                       href={item.href}
+                      onClick={(e) => handleNavigation(e, item.href)}
                       className="flex-1 px-4 py-3 text-primary/80 hover:text-primary text-sm font-medium transition-colors duration-200"
                     >
                       {item.label}

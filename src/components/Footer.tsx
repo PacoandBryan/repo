@@ -1,13 +1,14 @@
 import React from 'react';
 import { Instagram, Facebook, Mail } from 'lucide-react';
+import Logo from './Logo';
 
 export default function Footer() {
   return (
-    <footer className="bg-[#483434] text-white">
+    <footer className="bg-primary text-white">
       <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="col-span-1">
-            <h2 className="text-xl font-serif text-white">Diky</h2>
+            <Logo variant="light" />
             <p className="mt-4 text-white/80 text-sm">
               Contemporary artistry celebrating the tradition of Mexican embroidery.
             </p>

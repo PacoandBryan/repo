@@ -10,26 +10,54 @@ export default {
       colors: {
         primary: {
           DEFAULT: '#483434',
-          light: '#CFF6EE',
+          light: '#F5EBE6',
+          dark: '#2C1810',
         },
         secondary: {
           DEFAULT: '#FECEC5',
-          dark: '#B8AB80',
+          light: '#FDF8F6',
+          dark: '#FAA094',
         },
-        accent: '#2F6D9E',
+        accent: {
+          DEFAULT: '#2F6D9E',
+          light: '#E8F1F8',
+          dark: '#1D4B6E',
+        },
+        success: {
+          DEFAULT: '#4CAF50',
+          light: '#E8F5E9',
+        },
+        warning: {
+          DEFAULT: '#FFC107',
+          light: '#FFF8E1',
+        },
+        error: {
+          DEFAULT: '#EF5350',
+          light: '#FFEBEE',
+        }
       },
       animation: {
+        'fade-in': 'fadeIn 0.5s ease-in-out',
+        'slide-up': 'slideUp 0.5s ease-out',
         bounce: 'bounce 1s infinite',
       },
       keyframes: {
-        bounce: {
-          '0%, 100%': {
-            transform: 'translateY(0)',
-          },
-          '50%': {
-            transform: 'translateY(-10px)',
-          },
+        fadeIn: {
+          '0%': { opacity: '0' },
+          '100%': { opacity: '1' },
         },
+        slideUp: {
+          '0%': { transform: 'translateY(20px)', opacity: '0' },
+          '100%': { transform: 'translateY(0)', opacity: '1' },
+        },
+        bounce: {
+          '0%, 100%': { transform: 'translateY(0)' },
+          '50%': { transform: 'translateY(-10px)' },
+        },
+      },
+      boxShadow: {
+        'soft': '0 2px 15px rgba(0, 0, 0, 0.05)',
+        'medium': '0 4px 20px rgba(0, 0, 0, 0.08)',
       },
     },
   },
