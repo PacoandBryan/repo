@@ -13,6 +13,7 @@ export default {
     clutches: 'Clutches',
     totes: 'Bolsos Tote',
     catalog: 'Catálogo',
+    contact: 'Contáctanos',
     search: 'Buscar productos...'
   },
   hero: {

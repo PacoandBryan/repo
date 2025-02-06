@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Heart, ShoppingBag, Menu, Search, X, Globe, ChevronDown, ChevronRight, Home } from 'lucide-react';
+import { Heart, ShoppingBag, Menu, Search, X, Globe, ChevronDown, ChevronRight, Home, Mail } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import Logo from './Logo';
 
@@ -85,6 +85,10 @@ export default function NavBar() {
     {
       label: t('nav.catalog'),
       href: '/catalog'
+    },
+    {
+      label: t('nav.contact'),
+      href: '/contact'
     }
   ];
 
@@ -182,6 +186,7 @@ export default function NavBar() {
                     to={item.href}
                     className="flex items-center px-3 py-2 text-sm lg:text-base text-primary/80 hover:text-primary transition-colors duration-300"
                   >
+                    {item.label === t('nav.contact') && <Mail className="w-4 h-4 mr-1" />}
                     {item.label}
                     {item.children && (
                       <ChevronDown className="ml-1 w-4 h-4" />
@@ -355,6 +360,7 @@ export default function NavBar() {
                       onClick={() => setIsMenuOpen(false)}
                       className="flex-1 px-4 py-3 text-primary/80 hover:text-primary text-sm font-medium transition-colors duration-200"
                     >
+                      {item.label === t('nav.contact') && <Mail className="w-4 h-4 mr-2 inline" />}
                       {item.label}
                     </Link>
                     {item.children && (

@@ -6,6 +6,7 @@ import CatalogPage from './components/Catalog/CatalogPage';
 import PursesPage from './pages/PursesPage';
 import SweetTablePage from './pages/SweetTablePage';
 import CoursesPage from './pages/CoursesPage';
+import ContactPage from './pages/ContactPage';
 import Footer from './components/Footer';
 import LoadingScreen from './components/LoadingScreen';
 
@@ -35,6 +36,7 @@ function App() {
           <Route path="/purses" element={<PursesPage />} />
           <Route path="/sweet-table" element={<SweetTablePage />} />
           <Route path="/courses" element={<CoursesPage />} />
+          <Route path="/contact" element={<ContactPage />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
         <Footer />
