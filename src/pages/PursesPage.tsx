@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ChevronRight, Star, Heart, Eye, Leaf, Heart as HeartIcon, Users } from 'lucide-react';
+import { Heart, Download, Share2, ChevronRight, Star, Leaf, Heart as HeartIcon, Users } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 interface Purse {
@@ -81,13 +81,13 @@ export default function PursesPage() {
         <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
           <div className="text-center text-white max-w-4xl px-4">
             <h1 className="text-4xl md:text-6xl font-serif mb-6">
-              Embrace Elegance, Embrace Tradition
+              {t('purses.hero.title')}
             </h1>
             <p className="text-lg md:text-xl mb-8 text-white/90">
-              Discover our collection of handcrafted purses, where every stitch is a whisper of Mexico City's vibrant heritage.
+              {t('purses.hero.subtitle')}
             </p>
             <button className="btn bg-white/90 hover:bg-white text-primary transition-colors duration-300">
-              Explore the Collection
+              {t('purses.hero.cta')}
             </button>
           </div>
         </div>
@@ -98,10 +98,10 @@ export default function PursesPage() {
         <div className="max-w-7xl mx-auto px-4">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-serif text-primary mb-6">
-              Why Choose Our Handcrafted Purses?
+              {t('purses.whyChoose.title')}
             </h2>
             <p className="text-lg text-primary/80 max-w-2xl mx-auto">
-              Each piece tells a unique story of Mexican craftsmanship, combining traditional techniques with contemporary design.
+              {t('purses.whyChoose.subtitle')}
             </p>
           </div>
           
@@ -111,10 +111,10 @@ export default function PursesPage() {
                 <Leaf className="w-8 h-8 text-accent" />
               </div>
               <h3 className="text-xl font-serif text-primary mb-4">
-                Sustainable Materials
+                {t('purses.whyChoose.features.sustainable.title')}
               </h3>
               <p className="text-primary/80">
-                We use eco-friendly materials and support sustainable practices in our production process, ensuring minimal environmental impact.
+                {t('purses.whyChoose.features.sustainable.description')}
               </p>
             </div>
             
@@ -123,10 +123,10 @@ export default function PursesPage() {
                 <HeartIcon className="w-8 h-8 text-accent" />
               </div>
               <h3 className="text-xl font-serif text-primary mb-4">
-                Handcrafted Excellence
+                {t('purses.whyChoose.features.handcrafted.title')}
               </h3>
               <p className="text-primary/80">
-                Each purse is meticulously crafted by skilled artisans, ensuring superior quality and attention to detail that mass-produced items cannot match.
+                {t('purses.whyChoose.features.handcrafted.description')}
               </p>
             </div>
             
@@ -135,10 +135,10 @@ export default function PursesPage() {
                 <Users className="w-8 h-8 text-accent" />
               </div>
               <h3 className="text-xl font-serif text-primary mb-4">
-                Community Impact
+                {t('purses.whyChoose.features.community.title')}
               </h3>
               <p className="text-primary/80">
-                Your purchase directly supports Mexican artisans and their families, helping preserve traditional craftsmanship for future generations.
+                {t('purses.whyChoose.features.community.description')}
               </p>
             </div>
           </div>
@@ -150,7 +150,9 @@ export default function PursesPage() {
         <div className="max-w-7xl mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
             <div>
-              <h2 className="text-3xl font-serif text-primary mb-6">Meet Our Artisans</h2>
+              <h2 className="text-3xl font-serif text-primary mb-6">
+                {t('purses.artisans.title')}
+              </h2>
               <div className="bg-secondary/10 p-6 rounded-lg">
                 <div className="flex items-center space-x-4 mb-4">
                   <img
@@ -187,7 +189,9 @@ export default function PursesPage() {
       {/* Testimonials */}
       <div className="bg-secondary/10 py-16">
         <div className="max-w-7xl mx-auto px-4">
-          <h2 className="text-3xl font-serif text-primary text-center mb-12">What Our Customers Say</h2>
+          <h2 className="text-3xl font-serif text-primary text-center mb-12">
+            {t('purses.testimonials.title')}
+          </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[1, 2, 3].map((index) => (
               <div key={index} className="bg-white p-6 rounded-lg shadow-sm">
@@ -197,7 +201,7 @@ export default function PursesPage() {
                   ))}
                 </div>
                 <p className="text-primary/80 mb-4">
-                  "The attention to detail in my embroidered bag is incredible. Each stitch tells a story, and I love supporting local artisans."
+                  {t('purses.testimonials.review')}
                 </p>
                 <div className="flex items-center space-x-3">
                   <img
@@ -252,10 +256,10 @@ export default function PursesPage() {
                     </p>
                     <div className="space-y-4">
                       <button className="w-full btn bg-primary text-white hover:bg-primary/90">
-                        Add to Cart
+                        {t('purses.quickView.addToCart')}
                       </button>
                       <button className="w-full btn border-2 border-primary text-primary hover:bg-primary/5">
-                        Add to Wishlist
+                        {t('purses.quickView.addToWishlist')}
                       </button>
                     </div>
                   </div>

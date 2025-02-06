@@ -75,6 +75,43 @@ export default {
     by: 'By',
     from: 'from'
   },
+  purses: {
+    hero: {
+      title: 'Embrace Elegance, Embrace Tradition',
+      subtitle: 'Discover our collection of handcrafted purses, where every stitch is a whisper of Mexico City\'s vibrant heritage.',
+      cta: 'Explore the Collection'
+    },
+    whyChoose: {
+      title: 'Why Choose Our Handcrafted Purses?',
+      subtitle: 'Each piece tells a unique story of Mexican craftsmanship, combining traditional techniques with contemporary design.',
+      features: {
+        sustainable: {
+          title: 'Sustainable Materials',
+          description: 'We use eco-friendly materials and support sustainable practices in our production process, ensuring minimal environmental impact.'
+        },
+        handcrafted: {
+          title: 'Handcrafted Excellence',
+          description: 'Each purse is meticulously crafted by skilled artisans, ensuring superior quality and attention to detail that mass-produced items cannot match.'
+        },
+        community: {
+          title: 'Community Impact',
+          description: 'Your purchase directly supports Mexican artisans and their families, helping preserve traditional craftsmanship for future generations.'
+        }
+      }
+    },
+    artisans: {
+      title: 'Meet Our Artisans',
+      subtitle: 'The skilled hands behind our beautiful creations'
+    },
+    testimonials: {
+      title: 'What Our Customers Say',
+      review: 'The attention to detail in my embroidered bag is incredible. Each stitch tells a story, and I love supporting local artisans.'
+    },
+    quickView: {
+      addToCart: 'Add to Cart',
+      addToWishlist: 'Add to Wishlist'
+    }
+  },
   contact: {
     title: "Let's Stay Connected",
     subtitle: "We'd love to hear from you and help bring your vision to life",

@@ -75,6 +75,43 @@ export default {
     by: 'Por',
     from: 'de'
   },
+  purses: {
+    hero: {
+      title: 'Abraza la Elegancia, Abraza la Tradición',
+      subtitle: 'Descubre nuestra colección de bolsos artesanales, donde cada puntada es un susurro del vibrante patrimonio de la Ciudad de México.',
+      cta: 'Explorar la Colección'
+    },
+    whyChoose: {
+      title: '¿Por Qué Elegir Nuestros Bolsos Artesanales?',
+      subtitle: 'Cada pieza cuenta una historia única de artesanía mexicana, combinando técnicas tradicionales con diseño contemporáneo.',
+      features: {
+        sustainable: {
+          title: 'Materiales Sostenibles',
+          description: 'Utilizamos materiales ecológicos y apoyamos prácticas sostenibles en nuestro proceso de producción, asegurando un mínimo impacto ambiental.'
+        },
+        handcrafted: {
+          title: 'Excelencia Artesanal',
+          description: 'Cada bolso es meticulosamente elaborado por artesanos expertos, garantizando una calidad superior y atención al detalle que los artículos producidos en masa no pueden igualar.'
+        },
+        community: {
+          title: 'Impacto Comunitario',
+          description: 'Tu compra apoya directamente a los artesanos mexicanos y sus familias, ayudando a preservar la artesanía tradicional para las generaciones futuras.'
+        }
+      }
+    },
+    artisans: {
+      title: 'Conoce a Nuestros Artesanos',
+      subtitle: 'Las manos expertas detrás de nuestras hermosas creaciones'
+    },
+    testimonials: {
+      title: 'Lo Que Dicen Nuestros Clientes',
+      review: 'La atención al detalle en mi bolso bordado es increíble. Cada puntada cuenta una historia, y me encanta apoyar a los artesanos locales.'
+    },
+    quickView: {
+      addToCart: 'Añadir al Carrito',
+      addToWishlist: 'Añadir a Lista de Deseos'
+    }
+  },
   contact: {
     title: "Mantengámonos Conectados",
     subtitle: "Nos encantaría escucharte y ayudar a hacer realidad tu visión",
