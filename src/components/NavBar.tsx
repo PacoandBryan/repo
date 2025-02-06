@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Heart, ShoppingBag, Menu, Search, X, Globe, ChevronDown, ChevronRight } from 'lucide-react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Heart, ShoppingBag, Menu, Search, X, Globe, ChevronDown, ChevronRight, Home } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import Logo from './Logo';
 
@@ -13,11 +14,7 @@ type NavItem = {
   }[];
 };
 
-interface NavBarProps {
-  onNavigate: (page: 'home' | 'catalog') => void;
-}
-
-export default function NavBar({ onNavigate }: NavBarProps) {
+export default function NavBar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -28,6 +25,8 @@ export default function NavBar({ onNavigate }: NavBarProps) {
   const langDropdownRef = useRef<HTMLDivElement>(null);
   const dropdownTimeoutRef = useRef<NodeJS.Timeout>();
   const sidebarRef = useRef<HTMLDivElement>(null);
+  const location = useLocation();
+  const navigate = useNavigate();
 
   const languages = [
     { code: 'en', label: 'English' },
@@ -150,32 +149,28 @@ export default function NavBar({ onNavigate }: NavBarProps) {
     );
   };
 
-  const handleNavigation = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
-    e.preventDefault();
-    if (href === '/') {
-      onNavigate('home');
-    } else if (href === '/catalog') {
-      onNavigate('catalog');
-    }
-    setIsMenuOpen(false);
-  };
-
   return (
     <>
       <nav className="bg-white/80 backdrop-blur-md fixed w-full z-50 border-b border-primary/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16 items-center">
             <div className="flex-shrink-0">
-              <a
-                href="/"
-                onClick={(e) => handleNavigation(e, '/')}
+              <Link
+                to="/"
                 className="hover:opacity-90 transition-opacity duration-300"
               >
                 <Logo />
-              </a>
+              </Link>
             </div>
             
             <div className="hidden md:flex items-center space-x-1 lg:space-x-2">
+              <Link
+                to="/"
+                className="flex items-center px-3 py-2 text-sm lg:text-base text-primary/80 hover:text-primary transition-colors duration-300"
+              >
+                <Home className="w-4 h-4 mr-1" />
+                Home
+              </Link>
               {navItems.map((item) => (
                 <div
                   key={item.label}
@@ -183,24 +178,23 @@ export default function NavBar({ onNavigate }: NavBarProps) {
                   onMouseEnter={() => handleDropdownEnter(item.label)}
                   onMouseLeave={handleDropdownLeave}
                 >
-                  <a
-                    href={item.href}
-                    onClick={(e) => handleNavigation(e, item.href)}
+                  <Link
+                    to={item.href}
                     className="flex items-center px-3 py-2 text-sm lg:text-base text-primary/80 hover:text-primary transition-colors duration-300"
                   >
                     {item.label}
                     {item.children && (
                       <ChevronDown className="ml-1 w-4 h-4" />
                     )}
-                  </a>
+                  </Link>
                   
                   {item.children && activeDropdown === item.label && (
                     <div className="absolute left-0 mt-2 w-64 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
                       <div className="py-1" role="menu" aria-orientation="vertical">
                         {item.children.map((child) => (
-                          <a
+                          <Link
                             key={child.label}
-                            href={child.href}
+                            to={child.href}
                             className="group flex flex-col px-4 py-2 text-sm text-primary/80 hover:bg-[#fcdce4]/20 hover:text-primary transition-colors duration-300"
                             role="menuitem"
                           >
@@ -210,7 +204,7 @@ export default function NavBar({ onNavigate }: NavBarProps) {
                                 {child.description}
                               </span>
                             )}
-                          </a>
+                          </Link>
                         ))}
                       </div>
                     </div>
@@ -343,16 +337,26 @@ export default function NavBar({ onNavigate }: NavBarProps) {
 
             {/* Navigation */}
             <div className="px-2 py-2 space-y-1">
+              <div className="border-b border-primary/5">
+                <Link
+                  to="/"
+                  onClick={() => setIsMenuOpen(false)}
+                  className="flex items-center px-4 py-3 text-primary/80 hover:text-primary text-sm font-medium transition-colors duration-200"
+                >
+                  <Home className="w-4 h-4 mr-2" />
+                  Home
+                </Link>
+              </div>
               {navItems.map((item) => (
                 <div key={item.label} className="border-b border-primary/5 last:border-b-0">
                   <div className="flex items-center justify-between">
-                    <a
-                      href={item.href}
-                      onClick={(e) => handleNavigation(e, item.href)}
+                    <Link
+                      to={item.href}
+                      onClick={() => setIsMenuOpen(false)}
                       className="flex-1 px-4 py-3 text-primary/80 hover:text-primary text-sm font-medium transition-colors duration-200"
                     >
                       {item.label}
-                    </a>
+                    </Link>
                     {item.children && (
                       <button
                         onClick={() => toggleMobileItem(item.label)}
@@ -369,9 +373,10 @@ export default function NavBar({ onNavigate }: NavBarProps) {
                   {item.children && expandedMobileItems.includes(item.label) && (
                     <div className="pl-4 pb-2 space-y-1 bg-[#fcdce4]/5">
                       {item.children.map((child) => (
-                        <a
+                        <Link
                           key={child.label}
-                          href={child.href}
+                          to={child.href}
+                          onClick={() => setIsMenuOpen(false)}
                           className="block px-4 py-2 text-primary/60 hover:text-primary text-sm transition-colors duration-200"
                         >
                           {child.label}
@@ -380,7 +385,7 @@ export default function NavBar({ onNavigate }: NavBarProps) {
                               {child.description}
                             </p>
                           )}
-                        </a>
+                        </Link>
                       ))}
                     </div>
                   )}
