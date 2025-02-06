@@ -74,81 +74,41 @@ export default {
     by: 'By',
     from: 'from'
   },
-  sweetTable: {
-    hero: {
-      title: 'Create Your Perfect Sweet Table',
-      subtitle: 'Discover our collection of hand-embroidered table linens that transform any gathering into an unforgettable celebration.',
-      cta: 'Get Inspired'
+  contact: {
+    title: "Let's Stay Connected",
+    subtitle: "We'd love to hear from you and help bring your vision to life",
+    form: {
+      title: "Send Us a Message",
+      firstName: "First Name",
+      firstNamePlaceholder: "Your First Name",
+      lastName: "Last Name",
+      lastNamePlaceholder: "Your Last Name",
+      email: "Email",
+      emailPlaceholder: "Your Best Contact Email",
+      message: "Message",
+      messagePlaceholder: "Let us know how we can help!",
+      submit: "Send Message",
+      sending: "Sending..."
     },
-    inspiration: {
-      title: 'Find Your Style',
-      subtitle: 'Explore our curated color palettes and design themes for every occasion.',
-      palettes: {
-        spring: {
-          name: 'Spring Garden',
-          description: 'Soft pinks and delicate florals for a fresh, romantic setting.'
-        },
-        fiesta: {
-          name: 'Mexican Fiesta',
-          description: 'Vibrant oranges and warm tones celebrating our cultural heritage.'
-        },
-        modern: {
-          name: 'Modern Elegance',
-          description: 'Sophisticated purples and muted tones for contemporary gatherings.'
-        }
+    info: {
+      title: "Where to Find Us",
+      address: {
+        title: "Visit Our Studio"
+      },
+      phone: {
+        title: "Call Us Anytime"
+      },
+      email: {
+        title: "Email Us"
+      },
+      hours: {
+        title: "Business Hours",
+        weekdays: "Monday - Friday, 08:00 AM - 05:00 PM"
       }
     },
-    steps: {
-      title: 'Create Your Sweet Table',
-      items: {
-        foundation: {
-          title: 'Start with the Foundation',
-          description: 'Choose your tablecloth as the base of your design.'
-        },
-        texture: {
-          title: 'Add Texture & Layers',
-          description: 'Layer with embroidered runners and placemats.'
-        },
-        height: {
-          title: 'Create Height & Dimension',
-          description: 'Arrange displays at different levels for visual interest.'
-        },
-        personal: {
-          title: 'Add Personal Touches',
-          description: 'Incorporate family heirlooms and personal details.'
-        }
-      }
-    },
-    stories: {
-      title: 'Sweet Table Stories',
-      quotes: {
-        isabella: {
-          location: 'Mexico City',
-          quote: 'The embroidered tablecloth became the centerpiece of our family celebration.'
-        },
-        sofia: {
-          location: 'Guadalajara',
-          quote: 'Every detail tells a story, making our gatherings truly special.'
-        }
-      }
-    },
-    community: {
-      title: 'Join Our Community',
-      subtitle: 'Share your sweet table creations and get inspired by others.',
-      share: 'Share Your Table',
-      follow: 'Follow Us'
-    },
-    newsletter: {
-      title: 'Get More Inspiration',
-      subtitle: 'Subscribe for exclusive styling tips and early access to new collections.',
-      placeholder: 'Enter your email',
-      button: 'Subscribe'
-    },
-    download: {
-      title: 'Ready to Create Your Sweet Table?',
-      subtitle: 'Download our free styling guide with tips and inspiration.',
-      button: 'Download Free Guide',
-      moreInspiration: 'Get More Inspiration'
+    social: {
+      title: "Connect With Us",
+      subtitle: "Follow us on social media for updates & inspiration!"
     }
   }
 }

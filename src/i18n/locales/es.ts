@@ -74,81 +74,41 @@ export default {
     by: 'Por',
     from: 'de'
   },
-  sweetTable: {
-    hero: {
-      title: 'Crea tu Mesa Dulce Perfecta',
-      subtitle: 'Descubre nuestra colección de manteles bordados a mano que transforman cualquier reunión en una celebración inolvidable.',
-      cta: 'Inspírate'
+  contact: {
+    title: "Mantengámonos Conectados",
+    subtitle: "Nos encantaría escucharte y ayudar a hacer realidad tu visión",
+    form: {
+      title: "Envíanos un Mensaje",
+      firstName: "Nombre",
+      firstNamePlaceholder: "Tu Nombre",
+      lastName: "Apellido",
+      lastNamePlaceholder: "Tu Apellido",
+      email: "Correo Electrónico",
+      emailPlaceholder: "Tu Mejor Correo de Contacto",
+      message: "Mensaje",
+      messagePlaceholder: "¡Cuéntanos cómo podemos ayudarte!",
+      submit: "Enviar Mensaje",
+      sending: "Enviando..."
     },
-    inspiration: {
-      title: 'Encuentra tu Estilo',
-      subtitle: 'Explora nuestras paletas de colores y temas de diseño para cada ocasión.',
-      palettes: {
-        spring: {
-          name: 'Jardín Primaveral',
-          description: 'Rosas suaves y flores delicadas para un ambiente fresco y romántico.'
-        },
-        fiesta: {
-          name: 'Fiesta Mexicana',
-          description: 'Naranjas vibrantes y tonos cálidos que celebran nuestra herencia cultural.'
-        },
-        modern: {
-          name: 'Elegancia Moderna',
-          description: 'Morados sofisticados y tonos suaves para reuniones contemporáneas.'
-        }
+    info: {
+      title: "Dónde Encontrarnos",
+      address: {
+        title: "Visita Nuestro Estudio"
+      },
+      phone: {
+        title: "Llámanos en Cualquier Momento"
+      },
+      email: {
+        title: "Envíanos un Correo"
+      },
+      hours: {
+        title: "Horario de Atención",
+        weekdays: "Lunes - Viernes, 08:00 AM - 05:00 PM"
       }
     },
-    steps: {
-      title: 'Crea tu Mesa Dulce',
-      items: {
-        foundation: {
-          title: 'Comienza con la Base',
-          description: 'Elige tu mantel como base de tu diseño.'
-        },
-        texture: {
-          title: 'Añade Textura y Capas',
-          description: 'Agrega caminos de mesa y manteles individuales bordados.'
-        },
-        height: {
-          title: 'Crea Altura y Dimensión',
-          description: 'Organiza las exhibiciones a diferentes niveles para interés visual.'
-        },
-        personal: {
-          title: 'Agrega Toques Personales',
-          description: 'Incorpora reliquias familiares y detalles personales.'
-        }
-      }
-    },
-    stories: {
-      title: 'Historias de Mesas Dulces',
-      quotes: {
-        isabella: {
-          location: 'Ciudad de México',
-          quote: 'El mantel bordado se convirtió en el centro de nuestra celebración familiar.'
-        },
-        sofia: {
-          location: 'Guadalajara',
-          quote: 'Cada detalle cuenta una historia, haciendo nuestras reuniones verdaderamente especiales.'
-        }
-      }
-    },
-    community: {
-      title: 'Únete a Nuestra Comunidad',
-      subtitle: 'Comparte tus creaciones de mesa dulce e inspírate con otros.',
-      share: 'Comparte tu Mesa',
-      follow: 'Síguenos'
-    },
-    newsletter: {
-      title: 'Obtén Más Inspiración',
-      subtitle: 'Suscríbete para consejos exclusivos de estilo y acceso anticipado a nuevas colecciones.',
-      placeholder: 'Ingresa tu email',
-      button: 'Suscribirse'
-    },
-    download: {
-      title: '¿Lista para Crear tu Mesa Dulce?',
-      subtitle: 'Descarga nuestra guía gratuita de estilo con consejos e inspiración.',
-      button: 'Descargar Guía Gratuita',
-      moreInspiration: 'Obtén Más Inspiración'
+    social: {
+      title: "Conéctate con Nosotros",
+      subtitle: "¡Síguenos en redes sociales para actualizaciones e inspiración!"
     }
   }
 }
