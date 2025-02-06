@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Search, SlidersHorizontal, ChevronDown, X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import ProductCard from './ProductCard';
@@ -40,6 +40,61 @@ const products: Product[] = [
     technique: "Traditional embroidery",
     category: "Table Linens",
   },
+  {
+    id: 4,
+    name: "Mariposa Evening Clutch",
+    price: 2100,
+    description: "Elegant evening clutch with butterfly motifs embroidered in metallic threads.",
+    image: "https://images.unsplash.com/photo-1584917865442-de89df76afd3?auto=format&fit=crop&q=80&w=800",
+    artisan: "Carmen Ortiz",
+    region: "Oaxaca",
+    technique: "Metallic embroidery",
+    category: "Clutches",
+  },
+  {
+    id: 5,
+    name: "Sol Tote Bag",
+    price: 3200,
+    description: "Spacious tote featuring sun motifs and traditional patterns in vibrant colors.",
+    image: "https://images.unsplash.com/photo-1590874103328-eac38a683ce7?auto=format&fit=crop&q=80&w=800",
+    artisan: "Laura Mendoza",
+    region: "Guerrero",
+    technique: "Mixed technique",
+    category: "Totes",
+  },
+  {
+    id: 6,
+    name: "Luna Napkin Set",
+    price: 850,
+    description: "Set of four napkins with crescent moon and star embroidery in silver thread.",
+    image: "https://images.unsplash.com/photo-1603400521630-9f2de124b33b?auto=format&fit=crop&q=80&w=800",
+    artisan: "Sofia Ruiz",
+    region: "Yucatán",
+    technique: "Fine embroidery",
+    category: "Table Linens",
+  },
+  {
+    id: 7,
+    name: "Flor Mini Crossbody",
+    price: 1800,
+    description: "Compact crossbody bag with delicate flower embroidery perfect for everyday use.",
+    image: "https://images.unsplash.com/photo-1566150905458-1bf1fc113f0d?auto=format&fit=crop&q=80&w=800",
+    artisan: "Elena Torres",
+    region: "Chiapas",
+    technique: "Floral embroidery",
+    category: "Crossbody",
+  },
+  {
+    id: 8,
+    name: "Azteca Table Runner",
+    price: 1500,
+    description: "Long table runner featuring ancient Aztec-inspired geometric patterns.",
+    image: "https://images.unsplash.com/photo-1590874103328-eac38a683ce7?auto=format&fit=crop&q=80&w=800",
+    artisan: "Rosa Hernández",
+    region: "Mexico City",
+    technique: "Geometric patterns",
+    category: "Table Linens",
+  }
 ];
 
 export default function CatalogPage() {
@@ -66,6 +121,53 @@ export default function CatalogPage() {
         : [...prev, filter]
     );
   };
+
+  // Filter and sort products
+  const filteredAndSortedProducts = useMemo(() => {
+    let result = [...products];
+
+    // Apply search filter
+    if (searchQuery) {
+      const query = searchQuery.toLowerCase();
+      result = result.filter(product =>
+        product.name.toLowerCase().includes(query) ||
+        product.description.toLowerCase().includes(query) ||
+        product.artisan.toLowerCase().includes(query) ||
+        product.technique.toLowerCase().includes(query) ||
+        product.category.toLowerCase().includes(query)
+      );
+    }
+
+    // Apply category/region/technique filters
+    if (activeFilters.length > 0) {
+      result = result.filter(product =>
+        activeFilters.some(filter =>
+          product.category === filter ||
+          product.region === filter ||
+          product.technique === filter ||
+          (filter === 'Under $1,000' && product.price < 1000) ||
+          (filter === '$1,000 - $2,000' && product.price >= 1000 && product.price <= 2000) ||
+          (filter === '$2,000 - $3,000' && product.price > 2000 && product.price <= 3000) ||
+          (filter === 'Over $3,000' && product.price > 3000)
+        )
+      );
+    }
+
+    // Apply sorting
+    switch (sortBy) {
+      case 'price-asc':
+        result.sort((a, b) => a.price - b.price);
+        break;
+      case 'price-desc':
+        result.sort((a, b) => b.price - a.price);
+        break;
+      case 'newest':
+        result.sort((a, b) => b.id - a.id);
+        break;
+    }
+
+    return result;
+  }, [products, searchQuery, activeFilters, sortBy]);
 
   return (
     <div className="min-h-screen bg-secondary-light pt-16">
@@ -168,22 +270,30 @@ export default function CatalogPage() {
 
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-6">
-          {products.map(product => (
-            <ProductCard
-              key={product.id}
-              product={product}
-              onQuickView={() => handleQuickView(product)}
-            />
-          ))}
-        </div>
-
-        {/* Load More Button */}
-        <div className="mt-8 sm:mt-12 text-center">
-          <button className="btn btn-outline w-full sm:w-auto">
-            {t('catalog.loadMore')}
-          </button>
-        </div>
+        {filteredAndSortedProducts.length > 0 ? (
+          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-6">
+            {filteredAndSortedProducts.map(product => (
+              <ProductCard
+                key={product.id}
+                product={product}
+                onQuickView={() => handleQuickView(product)}
+              />
+            ))}
+          </div>
+        ) : (
+          <div className="text-center py-12">
+            <p className="text-lg text-primary/80">No products found matching your criteria.</p>
+            <button
+              onClick={() => {
+                setSearchQuery('');
+                setActiveFilters([]);
+              }}
+              className="mt-4 text-accent hover:text-accent/80 transition-colors duration-200"
+            >
+              Clear all filters
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Filter Sidebar */}

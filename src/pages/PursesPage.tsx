@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ChevronRight, Star, Heart, Eye } from 'lucide-react';
+import { ChevronRight, Star, Heart, Eye, Leaf, Heart as HeartIcon, Users } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 interface Purse {
@@ -93,60 +93,55 @@ export default function PursesPage() {
         </div>
       </div>
 
-      {/* Filters */}
-      <div className="bg-white shadow-sm sticky top-16 z-30">
-        <div className="max-w-7xl mx-auto px-4 py-4">
-          <div className="flex items-center space-x-4 overflow-x-auto scrollbar-hide">
-            {['all', 'crossbody', 'clutch', 'tote'].map((filter) => (
-              <button
-                key={filter}
-                onClick={() => setActiveFilter(filter)}
-                className={`px-4 py-2 rounded-full text-sm whitespace-nowrap transition-colors duration-300 ${
-                  activeFilter === filter
-                    ? 'bg-primary text-white'
-                    : 'bg-secondary/20 text-primary hover:bg-secondary/30'
-                }`}
-              >
-                {filter.charAt(0).toUpperCase() + filter.slice(1)}
-              </button>
-            ))}
+      {/* Why Choose Us Section */}
+      <div className="bg-secondary-light py-24">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-serif text-primary mb-6">
+              Why Choose Our Handcrafted Purses?
+            </h2>
+            <p className="text-lg text-primary/80 max-w-2xl mx-auto">
+              Each piece tells a unique story of Mexican craftsmanship, combining traditional techniques with contemporary design.
+            </p>
           </div>
-        </div>
-      </div>
-
-      {/* Product Grid */}
-      <div className="max-w-7xl mx-auto px-4 py-12">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {purses.map((purse) => (
-            <div
-              key={purse.id}
-              className="group relative bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-all duration-300"
-            >
-              <div className="aspect-square overflow-hidden">
-                <img
-                  src={purse.images[0]}
-                  alt={purse.name}
-                  className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
-                />
-                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-4">
-                  <button
-                    onClick={() => setSelectedPurse(purse)}
-                    className="p-2 rounded-full bg-white/90 hover:bg-white text-primary transition-colors duration-300"
-                  >
-                    <Eye className="w-5 h-5" />
-                  </button>
-                  <button className="p-2 rounded-full bg-white/90 hover:bg-white text-primary transition-colors duration-300">
-                    <Heart className="w-5 h-5" />
-                  </button>
-                </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+            <div className="text-center">
+              <div className="w-16 h-16 bg-accent/10 rounded-full flex items-center justify-center mx-auto mb-6">
+                <Leaf className="w-8 h-8 text-accent" />
               </div>
-              <div className="p-4">
-                <h3 className="font-serif text-lg text-primary">{purse.name}</h3>
-                <p className="text-sm text-primary/60 mt-1">{purse.technique}</p>
-                <p className="mt-2 font-medium text-primary">{formatPrice(purse.price)}</p>
-              </div>
+              <h3 className="text-xl font-serif text-primary mb-4">
+                Sustainable Materials
+              </h3>
+              <p className="text-primary/80">
+                We use eco-friendly materials and support sustainable practices in our production process, ensuring minimal environmental impact.
+              </p>
             </div>
-          ))}
+            
+            <div className="text-center">
+              <div className="w-16 h-16 bg-accent/10 rounded-full flex items-center justify-center mx-auto mb-6">
+                <HeartIcon className="w-8 h-8 text-accent" />
+              </div>
+              <h3 className="text-xl font-serif text-primary mb-4">
+                Handcrafted Excellence
+              </h3>
+              <p className="text-primary/80">
+                Each purse is meticulously crafted by skilled artisans, ensuring superior quality and attention to detail that mass-produced items cannot match.
+              </p>
+            </div>
+            
+            <div className="text-center">
+              <div className="w-16 h-16 bg-accent/10 rounded-full flex items-center justify-center mx-auto mb-6">
+                <Users className="w-8 h-8 text-accent" />
+              </div>
+              <h3 className="text-xl font-serif text-primary mb-4">
+                Community Impact
+              </h3>
+              <p className="text-primary/80">
+                Your purchase directly supports Mexican artisans and their families, helping preserve traditional craftsmanship for future generations.
+              </p>
+            </div>
+          </div>
         </div>
       </div>
 
