@@ -75,6 +75,83 @@ export default {
     by: 'By',
     from: 'from'
   },
+  sweetTable: {
+    hero: {
+      title: 'Create Your Perfect Sweet Table',
+      subtitle: 'Discover our collection of handcrafted table linens that transform any gathering into an unforgettable celebration',
+      cta: 'Get Inspired'
+    },
+    inspiration: {
+      title: 'Find Your Style',
+      subtitle: 'Explore our curated color palettes and design themes',
+      palettes: {
+        spring: {
+          name: 'Spring Blossoms',
+          description: 'Soft pinks and delicate florals for a romantic touch'
+        },
+        fiesta: {
+          name: 'Fiesta Vibes',
+          description: 'Bold and vibrant colors celebrating Mexican heritage'
+        },
+        modern: {
+          name: 'Modern Elegance',
+          description: 'Sophisticated neutrals with subtle accents'
+        }
+      }
+    },
+    steps: {
+      title: 'Create Your Perfect Setting',
+      items: {
+        foundation: {
+          title: 'Start with the Foundation',
+          description: 'Choose your base tablecloth and establish your color scheme'
+        },
+        texture: {
+          title: 'Add Texture & Layers',
+          description: 'Layer runners and placemats for depth and interest'
+        },
+        height: {
+          title: 'Play with Height',
+          description: 'Create visual interest with varying display levels'
+        },
+        personal: {
+          title: 'Add Personal Touches',
+          description: 'Incorporate family heirlooms or special pieces'
+        }
+      }
+    },
+    stories: {
+      title: 'Real Celebrations',
+      quotes: {
+        isabella: {
+          location: 'Wedding in Mexico City',
+          quote: 'The embroidered linens added such a special touch to our reception. Every detail told our story.'
+        },
+        sofia: {
+          location: 'Birthday in Oaxaca',
+          quote: 'The quality of the craftsmanship made our family celebration feel extra special.'
+        }
+      }
+    },
+    community: {
+      title: 'Join Our Community',
+      subtitle: 'Share your creations and get inspired by others',
+      share: 'Share Your Style',
+      follow: 'Follow Us'
+    },
+    newsletter: {
+      title: 'Get Inspired',
+      subtitle: 'Subscribe for styling tips, new collection alerts, and exclusive offers',
+      placeholder: 'Enter your email',
+      button: 'Subscribe'
+    },
+    download: {
+      title: 'Ready to Start Planning?',
+      subtitle: 'Download our free styling guide with tips and inspiration',
+      button: 'Download Free Guide',
+      moreInspiration: 'Get More Inspiration'
+    }
+  },
   purses: {
     hero: {
       title: 'Embrace Elegance, Embrace Tradition',
@@ -147,6 +224,112 @@ export default {
     social: {
       title: "Connect With Us",
       subtitle: "Follow us on social media for updates & inspiration!"
+    }
+  },
+  courses: {
+    hero: {
+      title: 'Learn Art & Technology with Dikí',
+      subtitle: 'Whether you\'re drawn to the tactile beauty of embroidery or eager to master the basics of web development, our courses blend creativity with practical skills.',
+      cta: 'Explore Courses'
+    },
+    card: {
+      duration: 'Duration',
+      startDate: 'Starts',
+      students: 'students',
+      learnMore: 'Learn More',
+      instructor: 'Instructor',
+      modules: 'Course Modules',
+      enrollNow: 'Enroll Now',
+      downloadSyllabus: 'Download Syllabus',
+      price: 'Full course access'
+    },
+    courses: {
+      embroidery: {
+        title: 'Embroidery Mastery',
+        subtitle: 'Stitching Tradition & Art',
+        description: 'Immerse yourself in the rich tradition of Mexican embroidery. From basic stitches to complex patterns, learn how to create stunning pieces that tell stories through thread and fabric.',
+        instructor: {
+          name: 'María González',
+          role: 'Master Artisan',
+          bio: 'With over 20 years of experience in traditional Mexican embroidery, María brings a wealth of knowledge and passion to her teaching.'
+        },
+        modules: {
+          foundations: {
+            title: 'Foundations of Embroidery',
+            description: 'Learn essential tools, materials, and basic stitches that form the foundation of embroidery.'
+          },
+          traditional: {
+            title: 'Traditional Mexican Patterns',
+            description: 'Explore the rich history and techniques behind traditional Mexican embroidery patterns.'
+          },
+          color: {
+            title: 'Color Theory & Design',
+            description: 'Master the art of color combination and pattern design for stunning visual impact.'
+          },
+          advanced: {
+            title: 'Advanced Techniques',
+            description: 'Take your skills to the next level with complex stitches and professional finishing methods.'
+          }
+        }
+      },
+      webDev: {
+        title: 'Web Development Fundamentals',
+        subtitle: 'HTML, CSS & JavaScript Essentials',
+        description: 'Begin your journey into web development with this comprehensive introduction to the core technologies that power the modern web.',
+        instructor: {
+          name: 'Alex Rivera',
+          role: 'Senior Web Developer',
+          bio: 'A passionate educator with 10+ years of industry experience, Alex specializes in making complex concepts accessible to beginners.'
+        },
+        modules: {
+          html: {
+            title: 'HTML5 Fundamentals',
+            description: 'Learn the building blocks of web pages and proper semantic markup.'
+          },
+          css: {
+            title: 'CSS Styling & Layout',
+            description: 'Master modern CSS techniques for creating beautiful, responsive designs.'
+          },
+          javascript: {
+            title: 'JavaScript Basics',
+            description: 'Introduction to programming concepts and interactive web development.'
+          },
+          projects: {
+            title: 'Building Real Projects',
+            description: 'Apply your skills by building practical, real-world websites.'
+          }
+        }
+      }
+    },
+    faq: {
+      title: 'Frequently Asked Questions',
+      questions: {
+        experience: {
+          question: 'Do I need any prior experience?',
+          answer: 'No prior experience is needed for either course. Our programs are designed to take you from beginner to confident practitioner.'
+        },
+        materials: {
+          question: 'What materials do I need?',
+          answer: 'For the embroidery course, we provide a starter kit with all necessary materials. For web development, you\'ll need a computer with internet access.'
+        },
+        pacing: {
+          question: 'Are the courses self-paced?',
+          answer: 'While you can review materials at your own pace, we follow a weekly structure to ensure you stay on track and can interact with fellow students.'
+        },
+        certificate: {
+          question: 'Is there a certificate upon completion?',
+          answer: 'Yes, both courses provide a certificate of completion once you\'ve finished all required modules and projects.'
+        }
+      }
+    },
+    testimonials: {
+      title: 'What Our Students Say',
+      cta: {
+        title: 'Ready to Start Your Learning Journey?',
+        subtitle: 'Join our community of learners and start mastering new skills today.',
+        primary: 'Get Started',
+        secondary: 'View Course Calendar'
+      }
     }
   }
 }

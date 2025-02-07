@@ -27,71 +27,71 @@ interface Course {
 const courses: Course[] = [
   {
     id: 'embroidery',
-    title: 'Embroidery Mastery',
-    subtitle: 'Stitching Tradition & Art',
-    description: 'Immerse yourself in the rich tradition of Mexican embroidery. From basic stitches to complex patterns, learn how to create stunning pieces that tell stories through thread and fabric.',
+    title: t('courses.embroidery.title'),
+    subtitle: t('courses.embroidery.subtitle'),
+    description: t('courses.embroidery.description'),
     duration: '8 weeks',
     startDate: 'March 15, 2024',
     students: 234,
     price: 2800,
     image: 'https://images.unsplash.com/photo-1590927793796-c6cc0c97e7b4?auto=format&fit=crop&q=80&w=1000',
     instructor: {
-      name: 'María González',
-      role: 'Master Artisan',
+      name: t('courses.embroidery.instructor.name'),
+      role: t('courses.embroidery.instructor.role'),
       image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=400',
-      bio: 'With over 20 years of experience in traditional Mexican embroidery, María brings a wealth of knowledge and passion to her teaching.'
+      bio: t('courses.embroidery.instructor.bio'),
     },
     modules: [
       {
-        title: 'Foundations of Embroidery',
-        description: 'Learn essential tools, materials, and basic stitches that form the foundation of embroidery.'
+        title: t('courses.embroidery.modules.foundations.title'),
+        description: t('courses.embroidery.modules.foundations.description'),
       },
       {
-        title: 'Traditional Mexican Patterns',
-        description: 'Explore the rich history and techniques behind traditional Mexican embroidery patterns.'
+        title: t('courses.embroidery.modules.traditional.title'),
+        description: t('courses.embroidery.modules.traditional.description'),
       },
       {
-        title: 'Color Theory & Design',
-        description: 'Master the art of color combination and pattern design for stunning visual impact.'
+        title: t('courses.embroidery.modules.color.title'),
+        description: t('courses.embroidery.modules.color.description'),
       },
       {
-        title: 'Advanced Techniques',
-        description: 'Take your skills to the next level with complex stitches and professional finishing methods.'
+        title: t('courses.embroidery.modules.advanced.title'),
+        description: t('courses.embroidery.modules.advanced.description'),
       }
     ]
   },
   {
     id: 'web-dev',
-    title: 'Web Development Fundamentals',
-    subtitle: 'HTML, CSS & JavaScript Essentials',
-    description: 'Begin your journey into web development with this comprehensive introduction to the core technologies that power the modern web.',
+    title: t('courses.webDev.title'),
+    subtitle: t('courses.webDev.subtitle'),
+    description: t('courses.webDev.description'),
     duration: '10 weeks',
     startDate: 'April 1, 2024',
     students: 456,
     price: 3200,
     image: 'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=crop&q=80&w=1000',
     instructor: {
-      name: 'Alex Rivera',
-      role: 'Senior Web Developer',
+      name: t('courses.webDev.instructor.name'),
+      role: t('courses.webDev.instructor.role'),
       image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=400',
-      bio: 'A passionate educator with 10+ years of industry experience, Alex specializes in making complex concepts accessible to beginners.'
+      bio: t('courses.webDev.instructor.bio'),
     },
     modules: [
       {
-        title: 'HTML5 Fundamentals',
-        description: 'Learn the building blocks of web pages and proper semantic markup.'
+        title: t('courses.webDev.modules.html.title'),
+        description: t('courses.webDev.modules.html.description'),
       },
       {
-        title: 'CSS Styling & Layout',
-        description: 'Master modern CSS techniques for creating beautiful, responsive designs.'
+        title: t('courses.webDev.modules.css.title'),
+        description: t('courses.webDev.modules.css.description'),
       },
       {
-        title: 'JavaScript Basics',
-        description: 'Introduction to programming concepts and interactive web development.'
+        title: t('courses.webDev.modules.javascript.title'),
+        description: t('courses.webDev.modules.javascript.description'),
       },
       {
-        title: 'Building Real Projects',
-        description: 'Apply your skills by building practical, real-world websites.'
+        title: t('courses.webDev.modules.projects.title'),
+        description: t('courses.webDev.modules.projects.description'),
       }
     ]
   }
@@ -104,20 +104,20 @@ interface FAQItem {
 
 const faqs: FAQItem[] = [
   {
-    question: 'Do I need any prior experience?',
-    answer: 'No prior experience is needed for either course. Our programs are designed to take you from beginner to confident practitioner.'
+    question: t('faqs.experience.question'),
+    answer: t('faqs.experience.answer'),
   },
   {
-    question: 'What materials do I need?',
-    answer: 'For the embroidery course, we provide a starter kit with all necessary materials. For web development, you\'ll need a computer with internet access.'
+    question: t('faqs.materials.question'),
+    answer: t('faqs.materials.answer'),
   },
   {
-    question: 'Are the courses self-paced?',
-    answer: 'While you can review materials at your own pace, we follow a weekly structure to ensure you stay on track and can interact with fellow students.'
+    question: t('faqs.pace.question'),
+    answer: t('faqs.pace.answer'),
   },
   {
-    question: 'Is there a certificate upon completion?',
-    answer: 'Yes, both courses provide a certificate of completion once you\'ve finished all required modules and projects.'
+    question: t('faqs.certificate.question'),
+    answer: t('faqs.certificate.answer'),
   }
 ];
 
