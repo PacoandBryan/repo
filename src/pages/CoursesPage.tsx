@@ -24,107 +24,106 @@ interface Course {
   }[];
 }
 
-const courses: Course[] = [
-  {
-    id: 'embroidery',
-    title: t('courses.embroidery.title'),
-    subtitle: t('courses.embroidery.subtitle'),
-    description: t('courses.embroidery.description'),
-    duration: '8 weeks',
-    startDate: 'March 15, 2024',
-    students: 234,
-    price: 2800,
-    image: 'https://images.unsplash.com/photo-1590927793796-c6cc0c97e7b4?auto=format&fit=crop&q=80&w=1000',
-    instructor: {
-      name: t('courses.embroidery.instructor.name'),
-      role: t('courses.embroidery.instructor.role'),
-      image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=400',
-      bio: t('courses.embroidery.instructor.bio'),
-    },
-    modules: [
-      {
-        title: t('courses.embroidery.modules.foundations.title'),
-        description: t('courses.embroidery.modules.foundations.description'),
-      },
-      {
-        title: t('courses.embroidery.modules.traditional.title'),
-        description: t('courses.embroidery.modules.traditional.description'),
-      },
-      {
-        title: t('courses.embroidery.modules.color.title'),
-        description: t('courses.embroidery.modules.color.description'),
-      },
-      {
-        title: t('courses.embroidery.modules.advanced.title'),
-        description: t('courses.embroidery.modules.advanced.description'),
-      }
-    ]
-  },
-  {
-    id: 'web-dev',
-    title: t('courses.webDev.title'),
-    subtitle: t('courses.webDev.subtitle'),
-    description: t('courses.webDev.description'),
-    duration: '10 weeks',
-    startDate: 'April 1, 2024',
-    students: 456,
-    price: 3200,
-    image: 'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=crop&q=80&w=1000',
-    instructor: {
-      name: t('courses.webDev.instructor.name'),
-      role: t('courses.webDev.instructor.role'),
-      image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=400',
-      bio: t('courses.webDev.instructor.bio'),
-    },
-    modules: [
-      {
-        title: t('courses.webDev.modules.html.title'),
-        description: t('courses.webDev.modules.html.description'),
-      },
-      {
-        title: t('courses.webDev.modules.css.title'),
-        description: t('courses.webDev.modules.css.description'),
-      },
-      {
-        title: t('courses.webDev.modules.javascript.title'),
-        description: t('courses.webDev.modules.javascript.description'),
-      },
-      {
-        title: t('courses.webDev.modules.projects.title'),
-        description: t('courses.webDev.modules.projects.description'),
-      }
-    ]
-  }
-];
-
-interface FAQItem {
-  question: string;
-  answer: string;
-}
-
-const faqs: FAQItem[] = [
-  {
-    question: t('faqs.experience.question'),
-    answer: t('faqs.experience.answer'),
-  },
-  {
-    question: t('faqs.materials.question'),
-    answer: t('faqs.materials.answer'),
-  },
-  {
-    question: t('faqs.pace.question'),
-    answer: t('faqs.pace.answer'),
-  },
-  {
-    question: t('faqs.certificate.question'),
-    answer: t('faqs.certificate.answer'),
-  }
-];
-
 export default function CoursesPage() {
   const { t } = useTranslation();
   const [selectedCourse, setSelectedCourse] = useState<string>('embroidery');
   const [expandedFAQs, setExpandedFAQs] = useState<string[]>([]);
+  const courses: Course[] = [
+    {
+      id: 'embroidery',
+      title: t('courses.embroidery.title'),
+      subtitle: t('courses.embroidery.subtitle'),
+      description: t('courses.embroidery.description'),
+      duration: '8 weeks',
+      startDate: 'March 15, 2024',
+      students: 234,
+      price: 2800,
+      image: 'https://images.unsplash.com/photo-1590927793796-c6cc0c97e7b4?auto=format&fit=crop&q=80&w=1000',
+      instructor: {
+        name: t('courses.embroidery.instructor.name'),
+        role: t('courses.embroidery.instructor.role'),
+        image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=400',
+        bio: t('courses.embroidery.instructor.bio'),
+      },
+      modules: [
+        {
+          title: t('courses.embroidery.modules.foundations.title'),
+          description: t('courses.embroidery.modules.foundations.description'),
+        },
+        {
+          title: t('courses.embroidery.modules.traditional.title'),
+          description: t('courses.embroidery.modules.traditional.description'),
+        },
+        {
+          title: t('courses.embroidery.modules.color.title'),
+          description: t('courses.embroidery.modules.color.description'),
+        },
+        {
+          title: t('courses.embroidery.modules.advanced.title'),
+          description: t('courses.embroidery.modules.advanced.description'),
+        }
+      ]
+    },
+    {
+      id: 'web-dev',
+      title: t('courses.webDev.title'),
+      subtitle: t('courses.webDev.subtitle'),
+      description: t('courses.webDev.description'),
+      duration: '10 weeks',
+      startDate: 'April 1, 2024',
+      students: 456,
+      price: 3200,
+      image: 'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=crop&q=80&w=1000',
+      instructor: {
+        name: t('courses.webDev.instructor.name'),
+        role: t('courses.webDev.instructor.role'),
+        image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=400',
+        bio: t('courses.webDev.instructor.bio'),
+      },
+      modules: [
+        {
+          title: t('courses.webDev.modules.html.title'),
+          description: t('courses.webDev.modules.html.description'),
+        },
+        {
+          title: t('courses.webDev.modules.css.title'),
+          description: t('courses.webDev.modules.css.description'),
+        },
+        {
+          title: t('courses.webDev.modules.javascript.title'),
+          description: t('courses.webDev.modules.javascript.description'),
+        },
+        {
+          title: t('courses.webDev.modules.projects.title'),
+          description: t('courses.webDev.modules.projects.description'),
+        }
+      ]
+    }
+  ];
+  
+  interface FAQItem {
+    question: string;
+    answer: string;
+  }
+  
+  const faqs: FAQItem[] = [
+    {
+      question: t('faqs.experience.question'),
+      answer: t('faqs.experience.answer'),
+    },
+    {
+      question: t('faqs.materials.question'),
+      answer: t('faqs.materials.answer'),
+    },
+    {
+      question: t('faqs.pace.question'),
+      answer: t('faqs.pace.answer'),
+    },
+    {
+      question: t('faqs.certificate.question'),
+      answer: t('faqs.certificate.answer'),
+    }
+  ];
 
   const toggleFAQ = (question: string) => {
     setExpandedFAQs(prev =>
