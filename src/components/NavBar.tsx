@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Heart, ShoppingBag, Menu, Search, X, Globe, ChevronDown, ChevronRight, Home, Mail } from 'lucide-react';
+import { Menu, Search, X, Globe, ChevronDown, ChevronRight, Home, Mail } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import Logo from './Logo';
 
@@ -277,12 +277,6 @@ export default function NavBar() {
                 ) : (
                   <Search className="w-[18px] h-[18px] sm:w-5 sm:h-5" />
                 )}
-              </button>
-              <button className="text-primary/80 hover:text-primary">
-                <Heart className="w-[18px] h-[18px] sm:w-5 sm:h-5" />
-              </button>
-              <button className="text-primary/80 hover:text-primary">
-                <ShoppingBag className="w-[18px] h-[18px] sm:w-5 sm:h-5" />
               </button>
               <button 
                 className="text-primary/80 hover:text-primary"
