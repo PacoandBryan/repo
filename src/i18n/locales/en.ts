@@ -49,72 +49,104 @@ export default {
     commitment: 'Our commitment is to support artisanal communities while bringing these unique works of art to modern homes that appreciate authenticity and craftsmanship.',
     cta: 'Meet our artisans →'
   },
-  testimonials: {
-    title: 'What People Say About Us',
-    subtitle: 'Discover why our customers love their handcrafted pieces and the stories behind each creation.',
-    people: {
-      maria: {
-        name: 'María González',
-        location: 'Ciudad de México',
-        text: 'The attention to detail in my embroidered bag is incredible. Each stitch tells a story, and I love supporting local artisans.'
-      },
-      isabella: {
-        name: 'Isabella Martínez',
-        location: 'Guadalajara',
-        text: 'Not just a bag, but a piece of art. The quality is exceptional, and I receive compliments everywhere I go.'
-      },
-      sofia: {
-        name: 'Sofia Rodriguez',
-        location: 'Oaxaca',
-        text: 'Beautiful craftsmanship that honors our traditions. The personal touch makes each piece special.'
-      }
-    }
-  },
-  faq: {
-    title: 'Frequently Asked Questions',
-    subtitle: 'Find answers to common questions about our products and services.',
-    searchPlaceholder: 'Search questions...',
-    noResults: 'No questions found matching your search.',
-    clearSearch: 'Clear search',
-    categories: {
-      'Product Information': 'Product Information',
-      'Care Instructions': 'Care Instructions',
-      'Orders & Shipping': 'Orders & Shipping',
-      'Custom Orders': 'Custom Orders'
+  catalog: {
+    title: 'Catalog',
+    search: 'Search products...',
+    filters: 'Filters',
+    sortBy: {
+      newest: 'Newest',
+      priceLowHigh: 'Price: Low to High',
+      priceHighLow: 'Price: High to Low'
     },
-    questions: {
-      materials: {
-        question: 'What is the fabric made of?',
-        answer: 'Almost all fabrics are half cotton and half polyester.'
-      },
-      waterproof: {
-        question: 'Are your products waterproof?',
-        answer: 'While our bags are made with durable materials, they are not fully waterproof. We recommend avoiding exposure to heavy rain to protect the embroidery.'
-      },
-      care: {
-        question: 'How should I care for my embroidered bag?',
-        answer: 'Hand wash in cold water with mild soap. Lay flat to dry and avoid direct sunlight to preserve the vibrant colors of the embroidery.'
-      },
-      shipping: {
-        question: 'How long does shipping take?',
-        answer: 'Domestic shipping within Mexico takes 2-3 business days. International shipping typically takes 7-14 business days.'
-      },
-      returns: {
-        question: 'What is your return policy?',
-        answer: 'We accept returns within 14 days of delivery. Items must be unused and in original condition with tags attached.'
-      },
-      custom: {
-        question: 'Can I request custom embroidery designs?',
-        answer: 'Yes! We work with our artisans to create custom designs. Please contact us for custom orders with a minimum 4-week lead time.'
+    filterCategories: {
+      productType: 'Product Type',
+      region: 'Region',
+      technique: 'Technique',
+      priceRange: 'Price Range'
+    },
+    clearAll: 'Clear all',
+    loadMore: 'Load More Products',
+    quickView: 'Quick View',
+    addToWishlist: 'Add to Wishlist',
+    addToCart: 'Add to Cart',
+    artisanStory: 'Artisan Story',
+    details: 'Details',
+    applyFilters: 'Apply Filters',
+    by: 'By',
+    from: 'from'
+  },
+  purses: {
+    hero: {
+      title: 'Embrace Elegance, Embrace Tradition',
+      subtitle: 'Discover our collection of handcrafted purses, where every stitch is a whisper of Mexico City\'s vibrant heritage.',
+      cta: 'Explore the Collection'
+    },
+    whyChoose: {
+      title: 'Why Choose Our Handcrafted Purses?',
+      subtitle: 'Each piece tells a unique story of Mexican craftsmanship, combining traditional techniques with contemporary design.',
+      features: {
+        sustainable: {
+          title: 'Sustainable Materials',
+          description: 'We use eco-friendly materials and support sustainable practices in our production process, ensuring minimal environmental impact.'
+        },
+        handcrafted: {
+          title: 'Handcrafted Excellence',
+          description: 'Each purse is meticulously crafted by skilled artisans, ensuring superior quality and attention to detail that mass-produced items cannot match.'
+        },
+        community: {
+          title: 'Community Impact',
+          description: 'Your purchase directly supports Mexican artisans and their families, helping preserve traditional craftsmanship for future generations.'
+        }
       }
+    },
+    artisans: {
+      title: 'Meet Our Artisans',
+      subtitle: 'The skilled hands behind our beautiful creations'
+    },
+    testimonials: {
+      title: 'What Our Customers Say',
+      review: 'The attention to detail in my embroidered bag is incredible. Each stitch tells a story, and I love supporting local artisans.'
+    },
+    quickView: {
+      addToCart: 'Add to Cart',
+      addToWishlist: 'Add to Wishlist'
     }
   },
-  newsletter: {
-    title: 'Join Our Community',
-    subtitle: 'Subscribe to receive updates about new collections, artisan stories, and exclusive offers.',
-    emailPlaceholder: 'Enter your email',
-    subscribeButton: 'Subscribe',
-    successMessage: 'Thank you for subscribing! We\'ll be in touch soon.',
-    disclaimer: 'By subscribing, you agree to receive marketing communications from us. You can unsubscribe at any time.'
+  contact: {
+    title: "Let's Stay Connected",
+    subtitle: "We'd love to hear from you and help bring your vision to life",
+    form: {
+      title: "Send Us a Message",
+      firstName: "First Name",
+      firstNamePlaceholder: "Your First Name",
+      lastName: "Last Name",
+      lastNamePlaceholder: "Your Last Name",
+      email: "Email",
+      emailPlaceholder: "Your Best Contact Email",
+      message: "Message",
+      messagePlaceholder: "Let us know how we can help!",
+      submit: "Send Message",
+      sending: "Sending..."
+    },
+    info: {
+      title: "Where to Find Us",
+      address: {
+        title: "Visit Our Studio"
+      },
+      phone: {
+        title: "Call Us Anytime"
+      },
+      email: {
+        title: "Email Us"
+      },
+      hours: {
+        title: "Business Hours",
+        weekdays: "Monday - Friday, 08:00 AM - 05:00 PM"
+      }
+    },
+    social: {
+      title: "Connect With Us",
+      subtitle: "Follow us on social media for updates & inspiration!"
+    }
   }
 }

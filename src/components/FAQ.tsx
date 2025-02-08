@@ -1,47 +1,45 @@
 import React, { useState } from 'react';
 import { Search, X, ChevronDown } from 'lucide-react';
-import { useTranslation } from 'react-i18next';
+
+const faqCategories = {
+  "Product Information": [
+    {
+      question: "What is the fabric made of?",
+      answer: "Almost all fabrics are half cotton and half polyester."
+    },
+    {
+      question: "Are your products waterproof?",
+      answer: "While our bags are made with durable materials, they are not fully waterproof. We recommend avoiding exposure to heavy rain to protect the embroidery."
+    }
+  ],
+  "Care Instructions": [
+    {
+      question: "How should I care for my embroidered bag?",
+      answer: "Hand wash in cold water with mild soap. Lay flat to dry and avoid direct sunlight to preserve the vibrant colors of the embroidery."
+    }
+  ],
+  "Orders & Shipping": [
+    {
+      question: "How long does shipping take?",
+      answer: "Domestic shipping within Mexico takes 2-3 business days. International shipping typically takes 7-14 business days."
+    },
+    {
+      question: "What is your return policy?",
+      answer: "We accept returns within 14 days of delivery. Items must be unused and in original condition with tags attached."
+    }
+  ],
+  "Custom Orders": [
+    {
+      question: "Can I request custom embroidery designs?",
+      answer: "Yes! We work with our artisans to create custom designs. Please contact us for custom orders with a minimum 4-week lead time."
+    }
+  ]
+};
 
 export default function FAQ() {
   const [searchQuery, setSearchQuery] = useState('');
   const [openCategory, setOpenCategory] = useState<string | null>(null);
-  const { t } = useTranslation();
   
-  const faqCategories = {
-    "Product Information": [
-      {
-        question: t('faq.questions.materials.question'),
-        answer: t('faq.questions.materials.answer')
-      },
-      {
-        question: t('faq.questions.waterproof.question'),
-        answer: t('faq.questions.waterproof.answer')
-      }
-    ],
-    "Care Instructions": [
-      {
-        question: t('faq.questions.care.question'),
-        answer: t('faq.questions.care.answer')
-      }
-    ],
-    "Orders & Shipping": [
-      {
-        question: t('faq.questions.shipping.question'),
-        answer: t('faq.questions.shipping.answer')
-      },
-      {
-        question: t('faq.questions.returns.question'),
-        answer: t('faq.questions.returns.answer')
-      }
-    ],
-    "Custom Orders": [
-      {
-        question: t('faq.questions.custom.question'),
-        answer: t('faq.questions.custom.answer')
-      }
-    ]
-  };
-
   const filteredCategories = Object.entries(faqCategories).reduce((acc, [category, questions]) => {
     const filteredQuestions = questions.filter(faq => 
       faq.question.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -58,10 +56,10 @@ export default function FAQ() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center">
           <h2 className="text-3xl font-serif tracking-tight text-primary sm:text-4xl">
-            {t('faq.title')}
+            Frequently Asked Questions
           </h2>
           <p className="mt-4 text-lg text-primary/80">
-            {t('faq.subtitle')}
+            Find answers to common questions about our products and services.
           </p>
         </div>
 
@@ -70,7 +68,7 @@ export default function FAQ() {
             <div className="relative w-full max-w-2xl">
               <input
                 type="text"
-                placeholder={t('faq.searchPlaceholder')}
+                placeholder="Search questions..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full pl-4 pr-12 py-3 text-sm rounded-full bg-[#fcdce4]/30 border-2 border-[#fcc4d4]/30 placeholder-primary/50 text-primary focus:outline-none focus:border-[#fcc4d4]/50 focus:bg-[#fcdce4]/40 transition-all duration-300"
@@ -98,7 +96,7 @@ export default function FAQ() {
                   onClick={() => setOpenCategory(openCategory === category ? null : category)}
                   className="w-full flex items-center justify-between p-4 bg-white/70 backdrop-blur-sm rounded-lg shadow-sm hover:shadow-md transition-all duration-200"
                 >
-                  <h3 className="text-lg font-medium text-primary">{t(`faq.categories.${category}`)}</h3>
+                  <h3 className="text-lg font-medium text-primary">{category}</h3>
                   <ChevronDown
                     size={20}
                     className={`text-primary/60 transition-transform duration-300 ${
@@ -130,13 +128,13 @@ export default function FAQ() {
           ) : (
             <div className="text-center py-12">
               <p className="text-primary/80">
-                {t('faq.noResults')}
+                No questions found matching your search.
               </p>
               <button
                 onClick={() => setSearchQuery('')}
                 className="mt-4 text-primary hover:text-primary/80 transition-colors duration-200"
               >
-                {t('faq.clearSearch')}
+                Clear search
               </button>
             </div>
           )}
