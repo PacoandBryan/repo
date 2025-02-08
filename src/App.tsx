@@ -32,6 +32,11 @@ function App() {
         <NavBar />
         <Routes>
           <Route path="/" element={<HomePage />} />
+          <Route path="/catalog" element={<CatalogPage />} />
+          <Route path="/purses" element={<PursesPage />} />
+          <Route path="/sweet-table" element={<SweetTablePage />} />
+          <Route path="/courses" element={<CoursesPage />} />
+          <Route path="/contact" element={<ContactPage />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
         <Footer />
