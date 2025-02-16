@@ -9,6 +9,8 @@ import CoursesPage from './pages/CoursesPage';
 import ContactPage from './pages/ContactPage';
 import Footer from './components/Footer';
 import LoadingScreen from './components/LoadingScreen';
+import StitchedTeddiesPage from './pages/StitchedTeddiesPage';
+import SweetsPage from './pages/SweetsPage';
 
 function App() {
   const [isLoading, setIsLoading] = useState(true);
@@ -35,8 +37,10 @@ function App() {
           <Route path="/catalog" element={<CatalogPage />} />
           <Route path="/purses" element={<PursesPage />} />
           <Route path="/sweet-table" element={<SweetTablePage />} />
+          <Route path="/sweets" element={<SweetsPage />} />
           <Route path="/courses" element={<CoursesPage />} />
           <Route path="/contact" element={<ContactPage />} />
+          <Route path="/stitched-teddies" element={<StitchedTeddiesPage />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
         <Footer />

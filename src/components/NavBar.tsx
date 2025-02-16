@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Heart, ShoppingBag, Menu, Search, X, Globe, ChevronDown, ChevronRight, Home, Mail } from 'lucide-react';
+import { Menu, Search, X, Globe, ChevronDown, ChevronRight, Home, Mail } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import Logo from './Logo';
 
@@ -21,8 +21,12 @@ export default function NavBar() {
   const [isLangDropdownOpen, setIsLangDropdownOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [expandedMobileItems, setExpandedMobileItems] = useState<string[]>([]);
+  const [isHoveringButton, setIsHoveringButton] = useState(false);
+  const [isHoveringContent, setIsHoveringContent] = useState(false);
   const { t, i18n } = useTranslation();
   const langDropdownRef = useRef<HTMLDivElement>(null);
+  const closeTimeoutRef = useRef<NodeJS.Timeout>();
+  const navRef = useRef<HTMLDivElement>(null);
   const dropdownTimeoutRef = useRef<NodeJS.Timeout>();
   const sidebarRef = useRef<HTMLDivElement>(null);
   const location = useLocation();
@@ -37,48 +41,30 @@ export default function NavBar() {
     {
       label: t('nav.courses'),
       href: '/courses',
-      children: [
-        {
-          label: t('nav.beginnerCourses'),
-          href: '/courses/beginner',
-          description: t('nav.beginnerCoursesDesc')
-        },
-        {
-          label: t('nav.advancedCourses'),
-          href: '/courses/advanced',
-          description: t('nav.advancedCoursesDesc')
-        }
-      ]
     },
     {
-      label: t('nav.sweetTable'),
-      href: '/sweet-table',
+      label: t('nav.products'),
+      href: '#',
       children: [
         {
-          label: t('nav.tablecloths'),
-          href: '/sweet-table/tablecloths'
+          label: t('nav.sweets'),
+          href: '/sweets',
+          description: t('nav.sweetsDesc')
         },
         {
-          label: t('nav.napkins'),
-          href: '/sweet-table/napkins'
-        }
-      ]
-    },
-    {
-      label: t('nav.purses'),
-      href: '/purses',
-      children: [
-        {
-          label: t('nav.crossbody'),
-          href: '/purses/crossbody'
+          label: t('nav.sweetTable'),
+          href: '/sweet-table',
+          description: t('nav.sweetTableDesc')
         },
         {
-          label: t('nav.clutches'),
-          href: '/purses/clutches'
+          label: t('nav.stitchedTeddies'),
+          href: '/stitched-teddies',
+          description: t('nav.stitchedTeddiesDesc')
         },
         {
-          label: t('nav.totes'),
-          href: '/purses/totes'
+          label: t('nav.purses'),
+          href: '/purses',
+          description: t('nav.pursesDesc')
         }
       ]
     },
@@ -91,6 +77,26 @@ export default function NavBar() {
       href: '/contact'
     }
   ];
+
+  useEffect(() => {
+    const handleGlobalMouseMove = (e: MouseEvent) => {
+      if (navRef.current && !navRef.current.contains(e.target as Node)) {
+        setIsHoveringButton(false);
+        setIsHoveringContent(false);
+        if (activeDropdown) {
+          setActiveDropdown(null);
+        }
+      }
+    };
+
+    document.addEventListener('mousemove', handleGlobalMouseMove);
+    return () => {
+      document.removeEventListener('mousemove', handleGlobalMouseMove);
+      if (closeTimeoutRef.current) {
+        clearTimeout(closeTimeoutRef.current);
+      }
+    };
+  }, [activeDropdown]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -127,25 +133,73 @@ export default function NavBar() {
     };
   }, [isMenuOpen]);
 
+  useEffect(() => {
+    return () => {
+      if (closeTimeoutRef.current) {
+        clearTimeout(closeTimeoutRef.current);
+      }
+    };
+  }, []);
+
   const handleLanguageChange = (langCode: string) => {
     i18n.changeLanguage(langCode);
     setIsLangDropdownOpen(false);
   };
 
   const handleDropdownEnter = (label: string) => {
-    if (dropdownTimeoutRef.current) {
-      clearTimeout(dropdownTimeoutRef.current);
+    if (window.innerWidth >= 768) {
+      if (closeTimeoutRef.current) {
+        clearTimeout(closeTimeoutRef.current);
+      }
+      setIsHoveringButton(true);
+      setActiveDropdown(label);
     }
-    setActiveDropdown(label);
   };
 
   const handleDropdownLeave = () => {
-    dropdownTimeoutRef.current = setTimeout(() => {
-      setActiveDropdown(null);
-    }, 150);
+    if (window.innerWidth >= 768) {
+      setIsHoveringButton(false);
+      closeTimeoutRef.current = setTimeout(() => {
+        if (!isHoveringContent && !isHoveringButton) {
+          setActiveDropdown(null);
+        }
+      }, 100);
+    }
   };
 
-  const toggleMobileItem = (label: string) => {
+  const handleContentEnter = () => {
+    if (window.innerWidth >= 768) {
+      if (closeTimeoutRef.current) {
+        clearTimeout(closeTimeoutRef.current);
+      }
+      setIsHoveringContent(true);
+    }
+  };
+
+  const handleContentLeave = () => {
+    if (window.innerWidth >= 768) {
+      setIsHoveringContent(false);
+      closeTimeoutRef.current = setTimeout(() => {
+        if (!isHoveringContent && !isHoveringButton) {
+          setActiveDropdown(null);
+        }
+      }, 100);
+    }
+  };
+
+  const handleDropdownClick = (label: string) => {
+    if (window.innerWidth >= 768) {
+      if (activeDropdown === label) {
+        setActiveDropdown(null);
+        setIsHoveringButton(false);
+        setIsHoveringContent(false);
+      } else {
+        setActiveDropdown(label);
+      }
+    }
+  };
+
+  const toggleMobileDropdown = (label: string) => {
     setExpandedMobileItems(prev => 
       prev.includes(label) 
         ? prev.filter(item => item !== label)
@@ -153,11 +207,26 @@ export default function NavBar() {
     );
   };
 
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      navigate(`/catalog?search=${encodeURIComponent(searchQuery.trim())}`);
+      setIsSearchOpen(false);
+      setSearchQuery('');
+    }
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      handleSearch(e);
+    }
+  };
+
   return (
     <>
       <nav className="bg-white/80 backdrop-blur-md fixed w-full z-50 border-b border-primary/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16 items-center">
+          <div className="flex justify-between h-16 items-center" ref={navRef}>
             <div className="flex-shrink-0">
               <Link
                 to="/"
@@ -182,33 +251,50 @@ export default function NavBar() {
                   onMouseEnter={() => handleDropdownEnter(item.label)}
                   onMouseLeave={handleDropdownLeave}
                 >
-                  <Link
-                    to={item.href}
-                    className="flex items-center px-3 py-2 text-sm lg:text-base text-primary/80 hover:text-primary transition-colors duration-300"
-                  >
-                    {item.label === t('nav.contact') && <Mail className="w-4 h-4 mr-1" />}
-                    {item.label}
-                    {item.children && (
-                      <ChevronDown className="ml-1 w-4 h-4" />
-                    )}
-                  </Link>
-                  
+                  {item.children ? (
+                    <button
+                      className="flex items-center space-x-1 px-2 py-1 text-gray-700 hover:text-gray-900"
+                      onClick={() => handleDropdownClick(item.label)}
+                    >
+                      <span>{item.label}</span>
+                      <ChevronDown className="h-4 w-4" />
+                    </button>
+                  ) : (
+                    <Link
+                      to={item.href}
+                      className="px-2 py-1 text-gray-700 hover:text-gray-900"
+                    >
+                      {item.label}
+                    </Link>
+                  )}
+
                   {item.children && activeDropdown === item.label && (
-                    <div className="absolute left-0 mt-2 w-64 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
-                      <div className="py-1" role="menu" aria-orientation="vertical">
+                    <div 
+                      className="absolute left-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5"
+                      onMouseEnter={handleContentEnter}
+                      onMouseLeave={handleContentLeave}
+                    >
+                      <div 
+                        className="py-1" 
+                        role="menu"
+                        onMouseEnter={handleContentEnter}
+                        onMouseLeave={handleContentLeave}
+                      >
                         {item.children.map((child) => (
                           <Link
                             key={child.label}
                             to={child.href}
-                            className="group flex flex-col px-4 py-2 text-sm text-primary/80 hover:bg-[#fcdce4]/20 hover:text-primary transition-colors duration-300"
+                            className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                             role="menuitem"
+                            onMouseEnter={handleContentEnter}
+                            onMouseLeave={handleContentLeave}
                           >
-                            <span className="font-medium">{child.label}</span>
-                            {child.description && (
-                              <span className="mt-1 text-xs text-primary/60 group-hover:text-primary/80">
-                                {child.description}
-                              </span>
-                            )}
+                            <div>
+                              <p className="font-medium">{child.label}</p>
+                              {child.description && (
+                                <p className="mt-1 text-gray-500">{child.description}</p>
+                              )}
+                            </div>
                           </Link>
                         ))}
                       </div>
@@ -221,16 +307,19 @@ export default function NavBar() {
             <div className="flex items-center space-x-3 sm:space-x-4">
               <div className={`transition-all duration-500 ease-in-out ${isSearchOpen ? 'w-40 sm:w-72' : 'w-0'} overflow-hidden`}>
                 <div className="relative w-full">
-                  <input
-                    type="text"
-                    placeholder={t('nav.search')}
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="input pr-10"
-                  />
-                  <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
-                    <Search size={16} className="text-primary/60" />
-                  </div>
+                  <form onSubmit={handleSearch}>
+                    <input
+                      type="text"
+                      placeholder={t('nav.search')}
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      onKeyPress={handleKeyPress}
+                      className="input pr-10"
+                    />
+                    <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+                      <Search size={16} className="text-primary/60" />
+                    </div>
+                  </form>
                 </div>
               </div>
 
@@ -278,12 +367,9 @@ export default function NavBar() {
                   <Search className="w-[18px] h-[18px] sm:w-5 sm:h-5" />
                 )}
               </button>
-              <button className="text-primary/80 hover:text-primary">
-                <Heart className="w-[18px] h-[18px] sm:w-5 sm:h-5" />
-              </button>
-              <button className="text-primary/80 hover:text-primary">
-                <ShoppingBag className="w-[18px] h-[18px] sm:w-5 sm:h-5" />
-              </button>
+
+              {/* The Heart and ShoppingBag icon buttons have been removed */}
+
               <button 
                 className="text-primary/80 hover:text-primary"
                 onClick={() => setIsMenuOpen(true)}
@@ -326,74 +412,63 @@ export default function NavBar() {
           <div className="flex-1 overflow-y-auto">
             {/* Search bar */}
             <div className="p-4">
-              <div className="relative">
-                <input
-                  type="text"
-                  placeholder={t('nav.search')}
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="input pr-10"
-                />
-                <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
-                  <Search size={16} className="text-primary/60" />
+              <form onSubmit={handleSearch}>
+                <div className="relative">
+                  <input
+                    type="text"
+                    placeholder={t('nav.search')}
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    onKeyPress={handleKeyPress}
+                    className="input pr-10"
+                  />
+                  <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+                    <Search size={16} className="text-primary/60" />
+                  </div>
                 </div>
-              </div>
+              </form>
             </div>
 
             {/* Navigation */}
-            <div className="px-2 py-2 space-y-1">
-              <div className="border-b border-primary/5">
-                <Link
-                  to="/"
-                  onClick={() => setIsMenuOpen(false)}
-                  className="flex items-center px-4 py-3 text-primary/80 hover:text-primary text-sm font-medium transition-colors duration-200"
-                >
-                  <Home className="w-4 h-4 mr-2" />
-                  Home
-                </Link>
-              </div>
+            <div className="py-6 px-4 space-y-4">
               {navItems.map((item) => (
-                <div key={item.label} className="border-b border-primary/5 last:border-b-0">
-                  <div className="flex items-center justify-between">
-                    <Link
-                      to={item.href}
-                      onClick={() => setIsMenuOpen(false)}
-                      className="flex-1 px-4 py-3 text-primary/80 hover:text-primary text-sm font-medium transition-colors duration-200"
-                    >
-                      {item.label === t('nav.contact') && <Mail className="w-4 h-4 mr-2 inline" />}
-                      {item.label}
-                    </Link>
-                    {item.children && (
+                <div key={item.label}>
+                  {item.children ? (
+                    <div>
                       <button
-                        onClick={() => toggleMobileItem(item.label)}
-                        className="px-4 py-3 text-primary/60 hover:text-primary transition-colors duration-200"
+                        className="flex items-center justify-between w-full text-gray-700 hover:text-gray-900"
+                        onClick={() => toggleMobileDropdown(item.label)}
                       >
+                        <span>{item.label}</span>
                         <ChevronRight
-                          className={`w-5 h-5 transform transition-transform duration-200 ${
+                          className={`h-4 w-4 transform transition-transform ${
                             expandedMobileItems.includes(item.label) ? 'rotate-90' : ''
                           }`}
                         />
                       </button>
-                    )}
-                  </div>
-                  {item.children && expandedMobileItems.includes(item.label) && (
-                    <div className="pl-4 pb-2 space-y-1 bg-[#fcdce4]/5">
-                      {item.children.map((child) => (
-                        <Link
-                          key={child.label}
-                          to={child.href}
-                          onClick={() => setIsMenuOpen(false)}
-                          className="block px-4 py-2 text-primary/60 hover:text-primary text-sm transition-colors duration-200"
-                        >
-                          {child.label}
-                          {child.description && (
-                            <p className="mt-1 text-xs text-primary/40">
-                              {child.description}
-                            </p>
-                          )}
-                        </Link>
-                      ))}
+                      {expandedMobileItems.includes(item.label) && (
+                        <div className="mt-2 ml-4 space-y-2">
+                          {item.children.map((child) => (
+                            <Link
+                              key={child.label}
+                              to={child.href}
+                              className="block py-2 text-sm text-gray-600 hover:text-gray-900"
+                              onClick={() => setIsMenuOpen(false)}
+                            >
+                              {child.label}
+                            </Link>
+                          ))}
+                        </div>
+                      )}
                     </div>
+                  ) : (
+                    <Link
+                      to={item.href}
+                      className="block text-gray-700 hover:text-gray-900"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      {item.label}
+                    </Link>
                   )}
                 </div>
               ))}

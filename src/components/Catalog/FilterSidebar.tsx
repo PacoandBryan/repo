@@ -11,31 +11,10 @@ interface FilterSidebarProps {
 
 const filterCategories = {
   'productType': [
-    'Purses',
-    'Clutches',
-    'Table Linens',
-    'Napkins',
-    'Accessories'
+    'Bolso',
+    "Peluche",
+    "Postres",
   ],
-  'region': [
-    'Oaxaca',
-    'Chiapas',
-    'Puebla',
-    'Yucatán',
-    'Guerrero'
-  ],
-  'technique': [
-    'Floral Embroidery',
-    'Geometric Patterns',
-    'Traditional Motifs',
-    'Contemporary Designs'
-  ],
-  'priceRange': [
-    'Under $1,000',
-    '$1,000 - $2,000',
-    '$2,000 - $3,000',
-    'Over $3,000'
-  ]
 };
 
 export default function FilterSidebar({

@@ -1,41 +1,62 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Eye } from 'lucide-react';
+import QuickViewModal from './Catalog/QuickViewModal';
+import { Product } from './Catalog/types';;
+import purse1 from '../../assets/purse1.jpg';
+import purse2 from '../../assets/purse2.jpg';
+import purse2V2 from '../../assets/purse2-V2.jpg';
+import purse3 from '../../assets/purse3.jpg';
 
 const products = [
   {
     id: 1,
-    name: 'Pink Floral Bag',
-    price: '$2,800 MXN',
-    image: 'https://images.unsplash.com/photo-1528812969535-4bcefc3926bb?auto=format&fit=crop&q=80&w=800'
+    name: "Bolso azul grande",
+    price: 1950,
+    description: "Bolso de color azul oscuro de tamaño grande",
+    image: purse1,
+    artisan: "María de la Luz",
+    region: "Estado de México",
+    technique: "Floral embroidery",
+    category: "Bolso",
   },
   {
     id: 2,
-    name: 'Embroidered Clutch',
-    price: '$1,950 MXN',
-    image: 'https://images.unsplash.com/photo-1566150905458-1bf1fc113f0d?auto=format&fit=crop&q=80&w=800'
+    name: "Bolso conejo",
+    price: 2800,
+    description: "Bolso de color blanco con detalles y forma de conejo.",
+    image: purse2,
+    additionalImages: [purse2V2],
+    artisan: "María de la Luz",
+    region: "Estado de México",
+    technique: "Geometric weaving",
+    category: "Peluche",
   },
   {
     id: 3,
-    name: 'Messenger Bag',
-    price: '$3,200 MXN',
-    image: 'https://images.unsplash.com/photo-1590874103328-eac38a683ce7?auto=format&fit=crop&q=80&w=800'
+    name: "Bolso blanco y rosa",
+    price: 1200,
+    description: "Hermoso bolso blanco y rosa con detalles tiernos e infantiles",
+    image: purse3,
+    artisan: "María de la Luz",
+    region: "Estado de México",
+    technique: "Traditional embroidery",
+    category: "Bolso",
   }
 ];
 
 export default function FeaturedProducts() {
   const { t } = useTranslation();
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+
+  const handleQuickView = (product: Product) => {
+    setSelectedProduct(product);
+  };
 
   return (
     <div className="bg-secondary/30 py-16 sm:py-24">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center">
-          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-serif tracking-tight text-primary">
-            {t('featured.title')}
-          </h2>
-          <p className="mt-4 text-base lg:text-lg text-primary/80 max-w-2xl mx-auto">
-            {t('featured.subtitle')}
-          </p>
-        </div>
+        {/* ... existing title and subtitle ... */}
 
         <div className="mt-12 sm:mt-16 grid grid-cols-1 gap-y-8 gap-x-6 sm:grid-cols-2 lg:grid-cols-3 xl:gap-x-8">
           {products.map((product) => (
@@ -44,21 +65,32 @@ export default function FeaturedProducts() {
                 <img
                   src={product.image}
                   alt={product.name}
-                  loading="lazy"
-                  decoding="async"
-                  className="w-full h-[250px] sm:h-[300px] lg:h-[400px] object-cover object-center group-hover:opacity-75 transition-opacity duration-300"
+                  className="w-full h-[250px] sm:h-[300px] lg:h-[400px] object-cover object-center transition-opacity duration-300"
                 />
-              </div>
-              <div className="mt-4 flex justify-between items-center">
-                <div>
-                  <h3 className="text-sm sm:text-base text-primary font-medium">{product.name}</h3>
-                  <p className="mt-1 text-sm text-primary/80">{product.price}</p>
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <button
+                    onClick={() => handleQuickView(product)}
+                    className="bg-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                    aria-label={t('catalog.quickView')}
+                  >
+                    <Eye className="w-5 h-5 text-primary" />
+                  </button>
                 </div>
+              </div>
+              <div className="mt-4">
+                <h3 className="text-sm sm:text-base text-primary font-medium">{product.name}</h3>
               </div>
             </div>
           ))}
         </div>
       </div>
+
+      {selectedProduct && (
+        <QuickViewModal
+          product={selectedProduct}
+          onClose={() => setSelectedProduct(null)}
+        />
+      )}
     </div>
   );
 }

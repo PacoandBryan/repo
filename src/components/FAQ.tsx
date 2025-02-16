@@ -1,42 +1,39 @@
 import React, { useState } from 'react';
 import { Search, X, ChevronDown } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
+
+export default function FAQ() {
+  const { t } = useTranslation();
 const faqCategories = {
-  "Product Information": [
+  [t("FAQ.PI.title")]: [
     {
-      question: "What is the fabric made of?",
-      answer: "Almost all fabrics are half cotton and half polyester."
+      question: t("FAQ.PI.Q1"),
+      answer: t("FAQ.PI.A1"),
     },
     {
-      question: "Are your products waterproof?",
-      answer: "While our bags are made with durable materials, they are not fully waterproof. We recommend avoiding exposure to heavy rain to protect the embroidery."
+      question: t("FAQ.PI.Q2"),
+      answer: t("FAQ.PI.A2"),
     }
   ],
-  "Care Instructions": [
+  [t("FAQ.OS.title")]: [
     {
-      question: "How should I care for my embroidered bag?",
-      answer: "Hand wash in cold water with mild soap. Lay flat to dry and avoid direct sunlight to preserve the vibrant colors of the embroidery."
-    }
-  ],
-  "Orders & Shipping": [
-    {
-      question: "How long does shipping take?",
-      answer: "Domestic shipping within Mexico takes 2-3 business days. International shipping typically takes 7-14 business days."
+      question: t("FAQ.OS.Q1"),
+      answer: t("FAQ.OS.A1"), // corrected typo here
     },
     {
-      question: "What is your return policy?",
-      answer: "We accept returns within 14 days of delivery. Items must be unused and in original condition with tags attached."
+      question: t("FAQ.OS.Q2"),
+      answer: t("FAQ.OS.A2"),
     }
   ],
-  "Custom Orders": [
+  [t("FAQ.MT.title")]: [
     {
-      question: "Can I request custom embroidery designs?",
-      answer: "Yes! We work with our artisans to create custom designs. Please contact us for custom orders with a minimum 4-week lead time."
+      question: t("FAQ.MT.Q1"),
+      answer: t("FAQ.MT.A1"),
     }
   ]
 };
 
-export default function FAQ() {
   const [searchQuery, setSearchQuery] = useState('');
   const [openCategory, setOpenCategory] = useState<string | null>(null);
   
@@ -56,10 +53,10 @@ export default function FAQ() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center">
           <h2 className="text-3xl font-serif tracking-tight text-primary sm:text-4xl">
-            Frequently Asked Questions
+            {t("FAQ.title")}
           </h2>
           <p className="mt-4 text-lg text-primary/80">
-            Find answers to common questions about our products and services.
+            {t("FAQ.subtitle")}
           </p>
         </div>
 

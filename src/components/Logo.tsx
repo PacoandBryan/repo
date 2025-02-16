@@ -1,5 +1,5 @@
 import React from 'react';
-import { Flower2 } from 'lucide-react';
+import DikyLogo from "../../Images/Dikylogo.jpg"; // Adjust the import path as needed
 
 interface LogoProps {
   variant?: 'default' | 'light';
@@ -8,6 +8,12 @@ interface LogoProps {
 
 export default function Logo({ variant = 'default', size = 'md' }: LogoProps) {
   const sizeClasses = {
+    sm: 'w-5 h-5',
+    md: 'w-6 h-6',
+    lg: 'w-8 h-8',
+  };
+
+  const textSizeClasses = {
     sm: 'text-xl',
     md: 'text-2xl',
     lg: 'text-3xl',
@@ -20,8 +26,8 @@ export default function Logo({ variant = 'default', size = 'md' }: LogoProps) {
 
   return (
     <div className={`flex items-center space-x-2 ${colorClasses[variant]}`}>
-      <Flower2 className={`${size === 'sm' ? 'w-5 h-5' : size === 'md' ? 'w-6 h-6' : 'w-8 h-8'}`} />
-      <span className={`font-serif ${sizeClasses[size]} tracking-wide`}>
+      <img src={DikyLogo} alt="Diky Logo" className={`${sizeClasses[size]} object-contain`} />
+      <span className={`font-serif ${textSizeClasses[size]} tracking-wide`}>
         diky
       </span>
     </div>

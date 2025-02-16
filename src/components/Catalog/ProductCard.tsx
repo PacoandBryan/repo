@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Eye, Heart } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Product } from './types';
@@ -12,12 +12,25 @@ export default function ProductCard({ product, onQuickView }: ProductCardProps) 
   const { t } = useTranslation();
   const [isHovered, setIsHovered] = useState(false);
   const [isImageLoaded, setIsImageLoaded] = useState(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const images = [product.image, ...(product.additionalImages || [])];
 
-  const formatPrice = (price: number) => {
-    return new Intl.NumberFormat('es-MX', {
-      style: 'currency',
-      currency: 'MXN'
-    }).format(price);
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    if (isHovered && images.length > 1) {
+      interval = setInterval(() => {
+        setCurrentImageIndex((prev) => (prev + 1) % images.length);
+      }, 1000);
+    } else {
+      setCurrentImageIndex(0);
+    }
+    return () => clearInterval(interval);
+  }, [isHovered, images.length]);
+
+  const handleQuickView = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    e.preventDefault();
+    onQuickView();
   };
 
   return (
@@ -29,10 +42,10 @@ export default function ProductCard({ product, onQuickView }: ProductCardProps) 
       onTouchEnd={() => setIsHovered(false)}
     >
       <div className="card overflow-hidden">
-        {/* Image */}
+        {/* Image Container */}
         <div className="relative aspect-square overflow-hidden bg-secondary/10">
           <img
-            src={product.image}
+            src={images[currentImageIndex]}
             alt={product.name}
             className={`w-full h-full object-cover transition-all duration-700 ${
               isHovered ? 'scale-110' : 'scale-100'
@@ -42,45 +55,38 @@ export default function ProductCard({ product, onQuickView }: ProductCardProps) 
             decoding="async"
           />
           
-          {/* Overlay */}
-          <div className={`absolute inset-0 bg-black/40 flex items-center justify-center gap-4 transition-opacity duration-300 ${
-            isHovered ? 'opacity-100' : 'opacity-0 sm:group-hover:opacity-100'
-          }`}>
+          {/* Quick View Button Overlay */}
+          <div 
+            className={`absolute inset-0 bg-black/40 transition-all duration-300 
+              ${isHovered ? 'opacity-100 visible' : 'opacity-0 invisible sm:group-hover:opacity-100 sm:group-hover:visible'}
+              flex items-center justify-center`}
+          >
             <button
-              onClick={(e) => {
-                e.preventDefault();
-                onQuickView();
-              }}
-              className="btn bg-white/90 hover:bg-white text-primary p-2 rounded-full touch-manipulation"
+              onClick={handleQuickView}
+              className="relative z-10 btn bg-white/90 hover:bg-white text-primary p-2 rounded-full 
+                transform transition-all duration-300 hover:scale-110 active:scale-95
+                shadow-lg hover:shadow-xl
+                focus:outline-none focus:ring-2 focus:ring-accent focus:ring-opacity-50"
               aria-label={t('catalog.quickView')}
             >
               <Eye className="w-5 h-5" />
             </button>
-            <button
-              className="btn bg-white/90 hover:bg-white text-primary p-2 rounded-full touch-manipulation"
-              aria-label={t('catalog.addToWishlist')}
-            >
-              <Heart className="w-5 h-5" />
-            </button>
           </div>
+
+          {/* Loading State */}
+          {!isImageLoaded && (
+            <div className="absolute inset-0 bg-secondary/10 animate-pulse" />
+          )}
         </div>
 
         {/* Content */}
         <div className="p-3 sm:p-4">
-          <h3 className="font-serif text-base sm:text-lg text-primary line-clamp-2">
+          <h3 className="font-serif text-base sm:text-lg text-primary line-clamp-2 group-hover:text-accent transition-colors duration-300">
             {product.name}
           </h3>
           <p className="text-xs sm:text-sm text-primary/60 mt-1 line-clamp-1">
-            {t('catalog.by')} {product.artisan} {t('catalog.from')} {product.region}
+            {t('catalog.by')} {product.artisan}
           </p>
-          <p className="mt-2 font-medium text-primary text-sm sm:text-base">
-            {formatPrice(product.price)}
-          </p>
-          <div className="mt-2">
-            <span className="inline-block px-2 py-1 text-xs rounded-full bg-secondary/20 text-primary">
-              {product.technique}
-            </span>
-          </div>
         </div>
       </div>
     </div>

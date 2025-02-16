@@ -10,7 +10,7 @@ export default function Story() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
           <div className="order-2 lg:order-1">
             <img
-              src="https://images.unsplash.com/photo-1604859347436-2e6925be8176?auto=format&fit=crop&q=80&w=1000"
+              src="https://cdn.pixabay.com/photo/2017/11/10/20/18/embroidery-2937593_1280.jpg"
               alt="Artisan working"
               loading="lazy"
               decoding="async"
@@ -32,7 +32,6 @@ export default function Story() {
                 href="#"
                 className="text-accent font-medium hover:opacity-80 transition-opacity duration-300 inline-flex items-center space-x-2"
               >
-                <span>{t('story.cta')}</span>
               </a>
             </div>
           </div>

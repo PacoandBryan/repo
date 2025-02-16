@@ -1,40 +1,42 @@
 import React from 'react';
 import { Star, Quote } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
-const testimonials = [
-  {
-    name: "María González",
-    location: "Ciudad de México",
-    image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=400",
-    text: "The attention to detail in my embroidered bag is incredible. Each stitch tells a story, and I love supporting local artisans.",
-    rating: 5
-  },
-  {
-    name: "Isabella Martínez",
-    location: "Guadalajara",
-    image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&q=80&w=400",
-    text: "Not just a bag, but a piece of art. The quality is exceptional, and I receive compliments everywhere I go.",
-    rating: 5
-  },
-  {
-    name: "Sofia Rodriguez",
-    location: "Oaxaca",
-    image: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=400",
-    text: "Beautiful craftsmanship that honors our traditions. The personal touch makes each piece special.",
-    rating: 5
-  }
-];
 
 export default function Testimonials() {
+  const { t } = useTranslation();
+  const testimonials = [
+    {
+      name: "María Elena Hernández",
+      location: "Pachuca",
+      image: "https://cdn.pixabay.com/photo/2016/11/14/17/39/person-1824144_1280.png",
+      text: t("testimonials.review1"),
+      rating: 5
+    },
+    {
+      name: "Marcelo Alfredo Torres",
+      location: "CDMX",
+      image: "https://cdn.pixabay.com/photo/2016/11/14/17/39/person-1824144_1280.png",
+      text: t("testimonials.review2"),
+      rating: 5
+    },
+    {
+      name: "Luiz Velazquez",
+      location: "Estado de México",
+      image: "https://cdn.pixabay.com/photo/2016/11/14/17/39/person-1824144_1280.png",
+      text: t("testimonials.review3"),
+      rating: 5
+    }
+  ];
   return (
     <div className="bg-gradient-to-b from-[#fdf6f8] to-white py-24">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center">
           <h2 className="text-3xl font-serif tracking-tight text-primary sm:text-4xl">
-            What People Say About Us
+            {t("testimonials.title")}
           </h2>
           <p className="mt-4 text-lg text-primary/80 max-w-2xl mx-auto">
-            Discover why our customers love their handcrafted pieces and the stories behind each creation.
+            {t("testimonials.subtitle")}
           </p>
         </div>
 
