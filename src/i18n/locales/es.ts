@@ -361,50 +361,47 @@ export default {
   },
   stitchedTeddies: {
     hero: {
-      title: 'Ositos Cosidos Artesanales',
-      subtitle: 'Descubre nuestra colección de ositos de peluche hechos a mano, cada uno contando su propia historia única a través del arte tradicional mexicano.',
+      title: 'Peluches Cosidos Artesanales',
+      subtitle: 'Descubre nuestra colección de osos de peluche hechos a mano, cada uno contando su propia historia única a través del arte tradicional mexicano.',
       cta: 'Explorar Colección'
     },
     products: {
       teddy1: {
-        name: "Muñeco de Oso Rosa",
-        price: 2100,
-        description: "Hermoso muñeco de oso rosa con detalles tiernos e infantiles",
-        technique: "Bordado Metálico",
+        name: 'Muñeco de Oso Rosa',
+        description: 'Hermoso muñeco de oso rosa con detalles tiernos e infantiles',
+        technique: 'Bordado Metálico',
         artisan: {
-          name: "Rosa Martínez",
-          location: "Oaxaca",
-          quote: "Cada osito lleva un pedacito de mi corazón"
+          name: 'María de la Luz',
+          location: 'Estado de México',
+          quote: 'Cada osito lleva un pedacito de mi corazón'
         }
       },
       teddy2: {
-        name: "Muñecos de Peluche",
-        price: 850,
-        description: "Set de 4 muñecos de peluche de color blanco con detalles tiernos e infantiles",
-        technique: "Bordado Fino",
+        name: 'Muñecos de Peluche',
+        description: 'Set de 4 muñecos de peluche de color blanco con detalles tiernos e infantiles',
+        technique: 'Bordado Fino',
         artisan: {
-          name: "Carmen López",
-          location: "Puebla",
-          quote: "Fusiono lo tradicional con lo moderno en cada creación"
+          name: 'Carmen López',
+          location: 'Puebla',
+          quote: 'Fusiono lo tradicional con lo moderno en cada creación'
         }
       },
       teddy3: {
-        name: "Monstruos de Colores",
-        price: 1800,
-        description: "Tres monstruos de colores rosa, verde y azul",
-        technique: "Bordado Floral",
+        name: 'Monstruos de Colores',
+        description: 'Tres monstruos de colores rosa, verde y azul',
+        technique: 'Bordado Floral',
         artisan: {
-          name: "María de la Luz",
-          location: "Estado de México",
-          quote: "Me encanta crear personajes únicos y coloridos"
+          name: 'María de la Luz',
+          location: 'Estado de México',
+          quote: 'Me encanta crear personajes únicos y coloridos'
         }
       }
     },
     filters: {
-      all: "Todos",
-      bears: "Osos",
-      monsters: "Monstruos",
-      dolls: "Muñecos"
+      all: 'Todos',
+      bears: 'Osos',
+      monsters: 'Monstruos',
+      dolls: 'Muñecos'
     },
     collection: {
       title: 'Nuestra Colección de Ositos',
@@ -435,6 +432,10 @@ export default {
       title: 'Dulces Mexicanos Artesanales',
       subtitle: 'Descubre nuestra colección de postres mexicanos hechos a mano, donde las recetas tradicionales se encuentran con el arte contemporáneo',
       cta: 'Explorar Colección'
+    },
+    artisan: {
+      title: 'Elaborados por Gaby Manzano',
+      description: 'Nuestros deliciosos dulces son creados con amor por la talentosa Gaby Manzano, llevando dulzura y alegría a cada bocado. Estos manjares complementan perfectamente los productos de Diky, creando una armoniosa mezcla de sabores y experiencias.'
     },
     filters: {
       all: 'Todos',

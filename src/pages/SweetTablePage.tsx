@@ -11,6 +11,10 @@ import Image5 from "../../assets/SweetTable5.jpg";
 import Image6 from "../../assets/SweetTable6.jpg";
 import Image7 from "../../assets/SweetTable7.jpg";
 import Image8 from "../../assets/SweetTable8.jpg";
+import Image9 from "../../assets/SweetTable9.jpg";
+import Image10 from "../../assets/SweetTable10.jpg";
+import Image11 from "../../assets/SweetTable11.jpg";
+
 
 interface InspirationStep {
   title: string;
@@ -164,6 +168,18 @@ export default function SweetTablePage() {
     },
     {
       image: Image8,
+      animation: "spin"
+    },
+    {
+      image: Image9,
+      animation: "float"
+    },
+    {
+      image: Image10,
+      animation: "zoom"
+    },
+    {
+      image: Image11,
       animation: "spin"
     }
   ];

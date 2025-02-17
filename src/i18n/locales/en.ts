@@ -363,6 +363,10 @@ export default {
       subtitle: 'Discover our collection of handcrafted Mexican desserts, where traditional recipes meet contemporary artistry',
       cta: 'Explore Collection'
     },
+    artisan: {
+      title: 'Handcrafted by Gaby Manzano',
+      description: 'Our delightful sweets are lovingly created by the talented Gaby Manzano, bringing sweetness and joy to every bite. These treats perfectly complement Diky\'s products, creating a harmonious blend of flavors and experiences.'
+    },
     filters: {
       all: 'All',
       cakes: 'Cakes',
@@ -436,47 +440,46 @@ export default {
     },
     products: {
       teddy1: {
-        name: "Pink Bear Doll",
-        price: 2100,
-        description: "Beautiful pink bear doll with cute and childish details",
-        technique: "Metallic embroidery",
+        name: 'Pink Bear Doll',
+        description: 'Beautiful pink bear doll with cute and childish details',
+        technique: 'Metallic embroidery',
         artisan: {
-          name: "Rosa Martínez",
-          location: "Oaxaca",
-          quote: "Each teddy bear carries a piece of my heart"
+          name: 'María de la Luz',
+          location: 'State of Mexico',
+          quote: 'Each teddy bear carries a piece of my heart'
         }
       },
       teddy2: {
-        name: "Plush Dolls",
-        price: 850,
-        description: "Set of 4 white plush dolls with cute and childish details",
-        technique: "Fine embroidery",
+        name: 'Plush Dolls',
+        description: 'Set of 4 white plush dolls with cute and childish details',
+        technique: 'Fine embroidery',
         artisan: {
-          name: "Carmen López",
-          location: "Puebla",
-          quote: "I fuse traditional with modern in each creation"
+          name: 'Carmen López',
+          location: 'Puebla',
+          quote: 'I fuse traditional with modern in each creation'
         }
       },
       teddy3: {
-        name: "Colorful Monsters",
-        price: 1800,
-        description: "Three colorful monsters in pink, green, and blue",
-        technique: "Floral embroidery",
+        name: 'Colorful Monsters',
+        description: 'Three colorful monsters in pink, green, and blue',
+        technique: 'Floral embroidery',
         artisan: {
-          name: "María de la Luz",
-          location: "State of Mexico",
-          quote: "I love creating unique and colorful characters"
+          name: 'María de la Luz',
+          location: 'State of Mexico',
+          quote: 'I love creating unique and colorful characters'
         }
       }
     },
     filters: {
-      all: "All",
-      bears: "Bears",
-      monsters: "Monsters",
-      dolls: "Dolls"
+      all: 'All',
+      bears: 'Bears',
+      monsters: 'Monsters',
+      dolls: 'Dolls'
     },
     collection: {
-      title: 'Our Teddy Collection'
+      title: 'Our Teddy Collection',
+      quickView: 'Quick View',
+      viewDetails: 'View Details'
     },
     whyChoose: {
       title: 'Why Choose Our Teddies?',
@@ -637,34 +640,6 @@ export default {
         subtitle: 'Join our community of learners and start mastering new skills today.',
         primary: 'Get Started',
         secondary: 'View Course Calendar'
-      }
-    }
-  },
-  stitchedTeddies: {
-    hero: {
-      title: 'Handcrafted Stitched Teddies',
-      subtitle: 'Discover our collection of lovingly handcrafted teddy bears, each telling its own unique story through traditional Mexican artistry.',
-      cta: 'Explore Collection'
-    },
-    collection: {
-      title: 'Our Teddy Bear Collection'
-    },
-    whyChoose: {
-      title: 'Why Choose Our Stitched Teddies',
-      subtitle: 'Each teddy bear is crafted with love, care, and traditional Mexican artisanal techniques',
-      features: {
-        sustainable: {
-          title: 'Eco-Friendly Materials',
-          description: 'Made with sustainable and safe materials, perfect for children of all ages'
-        },
-        handcrafted: {
-          title: 'Handmade with Love',
-          description: 'Each teddy bear is carefully stitched by skilled artisans using traditional techniques'
-        },
-        community: {
-          title: 'Supporting Communities',
-          description: 'Your purchase helps support local Mexican artisans and their families'
-        }
       }
     }
   }
