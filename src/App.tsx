@@ -11,6 +11,7 @@ import Footer from './components/Footer';
 import LoadingScreen from './components/LoadingScreen';
 import StitchedTeddiesPage from './pages/StitchedTeddiesPage';
 import SweetsPage from './pages/SweetsPage';
+import ContactGaby from './pages/ContactGaby';
 
 function App() {
   const [isLoading, setIsLoading] = useState(true);
@@ -41,6 +42,7 @@ function App() {
           <Route path="/courses" element={<CoursesPage />} />
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/stitched-teddies" element={<StitchedTeddiesPage />} />
+          <Route path="/contact-gaby" element={<ContactGaby />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
         <Footer />

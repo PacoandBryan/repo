@@ -19,8 +19,15 @@ import purse8 from '../../../assets/purse8.jpg';
 import purse9 from '../../../assets/purse9.jpg';
 import purse10 from '../../../assets/purse10.jpg';
 import purse11 from '../../../assets/purse11.jpg';
-
-
+import purse12 from '../../../assets/SweetTable10.jpg';
+import purse13 from '../../../assets/SweetTable12.jpg';
+import purse14 from '../../../assets/SweetTable13.jpg';
+import purse15 from '../../../assets/WeddingCake1.jpg';
+import purse16 from '../../../assets/WeddingCake2.jpg';
+import purse17 from '../../../assets/WeddingCake3.jpg';
+import cupcake1 from '../../../assets/cupcakes1.jpg';
+import cupcake2 from '../../../assets/cupcakes2.jpg';
+import cupcakeCake from '../../../assets/CupCake-Cake.jpg';
 
 export default function CatalogPage() {
   const { t } = useTranslation();
@@ -75,7 +82,7 @@ export default function CatalogPage() {
       artisan: t('catalog.products.purse4.artisan'),
       region: t('catalog.products.purse4.region'),
       technique: t('catalog.products.purse4.technique'),
-      category: t('catalog.categories.plush'),
+      category: "Peluche"
     },
     {
       id: 5,
@@ -97,7 +104,7 @@ export default function CatalogPage() {
       artisan: t('catalog.products.purse6.artisan'),
       region: t('catalog.products.purse6.region'),
       technique: t('catalog.products.purse6.technique'),
-      category: t('catalog.categories.plush'),
+      category: "Peluche"
     },
     {
       id: 7,
@@ -108,7 +115,7 @@ export default function CatalogPage() {
       artisan: t('catalog.products.purse7.artisan'),
       region: t('catalog.products.purse7.region'),
       technique: t('catalog.products.purse7.technique'),
-      category: t('catalog.categories.plush'),
+      category: "Peluche"
     },
     {
       id: 8,
@@ -130,7 +137,7 @@ export default function CatalogPage() {
       artisan: t('catalog.products.purse9.artisan'),
       region: t('catalog.products.purse9.region'),
       technique: t('catalog.products.purse9.technique'),
-      category: t('catalog.categories.plush'),
+      category: "Peluche"
     },
     {
       id: 10,
@@ -141,7 +148,7 @@ export default function CatalogPage() {
       artisan: t('catalog.products.purse10.artisan'),
       region: t('catalog.products.purse10.region'),
       technique: t('catalog.products.purse10.technique'),
-      category: t('catalog.categories.plush'),
+      category: "Peluche"
     },
     {
       id: 11,
@@ -152,7 +159,7 @@ export default function CatalogPage() {
       artisan: t('catalog.products.purse11.artisan'),
       region: t('catalog.products.purse11.region'),
       technique: t('catalog.products.purse11.technique'),
-      category: t('catalog.categories.plush'),
+      category: "Peluche"
     },
     {
       id: 12,
@@ -208,6 +215,54 @@ export default function CatalogPage() {
       region: t('sweets.products.sweet2.artisan.location'),
       technique: t('sweets.products.sweet2.technique'),
       category: 'Postres',
+    },
+    {
+      id: 17,
+      name: t('sweets.products.birthdayCake.name'),
+      price: 650,
+      description: t('sweets.products.birthdayCake.description'),
+      image : purse12,
+      images: [purse12, purse13, purse14],
+      artisan: "Gaby",
+      region: t('sweets.products.cake3.artisan.location'),
+      technique: t('sweets.products.cake3.technique'),
+      category: 'Postres'
+    },
+    {
+      id: 18,
+      name: t('sweets.products.weddingCake.name'),
+      price: 1200,
+      description: t('sweets.products.weddingCake.description'),
+      image : purse15,
+      images: [purse15, purse16, purse17],
+      artisan: "Gaby",
+      region: t('sweets.products.cake3.artisan.location'),
+      technique: t('sweets.products.cake3.technique'),
+      category: 'Postres'
+    },
+    {
+      id: 19,
+      name: t('sweets.products.cupcake.name'),
+      price: 180,
+      description: t('sweets.products.cupcake.description'),
+      image : cupcake1,
+      images: [cupcake1, cupcake2],
+      artisan: "Gaby",
+      region: t('sweets.products.cake3.artisan.location'),
+      technique: t('sweets.products.cake3.technique'),
+      category: 'Postres'
+    },
+    {
+      id: 20,
+      name: t('sweets.products.cupcakeCake.name'),
+      price: 180,
+      description: t('sweets.products.cupcakeCake.description'),
+      image : cupcakeCake,
+      images: [cupcakeCake],
+      artisan: "Gaby",
+      region: t('sweets.products.cake3.artisan.location'),
+      technique: t('sweets.products.cake3.technique'),
+      category: 'Postres'
     }
   ];
   // Update search query and filters when URL parameters change
@@ -282,7 +337,7 @@ export default function CatalogPage() {
       result = result.filter(product =>
         product.name.toLowerCase().includes(query) ||
         product.description.toLowerCase().includes(query) ||
-        product.artisan.toLowerCase().includes(query) ||
+        (typeof product.artisan === 'string' ? product.artisan.toLowerCase() : product.artisan.name.toLowerCase()).includes(query) ||
         product.technique.toLowerCase().includes(query) ||
         product.category.toLowerCase().includes(query)
       );
@@ -500,11 +555,17 @@ export default function CatalogPage() {
           {filteredAndSortedProducts.length > 0 ? (
             <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-6">
               {filteredAndSortedProducts.map(product => (
-                <ProductCard
-                  key={product.id}
-                  product={product}
-                  onQuickView={() => handleQuickView(product)}
-                />
+                <div key={product.id} className="relative">
+                  <ProductCard
+                    product={product}
+                    onQuickView={() => handleQuickView(product)}
+                  />
+                  {product.artisan === "Gaby" && (
+                    <span className="absolute top-2 right-2 bg-rose-500 text-white px-3 py-1 rounded-full text-xs font-medium shadow-sm z-10">
+                      {t('catalog.labels.external')}
+                    </span>
+                  )}
+                </div>
               ))}
             </div>
           ) : (

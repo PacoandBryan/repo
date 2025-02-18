@@ -74,7 +74,19 @@ export default function NavBar() {
     },
     {
       label: t('nav.contact'),
-      href: '/contact'
+      href: '#',
+      children: [
+        {
+          label: t('nav.contactUs'),
+          href: '/contact',
+          description: t('nav.contactUsDesc')
+        },
+        {
+          label: t('nav.contactGaby'),
+          href: '/contact-gaby',
+          description: t('nav.contactGabyDesc')
+        }
+      ]
     }
   ];
 

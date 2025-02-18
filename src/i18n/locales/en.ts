@@ -17,13 +17,17 @@ export default {
     clutches: 'Clutches',
     totes: 'Tote Bags',
     catalog: 'Catalog',
-    contact: 'Contact Us',
+    contact: 'Contact',
+    contactUs: 'Contact Us',
+    contactUsDesc: 'Get in touch with our team',
+    contactGaby: 'Contact Gaby',
+    contactGabyDesc: 'Direct contact with Gaby Manzano for custom desserts',
     search: 'Search products...',
     stitchedTeddies: 'Stitched Teddies',
     stitchedTeddiesDesc: 'Handcrafted stitched teddy bears',
     products: 'Products',
-    sweets: 'Sweets',
-    sweetsDesc: 'Explore our delightful collection of handcrafted sweets',
+    sweets: 'Desserts',
+    sweetsDesc: 'Explore our delightful collection of handcrafted desserts',
   },
   hero: {
     title: 'Handcrafted with Love',
@@ -214,6 +218,9 @@ export default {
     categories: {
       purse: "Purse",
       plush: "Plush"
+    },
+    labels: {
+      external: 'External'
     }
   },
   sweetTable: {
@@ -359,13 +366,13 @@ export default {
   },
   sweets: {
     hero: {
-      title: 'Artisanal Mexican Sweets',
-      subtitle: 'Discover our collection of handcrafted Mexican desserts, where traditional recipes meet contemporary artistry',
+      title: 'Artisanal Desserts',
+      subtitle: 'Discover our collection of handcrafted desserts, where classic recipes meet contemporary artistry',
       cta: 'Explore Collection'
     },
     artisan: {
       title: 'Handcrafted by Gaby Manzano',
-      description: 'Our delightful sweets are lovingly created by the talented Gaby Manzano, bringing sweetness and joy to every bite. These treats perfectly complement Diky\'s products, creating a harmonious blend of flavors and experiences.'
+      description: 'Our delightful desserts are lovingly created by the talented Gaby Manzano, bringing sweetness and joy to every bite. These treats perfectly complement Diky\'s products, creating a harmonious blend of flavors and experiences.'
     },
     filters: {
       all: 'All',
@@ -374,6 +381,22 @@ export default {
       candies: 'Candies'
     },
     products: {
+      birthdayCake: {
+        name: 'Custom Birthday Cake',
+        description: 'Celebrate your special day with our artisanal birthday cakes. Each cake is crafted to your specifications, combining traditional Mexican flavors with modern design. Share your vision with us, and we\'ll create a masterpiece that makes your celebration unforgettable.'
+      },
+      weddingCake: {
+        name: 'Custom Wedding Cake',
+        description: 'Make your wedding day even more magical with our bespoke wedding cakes. Our expert pastry artists will work closely with you to design an elegant centerpiece that reflects your style and love story. From classic tiered designs to contemporary creations, we\'ll bring your dream cake to life.'
+      },
+      cupcake: {
+        name: 'Custom Cupcakes',
+        description: 'Perfect for any occasion, our handcrafted cupcakes combine artisanal quality with personalized design. Choose from our signature flavors and decorative styles, or let us create something unique for your special event. Each cupcake is a miniature work of art.'
+      },
+      cupcakeCake: {
+        name: 'Custom Cupcake Cake',
+        description: 'Experience the best of both worlds with our innovative cupcake cakes. These stunning arrangements combine individual cupcakes to create a larger design, perfect for sharing and serving. Ideal for parties, weddings, or any celebration that calls for something extraordinary.'
+      },
       cake1: {
         name: 'Traditional Mexican Wedding Cake',
         description: 'A beautifully decorated three-tier cake featuring traditional Mexican patterns and motifs.',
@@ -414,7 +437,7 @@ export default {
       }
     },
     whyChoose: {
-      title: 'Why Choose Our Sweets?',
+      title: 'Why Choose Our Desserts?',
       subtitle: 'Experience the authentic taste of Mexican tradition in every bite',
       features: {
         sustainable: {
@@ -423,7 +446,7 @@ export default {
         },
         handcrafted: {
           title: 'Artisanal Excellence',
-          description: 'Each sweet is carefully crafted by skilled artisans using time-honored recipes'
+          description: 'Each dessert is carefully crafted by skilled artisans using time-honored recipes'
         },
         community: {
           title: 'Cultural Heritage',
@@ -514,7 +537,8 @@ export default {
       message: "Message",
       messagePlaceholder: "Let us know how we can help!",
       submit: "Send Message",
-      sending: "Sending..."
+      sending: "Sending...",
+      titleGaby: "Send a Message to Gaby"
     },
     info: {
       title: "Where to Find Us",
@@ -534,8 +558,14 @@ export default {
     },
     social: {
       title: "Connect With Us",
-      subtitle: "Follow us on social media for updates & inspiration!"
-    }
+      subtitle: "Follow us on social media for updates & inspiration!",
+      titleGaby: "Connect with Gaby",
+      subtitleGaby: "Follow Gaby's creations and get inspired!",
+      instagram: "Follow on Instagram",
+      facebook: "Follow on Facebook"
+    },
+    gabyTitle: "Contact Gaby Manzano",
+    gabySubtitle: "Get in touch for custom desserts and special orders"
   },
   courses: {
     hero: {

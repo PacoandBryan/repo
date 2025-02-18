@@ -1,0 +1,29 @@
+{
+  "products": [
+    {
+      "id": "1",
+      "name": "Classic Leather Purse",
+      "price": 299.99,
+      "description": "Elegant leather purse with gold-tone hardware",
+      "image": "purse1.jpg",
+      "category": "handbags",
+      "inStock": true
+    },
+    {
+      "id": "2",
+      "name": "Modern Shoulder Bag",
+      "price": 249.99,
+      "description": "Contemporary design shoulder bag with adjustable strap",
+      "image": "purse2.jpg",
+      "category": "handbags",
+      "inStock": true
+    }
+  ],
+  "categories": [
+    {
+      "id": "handbags",
+      "name": "Handbags",
+      "description": "Luxury handbags and purses"
+    }
+  ]
+}

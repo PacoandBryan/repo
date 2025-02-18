@@ -145,9 +145,28 @@ export default function QuickViewModal({ product, onClose }: QuickViewModalProps
                   {product.name}
                 </h2>
 
+
                 <p className="text-base text-primary/80 leading-relaxed">
                   {product.description}
                 </p>
+                {product.category && (
+                  <div className="mb-4">
+                    <span 
+                      className="
+                        inline-flex items-center px-3 py-1.5 
+                        rounded-full text-sm font-medium
+                        bg-pink-50 text-pink-500
+                        border border-pink-200
+                        transition-all duration-300
+                        hover:bg-pink-100 hover:scale-105
+                        hover:shadow-md hover:shadow-pink-100
+                        cursor-default
+                      "
+                    >
+                      {product.category}
+                    </span>
+                  </div>
+                )}
               </div>
             </div>
           </div>

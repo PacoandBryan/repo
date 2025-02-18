@@ -7,8 +7,8 @@ export default {
     advancedCoursesDesc: 'Domina técnicas y patrones complejos',
     sweetTable: 'Mesa Dulce',
     sweetTableDesc: 'Explora nuestras hermosas decoraciones para mesa dulce',
-    sweets: 'Dulces',
-    sweetsDesc: 'Explora nuestra deliciosa colección de dulces artesanales',
+    sweets: 'Postres',
+    sweetsDesc: 'Explora nuestra deliciosa colección de postres artesanales',
     tablecloths: 'Manteles',
     napkins: 'Servilletas',
     purses: 'Bolsos',
@@ -17,7 +17,11 @@ export default {
     clutches: 'Clutches',
     totes: 'Bolsos Tote',
     catalog: 'Catálogo',
-    contact: 'Contáctanos',
+    contact: 'Contacto',
+    contactUs: 'Contáctanos',
+    contactUsDesc: 'Ponte en contacto con nuestro equipo',
+    contactGaby: 'Contacta a Gaby',
+    contactGabyDesc: 'Contacto directo con Gaby Manzano para postres personalizados',
     search: 'Buscar productos...',
     stitchedTeddies: 'Peluches Cosidos',
     stitchedTeddiesDesc: 'Osos de peluche cosidos a mano',
@@ -216,6 +220,9 @@ export default {
     categories: {
       purse: "Bolso",
       plush: "Peluche"
+    },
+    labels: {
+      external: 'Externo'
     }
   },
   sweetTable: {
@@ -429,13 +436,13 @@ export default {
   },
   sweets: {
     hero: {
-      title: 'Dulces Mexicanos Artesanales',
-      subtitle: 'Descubre nuestra colección de postres mexicanos hechos a mano, donde las recetas tradicionales se encuentran con el arte contemporáneo',
+      title: 'Postres Artesanales',
+      subtitle: 'Descubre nuestra colección de postres hechos a mano, donde las recetas clásicas se encuentran con el arte contemporáneo',
       cta: 'Explorar Colección'
     },
     artisan: {
       title: 'Elaborados por Gaby Manzano',
-      description: 'Nuestros deliciosos dulces son creados con amor por la talentosa Gaby Manzano, llevando dulzura y alegría a cada bocado. Estos manjares complementan perfectamente los productos de Diky, creando una armoniosa mezcla de sabores y experiencias.'
+      description: 'Nuestros deliciosos postres son creados con amor por la talentosa Gaby Manzano, llevando dulzura y alegría a cada bocado. Estos manjares complementan perfectamente los productos de Diky, creando una armoniosa mezcla de sabores y experiencias.'
     },
     filters: {
       all: 'Todos',
@@ -444,6 +451,22 @@ export default {
       candies: 'Dulces'
     },
     products: {
+      birthdayCake: {
+        name: 'Pastel de Cumpleaños Personalizado',
+        description: 'Celebra tu día especial con nuestros pasteles artesanales de cumpleaños. Cada pastel está elaborado según tus especificaciones, combinando sabores tradicionales mexicanos con diseños modernos. Comparte tu visión con nosotros y crearemos una obra maestra que hará tu celebración inolvidable.'
+      },
+      weddingCake: {
+        name: 'Pastel de Boda Personalizado',
+        description: 'Haz que tu día de boda sea aún más mágico con nuestros pasteles de boda a medida. Nuestros expertos pasteleros trabajarán contigo para diseñar una pieza central elegante que refleje tu estilo e historia de amor. Desde diseños clásicos de varios niveles hasta creaciones contemporáneas, haremos realidad el pastel de tus sueños.'
+      },
+      cupcake: {
+        name: 'Cupcakes Personalizados',
+        description: 'Perfectos para cualquier ocasión, nuestros cupcakes artesanales combinan calidad artesanal con diseño personalizado. Elige entre nuestros sabores distintivos y estilos decorativos, o permítenos crear algo único para tu evento especial. Cada cupcake es una pequeña obra de arte.'
+      },
+      cupcakeCake: {
+        name: 'Pastel de Cupcakes Personalizado',
+        description: 'Experimenta lo mejor de ambos mundos con nuestros innovadores pasteles de cupcakes. Estos impresionantes arreglos combinan cupcakes individuales para crear un diseño más grande, perfecto para compartir y servir. Ideal para fiestas, bodas o cualquier celebración que requiera algo extraordinario.'
+      },
       sweet1: {
         name: 'Flan Mexicano Tradicional',
         description: 'Flan de caramelo suave y cremoso, elaborado con huevos frescos de granja y vainilla pura, siguiendo una preciada receta familiar.'
@@ -516,7 +539,8 @@ export default {
       message: "Mensaje",
       messagePlaceholder: "¡Cuéntanos cómo podemos ayudarte!",
       submit: "Enviar Mensaje",
-      sending: "Enviando..."
+      sending: "Enviando...",
+      titleGaby: "Envía un Mensaje a Gaby"
     },
     info: {
       title: "Dónde Encontrarnos",
@@ -536,8 +560,14 @@ export default {
     },
     social: {
       title: "Conéctate con Nosotros",
-      subtitle: "¡Síguenos en redes sociales para actualizaciones e inspiración!"
-    }
+      subtitle: "¡Síguenos en redes sociales para actualizaciones e inspiración!",
+      titleGaby: "Conéctate con Gaby",
+      subtitleGaby: "¡Sigue las creaciones de Gaby e inspírate!",
+      instagram: "Síguenos en Instagram",
+      facebook: "Síguenos en Facebook"
+    },
+    gabyTitle: "Contacta a Gaby Manzano",
+    gabySubtitle: "Ponte en contacto para postres personalizados y pedidos especiales"
   },
   courses: {
     hero: {

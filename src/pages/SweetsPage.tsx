@@ -7,6 +7,15 @@ import { motion } from 'framer-motion';
 import { NextSeo } from 'next-seo';
 import { JsonLd } from 'react-schemaorg';
 import GabyLogo from '../../Images/GabyLogo.jpg';
+import purse12 from '../../assets/SweetTable10.jpg';
+import purse13 from '../../assets/SweetTable12.jpg';
+import purse14 from '../../assets/SweetTable13.jpg';
+import purse15 from '../../assets/WeddingCake1.jpg';
+import purse16 from '../../assets/WeddingCake2.jpg';
+import purse17 from '../../assets/WeddingCake3.jpg';
+import cupcake1 from '../../assets/cupcakes1.jpg';
+import cupcake2 from '../../assets/cupcakes2.jpg';
+import cupcakeCake from '../../assets/CupCake-Cake.jpg';
 
 interface Sweet {
   id: number;
@@ -28,7 +37,7 @@ export default function SweetsPage() {
   const { t } = useTranslation();
   const [selectedSweet, setSelectedSweet] = useState<Sweet | null>(null);
   const [activeFilter, setActiveFilter] = useState('all');
-  const [likedImages, setLikedImages] = useState<boolean[]>(new Array(5).fill(false));
+  const [likedImages, setLikedImages] = useState<boolean[]>(new Array(20).fill(false));
   const [showCopyNotification, setShowCopyNotification] = useState(false);
 
   const handleQuickView = (sweet: Sweet) => {
@@ -135,9 +144,69 @@ export default function SweetsPage() {
         quote: t('sweets.products.sweet2.artisan.quote')
       },
       images: [
-        "https://images.unsplash.com/photo-1587314168485-3236d6710814?auto=format&fit=crop&q=80&w=1000"
+        "https://images.unsplash.com/photo-1587536849024-daaa4a417b16?auto=format&fit=crop&q=80&w=1000"
       ],
       category: t('sweets.filters.traditional')
+    },
+    {
+      id: 17,
+      name: t('sweets.products.birthdayCake.name'),
+      price: 650,
+      description: t('sweets.products.birthdayCake.description'),
+      technique: t('sweets.products.cake3.technique'),
+      artisan: {
+        name: "Gaby",
+        location: t('sweets.products.cake3.artisan.location'),
+        image: GabyLogo,
+        quote: t('sweets.products.cake3.artisan.quote')
+      },
+      images: [purse12, purse13, purse14],
+      category: t('sweets.filters.cakes')
+    },
+    {
+      id: 18,
+      name: t('sweets.products.weddingCake.name'),
+      price: 1200,
+      description: t('sweets.products.weddingCake.description'),
+      technique: t('sweets.products.cake3.technique'),
+      artisan: {
+        name: "Gaby",
+        location: t('sweets.products.cake3.artisan.location'),
+        image: GabyLogo,
+        quote: t('sweets.products.cake3.artisan.quote')
+      },
+      images: [purse15, purse16, purse17],
+      category: t('sweets.filters.cakes')
+    },
+    {
+      id: 19,
+      name: t('sweets.products.cupcake.name'),
+      price: 180,
+      description: t('sweets.products.cupcake.description'),
+      technique: t('sweets.products.cake3.technique'),
+      artisan: {
+        name: "Gaby",
+        location: t('sweets.products.cake3.artisan.location'),
+        image: GabyLogo,
+        quote: t('sweets.products.cake3.artisan.quote')
+      },
+      images: [cupcake1, cupcake2],
+      category: t('sweets.filters.cupcakes')
+    },
+    {
+      id: 20,
+      name: t('sweets.products.cupcakeCake.name'),
+      price: 180,
+      description: t('sweets.products.cupcakeCake.description'),
+      technique: t('sweets.products.cake3.technique'),
+      artisan: {
+        name: "Gaby",
+        location: t('sweets.products.cake3.artisan.location'),
+        image: GabyLogo,
+        quote: t('sweets.products.cake3.artisan.quote')
+      },
+      images: [cupcakeCake],
+      category: t('sweets.filters.cupcakes')
     }
   ];
 
@@ -202,7 +271,7 @@ export default function SweetsPage() {
           description: t('sweets.seo.description'),
         }}
       />
-      
+
 
       {/* Hero Section */}
       <motion.div
