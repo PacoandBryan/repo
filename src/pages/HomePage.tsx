@@ -4,7 +4,6 @@ import Benefits from '../components/Benefits';
 import FeaturedProducts from '../components/FeaturedProducts';
 import Story from '../components/Story';
 import Testimonials from '../components/Testimonials';
-import Newsletter from '../components/Newsletter';
 import FAQ from '../components/FAQ';
 import { NextSeo } from 'next-seo';
 import { JsonLd } from 'react-schemaorg';

@@ -38,6 +38,13 @@ export default function CatalogPage() {
   const [sortBy, setSortBy] = useState<'newest' | 'price-asc' | 'price-desc'>('newest');
   const [activeFilters, setActiveFilters] = useState<string[]>([]);
   const [isSearchVisible, setIsSearchVisible] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [notification, setNotification] = useState<{
+    type: 'success' | 'error';
+    message: string;
+  } | null>(null);
+  const [scrollProgress, setScrollProgress] = useState(0);
+  const [hoveredProduct, setHoveredProduct] = useState<number | null>(null);
   const products: Product[] = [
     {
       id: 1,
@@ -282,6 +289,32 @@ export default function CatalogPage() {
     }
   }, [searchParams]);
 
+  // Scroll progress handler
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrolled = window.scrollY;
+      const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = (scrolled / maxScroll) * 100;
+      setScrollProgress(progress);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Simulate loading state when filters change
+  useEffect(() => {
+    setIsLoading(true);
+    const timer = setTimeout(() => setIsLoading(false), 800);
+    return () => clearTimeout(timer);
+  }, [activeFilters, searchQuery, sortBy]);
+
+  // Show notification
+  const showNotification = (type: 'success' | 'error', message: string) => {
+    setNotification({ type, message });
+    setTimeout(() => setNotification(null), 3000);
+  };
+
   const handleQuickView = (product: Product) => {
     setSelectedProduct(product);
   };
@@ -439,8 +472,23 @@ export default function CatalogPage() {
         itemListElement={structuredProducts}
       />
       <div className="min-h-screen bg-secondary-light pt-16">
-        {/* Header */}
-        <div className="bg-white shadow-soft sticky top-16 z-40">
+        {/* Scroll Progress Bar */}
+        <div 
+          className="fixed top-0 left-0 h-1 bg-accent z-50 transition-all duration-300"
+          style={{ width: `${scrollProgress}%` }}
+        />
+
+        {/* Notification Toast */}
+        {notification && (
+          <div className={`fixed top-4 right-4 z-50 p-4 rounded-lg shadow-lg transform transition-all duration-300 ${
+            notification.type === 'success' ? 'bg-green-500' : 'bg-red-500'
+          } text-white animate-slide-in-right`}>
+            {notification.message}
+          </div>
+        )}
+
+        {/* Header with enhanced animations */}
+        <div className="bg-white shadow-soft sticky top-16 z-40 transition-transform duration-300 transform">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
             {/* Title and Search Toggle */}
             <div className="flex items-center justify-between mb-4">
@@ -550,33 +598,70 @@ export default function CatalogPage() {
           </div>
         </div>
 
-        {/* Main Content */}
+        {/* Main Content with Loading State */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          {filteredAndSortedProducts.length > 0 ? (
+          {isLoading ? (
             <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-6">
-              {filteredAndSortedProducts.map(product => (
-                <div key={product.id} className="relative">
+              {[...Array(8)].map((_, i) => (
+                <div key={i} className="animate-pulse">
+                  <div className="bg-gray-200 h-64 rounded-lg mb-4"></div>
+                  <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
+                  <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+                </div>
+              ))}
+            </div>
+          ) : filteredAndSortedProducts.length > 0 ? (
+            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-6">
+              {filteredAndSortedProducts.map((product, index) => (
+                <div 
+                  key={product.id} 
+                  className="relative transform transition-all duration-300"
+                  style={{
+                    opacity: 0,
+                    animation: `fade-in-up 0.6s ease-out ${index * 0.1}s forwards`
+                  }}
+                  onMouseEnter={() => setHoveredProduct(product.id)}
+                  onMouseLeave={() => setHoveredProduct(null)}
+                >
                   <ProductCard
                     product={product}
-                    onQuickView={() => handleQuickView(product)}
+                    onQuickView={() => {
+                      handleQuickView(product);
+                      showNotification('success', 'Quick view opened');
+                    }}
+                    isHovered={hoveredProduct === product.id}
                   />
+                  {/* Enhanced product labels */}
                   {product.artisan === "Gaby" && (
-                    <span className="absolute top-2 right-2 bg-rose-500 text-white px-3 py-1 rounded-full text-xs font-medium shadow-sm z-10">
+                    <span className="absolute top-2 right-2 bg-rose-500 text-white px-3 py-1 rounded-full text-xs font-medium shadow-sm z-10 transform transition-transform duration-300 hover:scale-110">
                       {t('catalog.labels.external')}
                     </span>
+                  )}
+                  
+                  {/* Hover overlay with additional actions */}
+                  {hoveredProduct === product.id && (
+                    <div className="absolute inset-0 bg-black/5 backdrop-blur-sm rounded-lg flex items-center justify-center gap-4 transition-opacity duration-300">
+                      <button 
+                        onClick={() => handleQuickView(product)}
+                        className="btn btn-primary btn-sm transform hover:scale-110 transition-transform duration-300"
+                      >
+                        Quick View
+                      </button>
+                    </div>
                   )}
                 </div>
               ))}
             </div>
           ) : (
-            <div className="text-center py-12">
-              <p className="text-lg text-primary/80">Error...</p>
+            <div className="text-center py-12 animate-fade-in">
+              <p className="text-lg text-primary/80">No products found</p>
               <button
                 onClick={() => {
                   setSearchQuery('');
                   setActiveFilters([]);
+                  showNotification('success', 'Filters cleared');
                 }}
-                className="mt-4 text-accent hover:text-accent/80 transition-colors duration-200"
+                className="mt-4 text-accent hover:text-accent/80 transition-colors duration-200 transform hover:scale-105"
               >
                 Clear all filters
               </button>
@@ -584,19 +669,25 @@ export default function CatalogPage() {
           )}
         </div>
 
-        {/* Filter Sidebar */}
+        {/* Enhanced Filter Sidebar */}
         <FilterSidebar
           isOpen={isSidebarOpen}
-          onClose={() => setIsSidebarOpen(false)}
+          onClose={() => {
+            setIsSidebarOpen(false);
+            showNotification('success', 'Filters applied');
+          }}
           activeFilters={activeFilters}
           onToggleFilter={toggleFilter}
         />
 
-        {/* Quick View Modal */}
+        {/* Enhanced Quick View Modal */}
         {selectedProduct && (
           <QuickViewModal
             product={selectedProduct}
-            onClose={closeQuickView}
+            onClose={() => {
+              closeQuickView();
+              showNotification('success', 'Quick view closed');
+            }}
           />
         )}
       </div>

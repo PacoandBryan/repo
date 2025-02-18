@@ -40,6 +40,8 @@ export default {
         'fade-in': 'fadeIn 0.5s ease-in-out',
         'slide-up': 'slideUp 0.5s ease-out',
         bounce: 'bounce 1s infinite',
+        'slide-left': 'slide-left 0.3s ease-in-out',
+        'slide-right': 'slide-right 0.3s ease-in-out',
       },
       keyframes: {
         fadeIn: {
@@ -53,6 +55,14 @@ export default {
         bounce: {
           '0%, 100%': { transform: 'translateY(0)' },
           '50%': { transform: 'translateY(-10px)' },
+        },
+        'slide-left': {
+          '0%': { transform: 'translateX(0)' },
+          '100%': { transform: 'translateX(-100%)' },
+        },
+        'slide-right': {
+          '0%': { transform: 'translateX(0)' },
+          '100%': { transform: 'translateX(100%)' },
         },
       },
       boxShadow: {

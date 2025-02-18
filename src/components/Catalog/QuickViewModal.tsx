@@ -1,6 +1,7 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { X, ShoppingBag, ChevronLeft, ChevronRight, ZoomIn } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { motion, AnimatePresence } from 'framer-motion';
 import type { Product } from './types';
 
 interface QuickViewModalProps {
@@ -8,26 +9,61 @@ interface QuickViewModalProps {
   onClose: () => void;
 }
 
+const variants = {
+  enter: (direction: number) => ({
+    x: direction > 0 ? 300 : -300,
+    opacity: 0,
+  }),
+  center: {
+    x: 0,
+    opacity: 1,
+  },
+  exit: (direction: number) => ({
+    x: direction < 0 ? 300 : -300,
+    opacity: 0,
+  }),
+};
+
 export default function QuickViewModal({ product, onClose }: QuickViewModalProps) {
   const { t } = useTranslation();
   const [isZoomed, setIsZoomed] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [direction, setDirection] = useState(0); // 1 for next, -1 for previous
   const [zoomPosition, setZoomPosition] = useState({ x: 0, y: 0 });
   const imageRef = useRef<HTMLImageElement>(null);
+  const [isTransitioning, setIsTransitioning] = useState(false);
   
   // Handle both image formats (array and image/additionalImages)
   const images = Array.isArray(product.images) 
     ? product.images 
     : [product.image, ...(product.additionalImages || [])];
 
-  const nextImage = () => {
-    setCurrentImageIndex((prev) => (prev + 1) % images.length);
-    setIsZoomed(false);
-  };
+  useEffect(() => {
+    // Preload adjacent images
+    const nextIndex = (currentImageIndex + 1) % images.length;
+    const prevIndex = (currentImageIndex - 1 + images.length) % images.length;
 
-  const previousImage = () => {
-    setCurrentImageIndex((prev) => (prev - 1 + images.length) % images.length);
-    setIsZoomed(false);
+    const preloadImage = (src: string) => {
+      const img = new Image();
+      img.src = src;
+    };
+
+    preloadImage(images[nextIndex]);
+    preloadImage(images[prevIndex]);
+  }, [currentImageIndex, images]);
+
+  const paginate = (newDirection: number) => {
+    if (isTransitioning || isZoomed) return; // Prevent overlapping transitions or when zoomed
+    setDirection(newDirection);
+    setCurrentImageIndex((prevIndex) => {
+      const newIndex = prevIndex + newDirection;
+      if (newIndex < 0) {
+        return images.length - 1;
+      } else if (newIndex >= images.length) {
+        return 0;
+      }
+      return newIndex;
+    });
   };
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -64,6 +100,7 @@ export default function QuickViewModal({ product, onClose }: QuickViewModalProps
             <button
               onClick={onClose}
               className="absolute right-2 sm:right-4 top-2 sm:top-4 text-primary/60 hover:text-primary p-2 touch-manipulation z-10"
+              aria-label="Close Modal"
             >
               <X className="w-6 h-6" />
             </button>
@@ -76,35 +113,53 @@ export default function QuickViewModal({ product, onClose }: QuickViewModalProps
                 onTouchMove={handleTouchMove}
                 onMouseLeave={() => setIsZoomed(false)}
               >
-                <div className={`relative w-full h-full ${isZoomed ? 'cursor-zoom-out' : 'cursor-zoom-in'}`}>
-                  <img
-                    ref={imageRef}
+                <AnimatePresence initial={false} custom={direction}>
+                  <motion.img
+                    key={currentImageIndex}
                     src={images[currentImageIndex]}
                     alt={product.name}
-                    className={`w-full h-full object-cover transition-all duration-300 ${
-                      isZoomed ? 'scale-[2.5]' : 'scale-100'
-                    }`}
+                    className={`
+                      w-full h-full object-cover
+                      ${isZoomed ? 'scale-[2.5]' : 'scale-100'}
+                      transition-[transform] duration-300
+                    `}
                     style={isZoomed ? {
                       transformOrigin: `${zoomPosition.x}% ${zoomPosition.y}%`
                     } : undefined}
                     loading="lazy"
                     decoding="async"
                     onClick={() => setIsZoomed(!isZoomed)}
+                    custom={direction}
+                    variants={variants}
+                    initial="enter"
+                    animate="center"
+                    exit="exit"
+                    transition={{
+                      x: { type: 'spring', stiffness: 300, damping: 30 },
+                      opacity: { duration: 0.2 }
+                    }}
+                    onAnimationStart={() => setIsTransitioning(true)}
+                    onAnimationComplete={() => setIsTransitioning(false)}
+                    ref={imageRef}
                   />
-                </div>
+                </AnimatePresence>
 
                 {/* Image Navigation */}
                 {images.length > 1 && !isZoomed && (
                   <>
                     <button
-                      onClick={(e) => { e.stopPropagation(); previousImage(); }}
+                      onClick={() => paginate(-1)}
                       className="absolute left-2 top-1/2 -translate-y-1/2 bg-white/90 p-2 rounded-full shadow-md opacity-0 group-hover:opacity-100 transition-opacity"
+                      aria-label="Previous Image"
+                      disabled={isTransitioning}
                     >
                       <ChevronLeft className="w-5 h-5 text-primary" />
                     </button>
                     <button
-                      onClick={(e) => { e.stopPropagation(); nextImage(); }}
+                      onClick={() => paginate(1)}
                       className="absolute right-2 top-1/2 -translate-y-1/2 bg-white/90 p-2 rounded-full shadow-md opacity-0 group-hover:opacity-100 transition-opacity"
+                      aria-label="Next Image"
+                      disabled={isTransitioning}
                     >
                       <ChevronRight className="w-5 h-5 text-primary" />
                     </button>
@@ -117,22 +172,24 @@ export default function QuickViewModal({ product, onClose }: QuickViewModalProps
                     {images.map((_, index) => (
                       <button
                         key={index}
-                        onClick={(e) => { e.stopPropagation(); setCurrentImageIndex(index); }}
+                        onClick={() => { setCurrentImageIndex(index); setDirection(index > currentImageIndex ? 1 : -1); setIsZoomed(false); }}
                         className={`w-2 h-2 rounded-full transition-all ${
                           currentImageIndex === index 
                             ? 'bg-primary scale-125' 
                             : 'bg-white/70 hover:bg-white'
                         }`}
+                        aria-label={`Go to image ${index + 1}`}
                       />
                     ))}
                   </div>
                 )}
 
-                {/* Zoom indicator */}
+                {/* Zoom Indicator */}
                 {!isZoomed && (
                   <button
                     className="absolute bottom-4 right-4 bg-white/90 p-2 rounded-full shadow-md opacity-0 group-hover:opacity-100 transition-opacity"
                     onClick={() => setIsZoomed(true)}
+                    aria-label="Zoom Image"
                   >
                     <ZoomIn className="w-5 h-5 text-primary" />
                   </button>
@@ -144,7 +201,6 @@ export default function QuickViewModal({ product, onClose }: QuickViewModalProps
                 <h2 className="text-2xl sm:text-3xl font-serif text-primary mb-4">
                   {product.name}
                 </h2>
-
 
                 <p className="text-base text-primary/80 leading-relaxed">
                   {product.description}

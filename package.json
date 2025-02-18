@@ -21,7 +21,8 @@
     "react-dom": "^18.3.1",
     "react-i18next": "^14.0.5",
     "react-router-dom": "^6.22.2",
-    "react-schemaorg": "^2.0.0"
+    "react-schemaorg": "^2.0.0",
+    "react-scroll-parallax": "^3.4.5"
   },
   "devDependencies": {
     "@eslint/js": "^9.9.1",
