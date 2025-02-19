@@ -16,6 +16,9 @@ import purse17 from '../../assets/WeddingCake3.jpg';
 import cupcake1 from '../../assets/cupcakes1.jpg';
 import cupcake2 from '../../assets/cupcakes2.jpg';
 import cupcakeCake from '../../assets/CupCake-Cake.jpg';
+import truffles1 from '../../assets/truffles.jpg';
+import truffles2 from '../../assets/truffles1.jpg';
+import truffles3 from '../../assets/truffles2.jpg';
 
 interface Sweet {
   id: number;
@@ -63,91 +66,6 @@ export default function SweetsPage() {
   };
 
   const sweets: Sweet[] = [
-    {
-      id: 1,
-      name: t('sweets.products.cake1.name'),
-      price: 450,
-      description: t('sweets.products.cake1.description'),
-      technique: t('sweets.products.cake1.technique'),
-      artisan: {
-        name: t('sweets.products.cake1.artisan.name'),
-        location: t('sweets.products.cake1.artisan.location'),
-        image: "https://images.unsplash.com/photo-1556911261-6bd341186b2f?auto=format&fit=crop&q=80&w=400",
-        quote: t('sweets.products.cake1.artisan.quote')
-      },
-      images: [
-        "https://images.unsplash.com/photo-1535254973040-607b474cb50d?auto=format&fit=crop&q=80&w=1000"
-      ],
-      category: t('sweets.filters.cakes')
-    },
-    {
-      id: 2,
-      name: t('sweets.products.cookie1.name'),
-      price: 250,
-      description: t('sweets.products.cookie1.description'),
-      technique: t('sweets.products.cookie1.technique'),
-      artisan: {
-        name: t('sweets.products.cookie1.artisan.name'),
-        location: t('sweets.products.cookie1.artisan.location'),
-        image: "https://images.unsplash.com/photo-1594744803329-e58b31de8bf5?auto=format&fit=crop&q=80&w=400",
-        quote: t('sweets.products.cookie1.artisan.quote')
-      },
-      images: [
-        "https://images.unsplash.com/photo-1576618148400-f54bed99fcfd?auto=format&fit=crop&q=80&w=1000"
-      ],
-      category: t('sweets.filters.cookies')
-    },
-    {
-      id: 3,
-      name: t('sweets.products.cake2.name'),
-      price: 500,
-      description: t('sweets.products.cake2.description'),
-      technique: t('sweets.products.cake2.technique'),
-      artisan: {
-        name: t('sweets.products.cake2.artisan.name'),
-        location: t('sweets.products.cake2.artisan.location'),
-        image: "https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&q=80&w=400",
-        quote: t('sweets.products.cake2.artisan.quote')
-      },
-      images: [
-        "https://images.unsplash.com/photo-1562440499-64c9a111f713?auto=format&fit=crop&q=80&w=1000"
-      ],
-      category: t('sweets.filters.cakes')
-    },
-    {
-      id: 4,
-      name: t('sweets.products.sweet1.name'),
-      price: 180,
-      description: t('sweets.products.sweet1.description'),
-      technique: t('sweets.products.sweet1.technique'),
-      artisan: {
-        name: t('sweets.products.sweet1.artisan.name'),
-        location: t('sweets.products.sweet1.artisan.location'),
-        image: "https://images.unsplash.com/photo-1624001934657-640aae5ff42e?auto=format&fit=crop&q=80&w=400",
-        quote: t('sweets.products.sweet1.artisan.quote')
-      },
-      images: [
-        "https://images.unsplash.com/photo-1531594652722-292a43e752b4?auto=format&fit=crop&q=80&w=1000"
-      ],
-      category: t('sweets.filters.traditional')
-    },
-    {
-      id: 5,
-      name: t('sweets.products.sweet2.name'),
-      price: 120,
-      description: t('sweets.products.sweet2.description'),
-      technique: t('sweets.products.sweet2.technique'),
-      artisan: {
-        name: t('sweets.products.sweet2.artisan.name'),
-        location: t('sweets.products.sweet2.artisan.location'),
-        image: "https://images.unsplash.com/photo-1516684732162-798a0062be99?auto=format&fit=crop&q=80&w=400",
-        quote: t('sweets.products.sweet2.artisan.quote')
-      },
-      images: [
-        "https://images.unsplash.com/photo-1587536849024-daaa4a417b16?auto=format&fit=crop&q=80&w=1000"
-      ],
-      category: t('sweets.filters.traditional')
-    },
     {
       id: 17,
       name: t('sweets.products.birthdayCake.name'),
@@ -207,7 +125,22 @@ export default function SweetsPage() {
       },
       images: [cupcakeCake],
       category: t('sweets.filters.cupcakes')
-    }
+    },
+    {
+      id: 21,
+      name: t('sweets.products.truffles.name'),
+      price: 180,
+      description: t('sweets.products.truffles.description'),
+      technique: t('sweets.products.cake3.technique'),
+      artisan: {
+        name: "María de la Luz",
+        location: t('sweets.products.cake3.artisan.location'),
+        image: GabyLogo,
+        quote: t('sweets.products.cake3.artisan.quote')
+      },
+      images: [truffles1, truffles2, truffles3],
+      category: t('sweets.filters.chocolate')
+    },
   ];
 
   // Prepare structured data for sweets products

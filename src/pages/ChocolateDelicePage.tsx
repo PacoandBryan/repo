@@ -121,7 +121,7 @@ export default function ChocolateDelicePage() {
         <div className="animate-slide-up" style={{ animationDelay: "0s" }}>
           <div className="relative h-[70vh] overflow-hidden">
             <img
-              src="https://cdn.pixabay.com/photo/2015/09/16/05/57/embroidery-942255_1280.jpg"
+              src="https://cdn.pixabay.com/photo/2019/12/15/17/06/chocolate-4697591_1280.jpg"
               alt="Exquisite chocolate delights"
               className="w-full h-full object-cover"
             />
