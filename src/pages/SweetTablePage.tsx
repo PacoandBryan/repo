@@ -494,7 +494,7 @@ export default function SweetTablePage() {
         <div 
           id="cta"
           data-animate
-          className={`bg-secondary-light py-24 text-center transition-all duration-1000 ${animateClass('cta')}`}
+          className={`bg-white py-24 text-center transition-all duration-1000 ${animateClass('cta')}`}
         >
           <div className="max-w-3xl mx-auto px-4">
             <h2 className="text-3xl font-serif text-primary mb-6">
@@ -506,16 +506,22 @@ export default function SweetTablePage() {
             <div className="flex flex-col sm:flex-row justify-center gap-4">
               <button 
                 onClick={handleDownload}
-                className="btn btn-primary group hover:transform hover:scale-105 transition-all duration-300"
+                className="btn bg-white group relative overflow-hidden hover:text-white transition-colors duration-300 border-2 border-pink-400"
               >
-                <Download className="w-5 h-5 mr-2 group-hover:animate-bounce" />
-                {t('sweetTable.download.button')}
+                <span className="relative z-10 flex items-center text-pink-400 group-hover:text-white">
+                  <Download className="w-5 h-5 mr-2" />
+                  {t('sweetTable.download.button')}
+                </span>
+                <div className="absolute inset-0 w-0 bg-pink-400 group-hover:w-full transition-all duration-300 ease-out -z-0" />
               </button>
               <button
                 onClick={() => setShowNewsletter(true)}
-                className="btn btn-outline hover:transform hover:scale-105 transition-all duration-300"
+                className="btn bg-white group relative overflow-hidden hover:text-white transition-colors duration-300 border-2 border-purple-400"
               >
-                {t('sweetTable.download.moreInspiration')}
+                <span className="relative z-10 text-purple-400 group-hover:text-white">
+                  {t('sweetTable.download.moreInspiration')}
+                </span>
+                <div className="absolute inset-0 w-0 bg-purple-400 group-hover:w-full transition-all duration-300 ease-out -z-0" />
               </button>
             </div>
           </div>

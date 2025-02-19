@@ -28,6 +28,10 @@ import purse17 from '../../../assets/WeddingCake3.jpg';
 import cupcake1 from '../../../assets/cupcakes1.jpg';
 import cupcake2 from '../../../assets/cupcakes2.jpg';
 import cupcakeCake from '../../../assets/CupCake-Cake.jpg';
+import truffles1 from '../../../assets/truffles.jpg';
+import truffles2 from '../../../assets/truffles1.jpg';
+import truffles3 from '../../../assets/truffles2.jpg';
+
 
 export default function CatalogPage() {
   const { t } = useTranslation();
@@ -270,7 +274,20 @@ export default function CatalogPage() {
       region: t('sweets.products.cake3.artisan.location'),
       technique: t('sweets.products.cake3.technique'),
       category: 'Postres'
+    },
+    {
+      id: 21,
+      name: t('sweets.products.truffles.name'),
+      price: 180,
+      description: t('sweets.products.truffles.description'),
+      image: truffles1,
+      images: [truffles1, truffles2, truffles3],
+      artisan: "María de la Luz",
+      region: t('sweets.products.cake3.artisan.location'),
+      technique: t('sweets.products.cake3.technique'),
+      category: 'Chocolate'
     }
+    
   ];
   // Update search query and filters when URL parameters change
   useEffect(() => {

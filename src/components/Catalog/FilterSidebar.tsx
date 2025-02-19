@@ -14,6 +14,7 @@ const filterCategories = {
     'Bolso',
     "Peluche",
     "Postres",
+    "Chocolate"
   ],
 };
 

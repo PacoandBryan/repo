@@ -65,6 +65,11 @@ export default function NavBar() {
           label: t('nav.purses'),
           href: '/purses',
           description: t('nav.pursesDesc')
+        },
+        {
+          label: t('nav.chocolateDelice'), // New Nav Item
+          href: '/chocolate-delice',
+          description: t('nav.chocolateDeliceDesc')
         }
       ]
     },

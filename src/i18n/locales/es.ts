@@ -25,7 +25,9 @@ export default {
     search: 'Buscar productos...',
     stitchedTeddies: 'Peluches Cosidos',
     stitchedTeddiesDesc: 'Osos de peluche cosidos a mano',
-    products: 'Productos'
+    products: 'Productos',
+    chocolateDelice: 'Delicias de Chocolate',
+    chocolateDeliceDesc: 'Disfruta de nuestros chocolates artesanales hechos con pasión y tradición',
   },
   hero: {
     title: 'Hecho a Mano con Amor',
@@ -215,6 +217,15 @@ export default {
         artisan: "María de la Luz",
         region: "Puebla",
         technique: "Tejido y bordado"
+      },
+      truffles: {
+        name: 'Trufas y Enjambres',
+        description: 'Deliciosas trufas de chocolate y enjambres hechos a mano con los mejores ingredientes, perfectas para cualquier ocasión especial',
+        artisan: {
+          name: 'María de la Luz',
+          location: 'Ciudad de México',
+          quote: 'Cada trufa es una pequeña obra de arte llena de sabor'
+        }
       }
     },
     categories: {
@@ -504,6 +515,15 @@ export default {
       sweet2: {
         name: 'Caja de Dulces Mexicanos Artesanales',
         description: 'Una selección curada de dulces mexicanos tradicionales, elaborados artesanalmente usando recetas y técnicas ancestrales.'
+      },
+      truffles: {
+        name: 'Trufas Artesanales',
+        description: 'Deliciosas trufas de chocolate hechas a mano con los mejores ingredientes, perfectas para cualquier ocasión especial',
+        artisan: {
+          name: 'María de la Luz',
+          location: 'Ciudad de México',
+          quote: 'Cada trufa es una pequeña obra de arte llena de sabor'
+        }
       }
     },
     whyChoose: {
@@ -673,6 +693,49 @@ export default {
         primary: 'Comenzar',
         secondary: 'Ver Calendario de Cursos'
       }
+    }
+  },
+  chocolates: {
+    hero: {
+      title: 'Disfruta de Nuestros Chocolates',
+      subtitle: 'Experimenta los mejores chocolates artesanales hechos con pasión y tradición.',
+      cta: 'Explorar Chocolates'
+    },
+    collection: {
+      title: 'Chocolates Destacados'
+    },
+    products: {
+      chocolate1: {
+        name: 'Trufas y Enjambres',
+        description: 'Deliciosas trufas de chocolate y enjambres hechos a mano con los mejores ingredientes, perfectas para cualquier ocasión especial'
+      },
+      chocolate2: {
+        name: 'Delicia de Chocolate con Leche',
+        description: 'Suave chocolate con leche infusionado con remolinos de caramelo.'
+      }
+    },
+    whyChoose: {
+      title: '¿Por Qué Elegir Nuestros Chocolates?',
+      subtitle: 'Descubre las razones por las cuales nuestros chocolates destacan sobre los demás.',
+      features: {
+        sustainable: {
+          title: 'Hechos a Mano por María de la Luz',
+          description: 'Cada chocolate es elaborado manualmente por María de la Luz utilizando materiales de alta calidad, hechos con amor y esfuerzo.'
+        },
+        handcrafted: {
+          title: 'Materiales de Alta Calidad',
+          description: 'Nuestros chocolates están hechos con los mejores ingredientes, asegurando una experiencia de sabor premium.'
+        },
+        community: {
+          title: 'Hechos con Amor y Esfuerzo',
+          description: 'Cada pieza es un testimonio de la dedicación y pasión que se pone en la creación de nuestros chocolates.'
+        }
+      }
+    },
+    history: {
+      title: 'Nuestra Historia del Chocolate',
+      truffles: 'Las trufas son un clásico indulgente, elaboradas con rico chocolate y una variedad de rellenos.',
+      enjambres: 'Los enjambres son deliciosos bocados cubiertos de chocolate, perfectos para cualquier ocasión.'
     }
   }
 }

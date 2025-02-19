@@ -28,6 +28,8 @@ export default {
     products: 'Products',
     sweets: 'Desserts',
     sweetsDesc: 'Explore our delightful collection of handcrafted desserts',
+    chocolateDelice: 'Chocolate Delice',
+    chocolateDeliceDesc: 'Indulge in our handcrafted chocolates made with passion and tradition',
   },
   hero: {
     title: 'Handcrafted with Love',
@@ -213,6 +215,15 @@ export default {
         artisan: "María de la Luz",
         region: "Puebla",
         technique: "Weaving and embroidery"
+      },
+      truffles: {
+        name: 'Truffles and Enjambres',
+        description: 'Delicious handmade chocolate truffles and enjambres (chocolate-covered treats) crafted with the finest ingredients, perfect for any special occasion',
+        artisan: {
+          name: 'María de la Luz',
+          location: 'Mexico City',
+          quote: 'Each piece is a small work of art filled with flavor'
+        }
       }
     },
     categories: {
@@ -434,6 +445,15 @@ export default {
       sweet2: {
         name: 'Artisanal Mexican Candy Box',
         description: 'A curated selection of traditional Mexican candies, handcrafted using age-old recipes and techniques.'
+      },
+      truffles: {
+        name: 'Truffles and Enjambres',
+        description: 'Delicious handmade chocolate truffles and enjambres (chocolate-covered treats) crafted with the finest ingredients, perfect for any special occasion',
+        artisan: {
+          name: 'María de la Luz',
+          location: 'Mexico City',
+          quote: 'Each piece is a small work of art filled with flavor'
+        }
       }
     },
     whyChoose: {
@@ -670,7 +690,50 @@ export default {
         subtitle: 'Join our community of learners and start mastering new skills today.',
         primary: 'Get Started',
         secondary: 'View Course Calendar'
+      }   
+    }
+  },
+  chocolates: {
+    hero: {
+      title: 'Enjoy Our Chocolates',
+      subtitle: 'Experience the finest handmade chocolates crafted with passion and tradition.',
+      cta: 'Explore Chocolates'
+    },
+    collection: {
+      title: 'Featured Chocolates'
+    },
+    products: {
+      chocolate1: {
+        name: 'Truffles and Enjambres',
+        description: 'Delicious handmade chocolate truffles and enjambres (chocolate-covered treats) crafted with the finest ingredients, perfect for any special occasion'
+      },
+      chocolate2: {
+        name: 'Milk Chocolate Bliss',
+        description: 'Smooth milk chocolate infused with caramel swirls.'
       }
+    },
+    whyChoose: {
+      title: 'Why Choose Our Chocolates?',
+      subtitle: 'Discover why our chocolates stand out from the rest.',
+      features: {
+        sustainable: {
+          title: 'Handcrafted by María de la Luz',
+          description: 'Each chocolate is made manually by María de la Luz using high-quality materials, crafted with love and effort.'
+        },
+        handcrafted: {
+          title: 'High-Quality Materials',
+          description: 'Our chocolates are made with the finest ingredients, ensuring a premium taste experience.'
+        },
+        community: {
+          title: 'Made with Love and Effort',
+          description: 'Every piece is a testament to the dedication and passion that goes into creating our chocolates.'
+        }
+      }
+    },
+    history: {
+      title: 'Our Chocolate History',
+      truffles: 'Truffles are a classic indulgence, crafted with rich chocolate and a variety of fillings.',
+      enjambres: 'Enjambres are delightful chocolate-covered treats, perfect for any occasion.'
     }
   }
 }
