@@ -14,6 +14,99 @@ type NavItem = {
   }[];
 };
 
+// ── Updated: SearchInput component props type ──────────────────────────────
+type SearchInputProps = {
+  searchQuery: string;
+  setSearchQuery: React.Dispatch<React.SetStateAction<string>>;
+  onSearch: (e: React.FormEvent) => void;
+  isSearchOpen: boolean;
+};
+
+// ── Updated: SearchInput component with suggestions ──────────────────────
+function SearchInput({ searchQuery, setSearchQuery, onSearch, isSearchOpen }: SearchInputProps) {
+  const { t } = useTranslation();
+  
+  const suggestions = [
+    t('catalog.products.purse1.name'),
+    t('catalog.products.purse2.name'),
+    t('catalog.products.purse3.name'),
+    t('catalog.products.purse4.name'),
+    t('catalog.products.purse5.name'),
+    t('catalog.products.purse6.name'),
+    t('catalog.products.purse7.name'),
+    t('catalog.products.purse8.name'),
+    t('catalog.products.purse9.name'),
+    t('catalog.products.purse10.name'),
+    t('catalog.products.purse11.name'),
+    t('sweets.products.birthdayCake.name'),
+    t('sweets.products.weddingCake.name'),
+    t('sweets.products.cupcake.name'),
+    t('sweets.products.cupcakeCake.name'),
+    t('sweets.products.truffles.name')
+  ];
+
+  return (
+    <form onSubmit={onSearch} className="relative">
+      <div className="relative">
+        <input
+          type="text"
+          placeholder={t('nav.search')}
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          disabled={!isSearchOpen}
+          className={`w-full px-4 py-3 rounded-2xl bg-white/95 
+                     shadow-[0_4px_16px_rgba(255,211,182,0.25)]
+                     border border-[#FFE2E2] placeholder-[#D3CCE3]
+                     focus:outline-none focus:ring-2 focus:ring-[#FFD3B6]/30 
+                     focus:border-[#FFD3B6]/40
+                     transition-all duration-300
+                     ${!isSearchOpen && 'cursor-not-allowed opacity-0'}`}
+        />
+        <button
+          type="submit"
+          disabled={!isSearchOpen}
+          className={`absolute right-2.5 top-1/2 transform -translate-y-1/2
+                     bg-[#FFADAD] hover:bg-[#FFD3B6] p-2.5 rounded-xl text-white
+                     transition-all duration-300 shadow-[0_2px_8px_rgba(255,211,182,0.4)]
+                     hover:shadow-[0_2px_12px_rgba(255,211,182,0.5)]
+                     ${!isSearchOpen && 'cursor-not-allowed opacity-0'}`}
+        >
+          <Search size={16} className="opacity-90" />
+        </button>
+      </div>
+      {/* Updated suggestions dropdown */}
+      {isSearchOpen && searchQuery && (
+        <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-2xl 
+                      shadow-[0_8px_24px_rgba(255,211,182,0.25)] 
+                      border border-[#FFE2E2]/50 
+                      backdrop-blur-sm 
+                      overflow-hidden
+                      transform transition-all duration-300 ease-out">
+          {suggestions.filter(suggestion => {
+            const regex = new RegExp(searchQuery.split(' ').join('.*'), 'i');
+            return regex.test(suggestion);
+          }).map((suggestion, index) => (
+            <div
+              key={index}
+              className="flex items-center justify-between px-4 py-3
+                         text-[#D3CCE3] hover:text-[#9F92B6]
+                         hover:bg-[#FFEBE5]/30
+                         transition-colors duration-200 cursor-pointer
+                         border-b border-[#FFE2E2]/20 last:border-b-0"
+              onClick={() => {
+                setSearchQuery(suggestion);
+              }}
+            >
+              <span className="font-medium">{suggestion}</span>
+              <Search size={14} className="text-[#FFADAD] opacity-70" />
+            </div>
+          ))}
+        </div>
+      )}
+    </form>
+  );
+}
+
 export default function NavBar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -67,7 +160,7 @@ export default function NavBar() {
           description: t('nav.pursesDesc')
         },
         {
-          label: t('nav.chocolateDelice'), // New Nav Item
+          label: t('nav.chocolateDelice'),
           href: '/chocolate-delice',
           description: t('nav.chocolateDeliceDesc')
         }
@@ -217,8 +310,8 @@ export default function NavBar() {
   };
 
   const toggleMobileDropdown = (label: string) => {
-    setExpandedMobileItems(prev => 
-      prev.includes(label) 
+    setExpandedMobileItems(prev =>
+      prev.includes(label)
         ? prev.filter(item => item !== label)
         : [...prev, label]
     );
@@ -228,14 +321,8 @@ export default function NavBar() {
     e.preventDefault();
     if (searchQuery.trim()) {
       navigate(`/catalog?search=${encodeURIComponent(searchQuery.trim())}`);
-      setIsSearchOpen(false);
+      setIsSearchOpen(true);
       setSearchQuery('');
-    }
-  };
-
-  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
-      handleSearch(e);
     }
   };
 
@@ -322,22 +409,14 @@ export default function NavBar() {
             </div>
 
             <div className="flex items-center space-x-3 sm:space-x-4">
-              <div className={`transition-all duration-500 ease-in-out ${isSearchOpen ? 'w-40 sm:w-72' : 'w-0'} overflow-hidden`}>
-                <div className="relative w-full">
-                  <form onSubmit={handleSearch}>
-                    <input
-                      type="text"
-                      placeholder={t('nav.search')}
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      onKeyPress={handleKeyPress}
-                      className="input pr-10"
-                    />
-                    <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
-                      <Search size={16} className="text-primary/60" />
-                    </div>
-                  </form>
-                </div>
+              {/* ── Updated desktop search bar using the SearchInput component ── */}
+              <div className={`transition-all duration-500 ease-in-out ${isSearchOpen ? 'w-40 sm:w-72' : 'w-0'} overflow-visible`}>
+                <SearchInput
+                  searchQuery={searchQuery}
+                  setSearchQuery={setSearchQuery}
+                  onSearch={handleSearch}
+                  isSearchOpen={isSearchOpen}
+                />
               </div>
 
               <div className="relative" ref={langDropdownRef}>
@@ -370,7 +449,7 @@ export default function NavBar() {
               </div>
 
               <button 
-                className={`text-primary/80 hover:text-primary transition-all duration-300 ${isSearchOpen ? 'rotate-90' : 'rotate-0'}`}
+                className="text-primary/80 hover:text-primary"
                 onClick={() => {
                   setIsSearchOpen(!isSearchOpen);
                   if (!isSearchOpen) {
@@ -427,23 +506,14 @@ export default function NavBar() {
           </div>
 
           <div className="flex-1 overflow-y-auto">
-            {/* Search bar */}
+            {/* ── Updated mobile search bar using the SearchInput component ── */}
             <div className="p-4">
-              <form onSubmit={handleSearch}>
-                <div className="relative">
-                  <input
-                    type="text"
-                    placeholder={t('nav.search')}
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    onKeyPress={handleKeyPress}
-                    className="input pr-10"
-                  />
-                  <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
-                    <Search size={16} className="text-primary/60" />
-                  </div>
-                </div>
-              </form>
+              <SearchInput
+                searchQuery={searchQuery}
+                setSearchQuery={setSearchQuery}
+                onSearch={handleSearch}
+                isSearchOpen={true}
+              />
             </div>
 
             {/* Navigation */}

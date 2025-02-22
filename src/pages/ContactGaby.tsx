@@ -206,7 +206,7 @@ export default function ContactGaby() {
                 </p>
                 <div className="space-y-4">
                   <a
-                    href={businessInfo.social.instagram}
+                    href="https://www.instagram.com/delittia_gabymanzano/"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center space-x-3 text-primary/80 hover:text-primary transition-all duration-300 group p-3 rounded-lg hover:bg-primary/5"

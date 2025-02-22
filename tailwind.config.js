@@ -42,6 +42,7 @@ export default {
         bounce: 'bounce 1s infinite',
         'slide-left': 'slide-left 0.3s ease-in-out',
         'slide-right': 'slide-right 0.3s ease-in-out',
+        'slide-down': 'slideDown 0.5s ease-out',
       },
       keyframes: {
         fadeIn: {
@@ -63,6 +64,10 @@ export default {
         'slide-right': {
           '0%': { transform: 'translateX(0)' },
           '100%': { transform: 'translateX(100%)' },
+        },
+        slideDown: {
+          '0%': { transform: 'translateY(-10px)', opacity: '0' },
+          '100%': { transform: 'translateY(0)', opacity: '1' },
         },
       },
       boxShadow: {
