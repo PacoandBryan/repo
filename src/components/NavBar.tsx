@@ -3,6 +3,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Menu, Search, X, Globe, ChevronDown, ChevronRight, Home, Mail } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import Logo from './Logo';
+import Tooltip from './Tooltip';
 
 type NavItem = {
   label: string;
@@ -60,7 +61,7 @@ function SearchInput({ searchQuery, setSearchQuery, onSearch, isSearchOpen }: Se
                      focus:outline-none focus:ring-2 focus:ring-[#FFD3B6]/30 
                      focus:border-[#FFD3B6]/40
                      transition-all duration-300
-                     ${!isSearchOpen && 'cursor-not-allowed opacity-0'}`}
+                     ${!isSearchOpen && 'opacity-0'}`}
         />
         <button
           type="submit"
@@ -124,6 +125,9 @@ export default function NavBar() {
   const sidebarRef = useRef<HTMLDivElement>(null);
   const location = useLocation();
   const navigate = useNavigate();
+  const [isLanguageChanging, setIsLanguageChanging] = useState(false);
+  const searchButtonRef = useRef<HTMLButtonElement>(null);
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
 
   const languages = [
     { code: 'en', label: 'English' },
@@ -251,9 +255,33 @@ export default function NavBar() {
     };
   }, []);
 
-  const handleLanguageChange = (langCode: string) => {
-    i18n.changeLanguage(langCode);
-    setIsLangDropdownOpen(false);
+  useEffect(() => {
+    const handleKeyboard = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+        e.preventDefault();
+        setIsSearchOpen(prev => !prev);
+        if (!isSearchOpen) {
+          setTimeout(() => document.querySelector('input')?.focus(), 100);
+        }
+      }
+      if ((e.ctrlKey || e.metaKey) && e.key === 'm') {
+        e.preventDefault();
+        setIsMenuOpen(prev => !prev);
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyboard);
+    return () => document.removeEventListener('keydown', handleKeyboard);
+  }, [isSearchOpen]);
+
+  const handleLanguageChange = async (langCode: string) => {
+    setIsLanguageChanging(true);
+    try {
+      await i18n.changeLanguage(langCode);
+    } finally {
+      setIsLanguageChanging(false);
+      setIsLangDropdownOpen(false);
+    }
   };
 
   const handleDropdownEnter = (label: string) => {
@@ -325,6 +353,40 @@ export default function NavBar() {
       setSearchQuery('');
     }
   };
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+  }, [location.pathname]);
+
+  useEffect(() => {
+    if (isMenuOpen) {
+      const focusableElements = sidebarRef.current?.querySelectorAll(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+      );
+      
+      if (focusableElements?.length) {
+        const firstElement = focusableElements[0] as HTMLElement;
+        const lastElement = focusableElements[focusableElements.length - 1] as HTMLElement;
+        
+        firstElement.focus();
+
+        const handleTabKey = (e: KeyboardEvent) => {
+          if (e.key === 'Tab') {
+            if (e.shiftKey && document.activeElement === firstElement) {
+              e.preventDefault();
+              lastElement.focus();
+            } else if (!e.shiftKey && document.activeElement === lastElement) {
+              e.preventDefault();
+              firstElement.focus();
+            }
+          }
+        };
+
+        document.addEventListener('keydown', handleTabKey);
+        return () => document.removeEventListener('keydown', handleTabKey);
+      }
+    }
+  }, [isMenuOpen]);
 
   return (
     <>
@@ -419,60 +481,72 @@ export default function NavBar() {
                 />
               </div>
 
-              <div className="relative" ref={langDropdownRef}>
-                <button
-                  className="flex items-center space-x-1 text-primary/80 hover:text-primary transition-colors duration-300"
-                  onClick={() => setIsLangDropdownOpen(!isLangDropdownOpen)}
-                >
-                  <Globe className="w-[18px] h-[18px] sm:w-5 sm:h-5" />
-                  <span className="hidden sm:inline text-sm font-medium">{i18n.language.toUpperCase()}</span>
-                </button>
+              <Tooltip content={t('nav.changeLanguage')} position="bottom">
+                <div className="relative" ref={langDropdownRef}>
+                  <button
+                    className="flex items-center space-x-1 text-primary/80 hover:text-primary transition-colors duration-300"
+                    onClick={() => setIsLangDropdownOpen(!isLangDropdownOpen)}
+                  >
+                    <Globe className="w-[18px] h-[18px] sm:w-5 sm:h-5" />
+                    <span className="hidden sm:inline text-sm font-medium">
+                      {isLanguageChanging ? (
+                        <span className="animate-pulse">...</span>
+                      ) : (
+                        i18n.language.toUpperCase()
+                      )}
+                    </span>
+                  </button>
 
-                {isLangDropdownOpen && (
-                  <div className="absolute right-0 mt-2 w-36 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
-                    <div className="py-1" role="menu" aria-orientation="vertical">
-                      {languages.map((lang) => (
-                        <button
-                          key={lang.code}
-                          onClick={() => handleLanguageChange(lang.code)}
-                          className={`${
-                            i18n.language === lang.code ? 'bg-[#fcdce4]/30 text-primary' : 'text-primary/80'
-                          } group flex w-full items-center px-4 py-2 text-sm hover:bg-[#fcdce4]/20 transition-colors duration-300`}
-                          role="menuitem"
-                        >
-                          {lang.label}
-                        </button>
-                      ))}
+                  {isLangDropdownOpen && (
+                    <div className="absolute right-0 mt-2 w-36 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
+                      <div className="py-1" role="menu" aria-orientation="vertical">
+                        {languages.map((lang) => (
+                          <button
+                            key={lang.code}
+                            onClick={() => handleLanguageChange(lang.code)}
+                            className={`${
+                              i18n.language === lang.code ? 'bg-[#fcdce4]/30 text-primary' : 'text-primary/80'
+                            } group flex w-full items-center px-4 py-2 text-sm hover:bg-[#fcdce4]/20 transition-colors duration-300`}
+                            role="menuitem"
+                          >
+                            {lang.label}
+                          </button>
+                        ))}
+                      </div>
                     </div>
-                  </div>
-                )}
-              </div>
+                  )}
+                </div>
+              </Tooltip>
 
-              <button 
-                className="text-primary/80 hover:text-primary"
-                onClick={() => {
-                  setIsSearchOpen(!isSearchOpen);
-                  if (!isSearchOpen) {
-                    setTimeout(() => document.querySelector('input')?.focus(), 100);
-                  }
-                }}
-              >
-                {isSearchOpen ? (
-                  <X className="w-[18px] h-[18px] sm:w-5 sm:h-5" />
-                ) : (
-                  <Search className="w-[18px] h-[18px] sm:w-5 sm:h-5" />
-                )}
-              </button>
+              <Tooltip content={`${t('nav.searchTooltip')} (${navigator.platform.includes('Mac') ? '⌘' : 'Ctrl'}+K)`} position="bottom">
+                <button 
+                  ref={searchButtonRef}
+                  className="text-primary/80 hover:text-primary"
+                  onClick={() => {
+                    setIsSearchOpen(!isSearchOpen);
+                    if (!isSearchOpen) {
+                      setTimeout(() => document.querySelector('input')?.focus(), 100);
+                    }
+                  }}
+                >
+                  {isSearchOpen ? (
+                    <X className="w-[18px] h-[18px] sm:w-5 sm:h-5" />
+                  ) : (
+                    <Search className="w-[18px] h-[18px] sm:w-5 sm:h-5" />
+                  )}
+                </button>
+              </Tooltip>
 
-              {/* The Heart and ShoppingBag icon buttons have been removed */}
-
-              <button 
-                className="text-primary/80 hover:text-primary"
-                onClick={() => setIsMenuOpen(true)}
-                aria-label="Open menu"
-              >
-                <Menu className="w-[18px] h-[18px] sm:w-5 sm:h-5" />
-              </button>
+              <Tooltip content={`${t('nav.menuTooltip')} (${navigator.platform.includes('Mac') ? '⌘' : 'Ctrl'}+M)`} position="bottom">
+                <button 
+                  ref={menuButtonRef}
+                  className="text-primary/80 hover:text-primary"
+                  onClick={() => setIsMenuOpen(true)}
+                  aria-label={t('nav.openMenu')}
+                >
+                  <Menu className="w-[18px] h-[18px] sm:w-5 sm:h-5" />
+                </button>
+              </Tooltip>
             </div>
           </div>
         </div>

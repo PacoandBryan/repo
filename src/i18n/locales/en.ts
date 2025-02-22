@@ -30,6 +30,10 @@ export default {
     sweetsDesc: 'Explore our delightful collection of handcrafted desserts',
     chocolateDelice: 'Chocolate Delice',
     chocolateDeliceDesc: 'Indulge in our handcrafted chocolates made with passion and tradition',
+    changeLanguage: "Change Language",
+    searchTooltip: "Search products",
+    menuTooltip: "Open menu",
+    openMenu: "Open menu",
   },
   hero: {
     title: 'Handcrafted with Love',

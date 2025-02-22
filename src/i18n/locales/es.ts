@@ -28,6 +28,10 @@ export default {
     products: 'Productos',
     chocolateDelice: 'Delicias de Chocolate',
     chocolateDeliceDesc: 'Disfruta de nuestros chocolates artesanales hechos con pasión y tradición',
+    changeLanguage: "Cambiar Idioma",
+    searchTooltip: "Buscar productos",
+    menuTooltip: "Abrir menú",
+    openMenu: "Abrir menú",
   },
   hero: {
     title: 'Hecho a Mano con Amor',
