@@ -204,6 +204,13 @@ export default function SweetTablePage() {
   const handleSubscribe = (e: React.FormEvent) => {
     e.preventDefault();
     setShowNewsletter(false);
+    
+    // Create confetti element
+    const confettiContainer = document.createElement('div');
+    confettiContainer.className = 'confetti-container animate-fade-in';
+    confettiContainer.innerHTML = '🎊';
+    document.body.appendChild(confettiContainer);
+    setTimeout(() => confettiContainer.remove(), 2000);
   };
 
   const isVisible = (sectionId: string) => visibleSections.includes(sectionId);

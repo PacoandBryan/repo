@@ -96,7 +96,7 @@ export default function QuickViewModal({ product, onClose }: QuickViewModalProps
       
       <div className="fixed inset-0 z-50 overflow-y-auto">
         <div className="flex min-h-full items-center justify-center p-2 sm:p-4">
-          <div className="relative bg-white rounded-lg shadow-2xl w-full max-w-5xl animate-fade-in">
+          <div className="relative bg-white rounded-lg shadow-2xl w-full max-w-5xl animate-slide-down">
             <button
               onClick={onClose}
               className="absolute right-2 sm:right-4 top-2 sm:top-4 text-primary/60 hover:text-primary p-2 touch-manipulation z-10"

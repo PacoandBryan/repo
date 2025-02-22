@@ -5,7 +5,7 @@ export default function LoadingScreen() {
   return (
     <div className="fixed inset-0 bg-secondary-light flex items-center justify-center z-50">
       <div className="text-center">
-        <Logo size="lg" />
+        <Logo size="lg" className="animate-rotate-slow" />
         <div className="flex space-x-2 justify-center mt-6">
           {[0, 1, 2].map((index) => (
             <div

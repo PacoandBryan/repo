@@ -36,6 +36,15 @@ export default function ContactGaby() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    // Simple validation: ensure all fields are filled
+    if (!formData.firstName || !formData.lastName || !formData.email || !formData.message) {
+      const formElement = document.querySelector('.contact-form') as HTMLElement;
+      if (formElement) {
+        formElement.classList.add('animate-shake');
+        setTimeout(() => formElement.classList.remove('animate-shake'), 820);
+      }
+      return;
+    }
     setIsSubmitting(true);
     // Simulate form submission
     await new Promise(resolve => setTimeout(resolve, 1000));
@@ -106,7 +115,7 @@ export default function ContactGaby() {
               <h2 className="text-2xl font-serif text-primary mb-6">
                 {t('contact.form.titleGaby')}
               </h2>
-              <form onSubmit={handleSubmit} className="space-y-6">
+              <form onSubmit={handleSubmit} className="space-y-6 contact-form">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                   <div 
                     className="transform transition-transform duration-300 hover:scale-[1.02]"

@@ -53,6 +53,13 @@ export default function SweetsPage() {
       newLiked[index] = !newLiked[index];
       return newLiked;
     });
+    
+    // Create heart explosion effect (this is a quick demo implementation)
+    const heartExplosion = document.createElement('span');
+    heartExplosion.className = 'animate-heart-explosion absolute top-0 left-0';
+    heartExplosion.innerText = '❤️';
+    document.body.appendChild(heartExplosion);
+    setTimeout(() => heartExplosion.remove(), 800);
   };
 
   const handleShare = async (sweetId: number) => {

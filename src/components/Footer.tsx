@@ -22,7 +22,7 @@ export default function Footer() {
             <ul className="mt-4 space-y-4">
               <li>
                 <div className="flex space-x-4">
-                  <a href="#" className="text-white/80 hover:text-white">
+                  <a href="#" className="text-white/80 hover:text-white hover:scale-110 transition-transform duration-300">
                     <Instagram size={20} />
                   </a>
                 </div>

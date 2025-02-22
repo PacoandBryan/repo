@@ -72,9 +72,20 @@ const addButtonClickEffect = () => {
   });
 };
 
+// Parallax effect for Hero background
+const handleHeroMouseMove = (e: MouseEvent) => {
+  const hero = document.querySelector('.hero-parallax') as HTMLElement;
+  if (!hero) return;
+  const { width, height } = hero.getBoundingClientRect();
+  const x = (e.clientX / width) - 0.5;
+  const y = (e.clientY / height) - 0.5;
+  hero.style.transform = `translate(${x * 20}px, ${y * 20}px)`;
+};
+
 // Initialize all interactions
 export const initializeInteractions = () => {
   document.addEventListener('mousemove', handleCardMouseMove);
+  document.addEventListener('mousemove', handleHeroMouseMove);
   addButtonClickEffect();
   
   // Add smooth scroll to all anchor links

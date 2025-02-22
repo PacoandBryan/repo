@@ -63,10 +63,7 @@ export default function ProductCard({ product, onQuickView }: ProductCardProps) 
           >
             <button
               onClick={handleQuickView}
-              className="relative z-10 btn bg-white/90 hover:bg-white text-primary p-2 rounded-full 
-                transform transition-all duration-300 hover:scale-110 active:scale-95
-                shadow-lg hover:shadow-xl
-                focus:outline-none focus:ring-2 focus:ring-accent focus:ring-opacity-50"
+              className="relative z-10 btn bg-white/90 hover:bg-white text-primary p-2 rounded-full transform transition-all duration-300 hover:scale-110 active:scale-95 shadow-lg hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-accent focus:ring-opacity-50 hover:animate-pulse"
               aria-label={t('catalog.quickView')}
             >
               <Eye className="w-5 h-5" />
