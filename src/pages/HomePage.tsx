@@ -26,8 +26,8 @@ export default function HomePage() {
           images: [
             {
               url: 'https://yoursite.com/og-image.jpg',
-              width: 1200,
-              height: 630,
+              width: 4800, // Doubled the width
+              height: 2400, // Doubled the height
               alt: 'Site Homepage',
             },
           ],

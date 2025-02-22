@@ -643,11 +643,12 @@ export default {
       webDev: {
         title: 'Fundamentos de Desarrollo Web',
         subtitle: 'Esenciales de HTML, CSS y JavaScript',
-        description: 'Comienza tu viaje en el desarrollo web con esta introducción completa a las tecnologías fundamentales que impulsan la web moderna.',
+        description:
+          'Comienza tu viaje en el desarrollo web con esta introducción completa a las tecnologías fundamentales que impulsan la web moderna.',
         instructor: {
-          name: 'María de la Luz',
-          role: 'Desarrolladora Web Senior',
-          bio: 'Con más de 10 años de experiencia en EDS y un título oficial en Tecnologías de la Información, María se especializa en hacer accesibles los conceptos complejos para principiantes.'
+          name: 'Equipo de IT',
+          role: 'Profesionales de IT',
+          bio: 'Nuestro equipo de IT está compuesto por profesionales altamente capacitados con una pasión por la tecnología y un compromiso con la excelencia. Aportan años de experiencia y una gran cantidad de conocimientos para ayudarte a dominar los fundamentos del desarrollo web.'
         },
         modules: {
           html: {
@@ -665,6 +666,29 @@ export default {
           projects: {
             title: 'Construyendo Proyectos Reales',
             description: 'Aplica tus habilidades construyendo sitios web prácticos del mundo real.'
+          }
+        }
+      },
+      itBasics: {
+        title: 'Fundamentos de IT',
+        subtitle: 'Aprende los principios básicos de la tecnología de la información',
+        description:
+          'Comienza con los conceptos esenciales de IT, incluyendo hardware, software y redes.',
+        instructor: {
+          name: 'Equipo de IT',
+          role: 'Profesionales de IT',
+          bio: 'Nuestro equipo de IT experimentado te guiará a través de los fundamentos de la tecnología de la información.'
+        },
+        modules: {
+          overview: {
+            title: 'Fundamentos de IT',
+            description:
+              'Comprende los componentes básicos de IT, incluyendo sistemas de computadoras, software y solución de problemas.'
+          },
+          network: {
+            title: 'Conceptos Básicos de Redes',
+            description:
+              'Aprende lo esencial de las redes de computadoras, incluyendo LAN, WAN y seguridad de red.'
           }
         }
       }

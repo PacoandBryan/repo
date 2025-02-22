@@ -643,9 +643,9 @@ export default {
         subtitle: 'HTML, CSS & JavaScript Essentials',
         description: 'Begin your journey into web development with this comprehensive introduction to the core technologies that power the modern web.',
         instructor: {
-          name: 'María de la Luz',
-          role: 'Senior Web Developer',
-          bio: 'With over 10 years of experience at EDS and an official degree in Information Technologies, María specializes in making complex concepts accessible to beginners.'
+          name: 'IT team',
+          role: 'IT Professionals',
+          bio: 'Our IT team consists of highly skilled professionals with a passion for technology and a commitment to excellence. They bring years of experience and a wealth of knowledge to help you master the fundamentals of web development.'
         },
         modules: {
           html: {
@@ -663,6 +663,26 @@ export default {
           projects: {
             title: 'Building Real Projects',
             description: 'Apply your skills by building practical, real-world websites.'
+          }
+        }
+      },
+      itBasics: {
+        title: 'IT Basics',
+        subtitle: 'Learn the Foundations of Information Technology',
+        description: 'Get started with the essential concepts of IT, including hardware, software, and networks.',
+        instructor: {
+          name: 'IT team',
+          role: 'IT Professionals',
+          bio: 'Our experienced IT team will guide you through the fundamentals of information technology.'
+        },
+        modules: {
+          overview: {
+            title: 'IT Fundamentals',
+            description: 'Understand the core components of IT including computer systems, software, and troubleshooting.'
+          },
+          network: {
+            title: 'Networking Basics',
+            description: 'Learn the basics of computer networking, including LANs, WANs, and network security.'
           }
         }
       }

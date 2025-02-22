@@ -119,6 +119,29 @@ export default function CoursesPage() {
         },
       ],
     },
+    {
+      id: 'it-basics',
+      title: t('courses.courses.itBasics.title'),
+      subtitle: t('courses.courses.itBasics.subtitle'),
+      description: t('courses.courses.itBasics.description'),
+      image: 'https://cdn.pixabay.com/photo/2023/04/29/16/12/ai-generated-7958880_640.jpg',
+      instructor: {
+        name: t('courses.courses.itBasics.instructor.name'),
+        role: t('courses.courses.itBasics.instructor.role'),
+        image: 'https://cdn.pixabay.com/photo/2016/11/14/17/39/person-1824144_1280.png',
+        bio: t('courses.courses.itBasics.instructor.bio'),
+      },
+      modules: [
+        {
+          title: t('courses.courses.itBasics.modules.overview.title'),
+          description: t('courses.courses.itBasics.modules.overview.description'),
+        },
+        {
+          title: t('courses.courses.itBasics.modules.network.title'),
+          description: t('courses.courses.itBasics.modules.network.description'),
+        },
+      ],
+    },
   ];
 
   const faqCategories: FAQCategory = {
@@ -286,7 +309,7 @@ export default function CoursesPage() {
         <div data-animate className="animate-slide-up" style={{ animationDelay: '0.2s' }}>
           <div id="courses" className="bg-secondary-light py-24">
             <div className="max-w-7xl mx-auto px-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                 {courses.map((course) => (
                   <div
                     key={course.id}

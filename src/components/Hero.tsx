@@ -11,7 +11,7 @@ export default function Hero() {
       <div className="bg-gradient-to-b from-[#fcdce4] to-[#fcc4d4] min-h-[90vh] flex items-center justify-center px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-4xl mx-auto">
           <div className="mb-10">
-            <img src={DikyLogo} alt="Diky Logo" className="w-24 h-24 mx-auto object-contain" />
+            <img src={DikyLogo} alt="Diky Logo" className="w-48 h-48 mx-auto object-contain" />
           </div>
           <h1 className="text-5xl md:text-6xl lg:text-8xl font-serif tracking-tight text-primary">
             {t('hero.title')}
