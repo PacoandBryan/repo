@@ -80,6 +80,7 @@ export default {
     title : "Frequently Asked Questions",
     subtitle: "Find answers to common questions about our products and services.",
     search: "Search questions...",
+    searchPlaceholder: "Search questions...",
     PI: {
       title: "Product Information",
       Q1: "What is the fabric made of?",
@@ -628,8 +629,8 @@ export default {
             description: 'Explore the rich history and techniques behind traditional Mexican embroidery patterns.'
           },
           color: {
-            title: 'Color Theory & Design',
-            description: 'Master the art of color combination and pattern design for stunning visual impact.'
+            title: 'Mexican Cultural Heritage in Embroidery',
+            description: 'Learn about the rich symbolism and cultural significance behind traditional Mexican embroidery patterns.'
           },
           advanced: {
             title: 'Advanced Techniques',
@@ -644,7 +645,7 @@ export default {
         instructor: {
           name: 'María de la Luz',
           role: 'Senior Web Developer',
-          bio: 'A passionate educator with 10+ years of industry experience, Alex specializes in making complex concepts accessible to beginners.'
+          bio: 'With over 10 years of experience at EDS and an official degree in Information Technologies, María specializes in making complex concepts accessible to beginners.'
         },
         modules: {
           html: {
@@ -668,6 +669,17 @@ export default {
     },
     faq: {
       title: 'Frequently Asked Questions',
+      subtitle: 'Find answers to common questions about our courses',
+      searchPlaceholder: 'Search questions...',
+      noResults: 'No questions found matching your search',
+      clearSearch: 'Clear search',
+      categories: {
+        experience: 'Experience Level',
+        materials: 'Materials & Equipment',
+        schedule: 'Schedule & Timing',
+        support: 'Student Support',
+        payment: 'Payment & Pricing'
+      },
       questions: {
         experience: {
           question: 'Do I need any prior experience?',

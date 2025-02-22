@@ -7,8 +7,12 @@ import Testimonials from '../components/Testimonials';
 import FAQ from '../components/FAQ';
 import { NextSeo } from 'next-seo';
 import { JsonLd } from 'react-schemaorg';
+import { useScrollAnimations } from '../hooks/useScrollAnimations';
 
 export default function HomePage() {
+  // Call the custom scroll animations hook
+  useScrollAnimations();
+
   return (
     <>
       <NextSeo
@@ -43,22 +47,22 @@ export default function HomePage() {
         }}
       />
       <div>
-        <div className="animate-slide-up" style={{ animationDelay: '0s' }}>
+        <div data-animate className="animate-slide-up" style={{ animationDelay: '0s' }}>
           <Hero />
         </div>
-        <div className="animate-slide-up" style={{ animationDelay: '0.5s' }}>
+        <div data-animate className="animate-slide-up" style={{ animationDelay: '0.5s' }}>
           <Benefits />
         </div>
-        <div className="animate-slide-up" style={{ animationDelay: '1s' }}>
+        <div data-animate className="animate-slide-up" style={{ animationDelay: '1s' }}>
           <FeaturedProducts />
         </div>
-        <div className="animate-slide-up" style={{ animationDelay: '1.5s' }}>
+        <div data-animate className="animate-slide-up" style={{ animationDelay: '1.5s' }}>
           <Story />
         </div>
-        <div className="animate-slide-up" style={{ animationDelay: '2s' }}>
+        <div data-animate className="animate-slide-up" style={{ animationDelay: '2s' }}>
           <Testimonials />
         </div>
-        <div className="animate-slide-up" style={{ animationDelay: '2.5s' }}>
+        <div data-animate className="animate-slide-up" style={{ animationDelay: '2.5s' }}>
           <FAQ />
         </div>
         <div className="animate-slide-up" style={{ animationDelay: '3s' }}>

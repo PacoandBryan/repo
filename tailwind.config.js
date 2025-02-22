@@ -37,7 +37,7 @@ export default {
         }
       },
       animation: {
-        'fade-in': 'fadeIn 0.5s ease-in-out',
+        'fade-in': 'fade-in 0.2s ease-out',
         'slide-up': 'slideUp 0.5s ease-out',
         bounce: 'bounce 1s infinite',
         'slide-left': 'slide-left 0.3s ease-in-out',
@@ -46,6 +46,7 @@ export default {
         shake: 'shake 0.82s cubic-bezier(.36,.07,.19,.97) both',
         tilt: 'tilt 0.5s ease-in-out',
         'rotate-slow': 'rotateSlow 8s linear infinite',
+        'dropdown': 'dropdown 0.2s ease-out forwards',
       },
       keyframes: {
         fadeIn: {
@@ -86,6 +87,20 @@ export default {
         rotateSlow: {
           '0%': { transform: 'rotate(0deg)' },
           '100%': { transform: 'rotate(360deg)' },
+        },
+        dropdown: {
+          '0%': { 
+            opacity: '0',
+            transform: 'scale(0.95) translateY(-10px)'
+          },
+          '100%': { 
+            opacity: '1',
+            transform: 'scale(1) translateY(0)'
+          },
+        },
+        'fade-in': {
+          '0%': { opacity: '0' },
+          '100%': { opacity: '1' },
         },
       },
       boxShadow: {

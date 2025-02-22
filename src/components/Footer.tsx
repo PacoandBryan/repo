@@ -13,22 +13,6 @@ export default function Footer() {
               Contemporary artistry celebrating the tradition of Mexican embroidery.
             </p>
           </div>
-          
-
-          <div>
-            <h3 className="text-sm font-semibold tracking-wider uppercase text-white">
-              Contact
-            </h3>
-            <ul className="mt-4 space-y-4">
-              <li>
-                <div className="flex space-x-4">
-                  <a href="#" className="text-white/80 hover:text-white hover:scale-110 transition-transform duration-300">
-                    <Instagram size={20} />
-                  </a>
-                </div>
-              </li>
-            </ul>
-          </div>
         </div>
         
         <div className="mt-8 pt-8 border-t border-white/20">

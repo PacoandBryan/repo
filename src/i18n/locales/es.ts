@@ -78,6 +78,7 @@ export default {
     title: 'Preguntas Frecuentes',
     subtitle: 'Encuentra respuestas a preguntas comunes sobre nuestros productos y servicios.',
     search: 'Buscar preguntas...',
+    searchPlaceholder: 'Buscar preguntas...',
     PI: {
       title: 'Información del Producto',
       Q1: '¿De qué está hecha la tela?',
@@ -630,8 +631,8 @@ export default {
             description: 'Explora la rica historia y técnicas detrás de los patrones tradicionales del bordado mexicano.'
           },
           color: {
-            title: 'Teoría del Color y Diseño',
-            description: 'Domina el arte de la combinación de colores y el diseño de patrones para un impacto visual impresionante.'
+            title: 'Herencia Cultural Mexicana en el Bordado',
+            description: 'Aprende sobre el rico simbolismo y la importancia cultural detrás de los patrones tradicionales del bordado mexicano.'
           },
           advanced: {
             title: 'Técnicas Avanzadas',
@@ -645,8 +646,8 @@ export default {
         description: 'Comienza tu viaje en el desarrollo web con esta introducción completa a las tecnologías fundamentales que impulsan la web moderna.',
         instructor: {
           name: 'María de la Luz',
-          role: 'Desarrollador Web Senior',
-          bio: 'Un educador apasionado con más de 10 años de experiencia en la industria, Alex se especializa en hacer accesibles los conceptos complejos para principiantes.'
+          role: 'Desarrolladora Web Senior',
+          bio: 'Con más de 10 años de experiencia en EDS y un título oficial en Tecnologías de la Información, María se especializa en hacer accesibles los conceptos complejos para principiantes.'
         },
         modules: {
           html: {
@@ -670,6 +671,17 @@ export default {
     },
     faq: {
       title: 'Preguntas Frecuentes',
+      subtitle: 'Encuentra respuestas a preguntas comunes sobre nuestros cursos',
+      searchPlaceholder: 'Buscar preguntas...',
+      noResults: 'No se encontraron preguntas que coincidan con tu búsqueda',
+      clearSearch: 'Limpiar búsqueda',
+      categories: {
+        experience: 'Nivel de Experiencia',
+        materials: 'Materiales y Equipo',
+        schedule: 'Horarios y Duración',
+        support: 'Apoyo al Estudiante',
+        payment: 'Pagos y Precios'
+      },
       questions: {
         experience: {
           question: '¿Necesito experiencia previa?',

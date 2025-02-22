@@ -65,7 +65,7 @@ const faqCategories = {
             <div className="relative w-full max-w-2xl">
               <input
                 type="text"
-                placeholder="Search questions..."
+                placeholder={t("FAQ.searchPlaceholder")}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full pl-4 pr-12 py-3 text-sm rounded-full bg-[#fcdce4]/30 border-2 border-[#fcc4d4]/30 placeholder-primary/50 text-primary focus:outline-none focus:border-[#fcc4d4]/50 focus:bg-[#fcdce4]/40 transition-all duration-300"

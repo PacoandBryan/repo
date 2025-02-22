@@ -8,47 +8,46 @@ import purse2 from '../../assets/purse2.jpg';
 import purse2V2 from '../../assets/purse2-V2.jpg';
 import purse3 from '../../assets/purse3.jpg';
 
-const products = [
-  {
-    id: 1,
-    name: "Bolso azul grande",
-    price: 1950,
-    description: "Bolso de color azul oscuro de tamaño grande",
-    image: purse1,
-    artisan: "María de la Luz",
-    region: "Estado de México",
-    technique: "Floral embroidery",
-    category: "Bolso",
-  },
-  {
-    id: 2,
-    name: "Bolso conejo",
-    price: 2800,
-    description: "Bolso de color blanco con detalles y forma de conejo.",
-    image: purse2,
-    additionalImages: [purse2V2],
-    artisan: "María de la Luz",
-    region: "Estado de México",
-    technique: "Geometric weaving",
-    category: "Peluche",
-  },
-  {
-    id: 3,
-    name: "Bolso blanco y rosa",
-    price: 1200,
-    description: "Hermoso bolso blanco y rosa con detalles tiernos e infantiles",
-    image: purse3,
-    artisan: "María de la Luz",
-    region: "Estado de México",
-    technique: "Traditional embroidery",
-    category: "Bolso",
-  }
-];
 
 export default function FeaturedProducts() {
   const { t } = useTranslation();
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
-
+  const products = [
+    {
+      id: 1,
+      name: t('catalog.products.purse1.name'),
+      price: 1950,
+      description: t('catalog.products.purse1.description'),
+      image: purse1,
+      artisan: t('catalog.products.purse1.artisan'),
+      region: t('catalog.products.purse1.region'),
+      technique: t('catalog.products.purse1.technique'),
+      category: t('catalog.categories.purse'),
+    },
+    {
+      id: 2,
+      name: t('catalog.products.purse2.name'),
+      price: 2800,
+      description: t('catalog.products.purse2.description'),
+      image: purse2,
+      additionalImages: [purse2V2],
+      artisan: t('catalog.products.purse2.artisan'),
+      region: t('catalog.products.purse2.region'),
+      technique: t('catalog.products.purse2.technique'),
+      category: t('catalog.categories.plush'),
+    },
+    {
+      id: 3,
+      name: t('catalog.products.purse3.name'),
+      price: 1200,
+      description: t('catalog.products.purse3.description'),
+      image: purse3,
+      artisan: t('catalog.products.purse3.artisan'),
+      region: t('catalog.products.purse3.region'),
+      technique: t('catalog.products.purse3.technique'),
+      category: t('catalog.categories.purse'),
+    }
+  ];
   const handleQuickView = (product: Product) => {
     setSelectedProduct(product);
   };
