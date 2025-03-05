@@ -24,3 +24,6 @@ dist-ssr
 *.sw?
 # Parcel cache
 .parcel-cache
+
+# Env
+.env

@@ -6,6 +6,16 @@ export default defineConfig({
   optimizeDeps: {
     exclude: ['lucide-react'],
   },
+  server: {
+    port: 3000,
+    proxy: {
+      '/api': {
+        target: 'http://localhost:5000',
+        changeOrigin: true,
+        secure: false,
+      }
+    },
+  },
   build: {
     rollupOptions: {
       output: {
@@ -21,10 +31,10 @@ export default defineConfig({
     minify: 'terser',
     terserOptions: {
       compress: {
-        drop_console: true,
-        drop_debugger: true
+        drop_console: false,
+        drop_debugger: false
       }
     }
   },
-  assetsInclude: ['**/*.JPG'] // Add this line
+  assetsInclude: ['**/*.JPG']
 });

@@ -8,6 +8,7 @@ import FAQ from '../components/FAQ';
 import { NextSeo } from 'next-seo';
 import { JsonLd } from 'react-schemaorg';
 import { useScrollAnimations } from '../hooks/useScrollAnimations';
+import Newsletter from '../components/Newsletter';
 
 export default function HomePage() {
   // Call the custom scroll animations hook
@@ -66,7 +67,7 @@ export default function HomePage() {
           <FAQ />
         </div>
         <div className="animate-slide-up" style={{ animationDelay: '3s' }}>
-          {/*Temporary disabled until backend is ready <Newsletter />*/}
+          <Newsletter />
         </div>
       </div>
     </>
