@@ -1,0 +1,115 @@
+/* Custom range input styles */
+input[type="range"] {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 4px;
+  background: #e5e7eb;
+  border-radius: 2px;
+  outline: none;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  background: #f09bc0;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+input[type="range"]::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  background: #f09bc0;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  border: none;
+}
+
+input[type="range"]::-webkit-slider-thumb:hover {
+  background: #e986b4;
+}
+
+input[type="range"]::-moz-range-thumb:hover {
+  background: #e986b4;
+}
+
+/* Step transition animations */
+.step-enter {
+  opacity: 0;
+  transform: translateX(10px);
+}
+
+.step-enter-active {
+  opacity: 1;
+  transform: translateX(0);
+  transition: opacity 300ms, transform 300ms;
+}
+
+.step-exit {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.step-exit-active {
+  opacity: 0;
+  transform: translateX(-10px);
+  transition: opacity 300ms, transform 300ms;
+}
+
+/* Image preview hover effect */
+.image-preview {
+  position: relative;
+  overflow: hidden;
+}
+
+.image-preview img {
+  transition: transform 0.3s ease;
+}
+
+.image-preview:hover img {
+  transform: scale(1.05);
+}
+
+/* Custom scrollbar for long descriptions */
+.description-preview {
+  max-height: 200px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #f09bc0 #fef4f7;
+}
+
+.description-preview::-webkit-scrollbar {
+  width: 6px;
+}
+
+.description-preview::-webkit-scrollbar-track {
+  background: #fef4f7;
+  border-radius: 3px;
+}
+
+.description-preview::-webkit-scrollbar-thumb {
+  background-color: #f09bc0;
+  border-radius: 3px;
+}
+
+/* Loading spinner animation */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.loading-spinner {
+  animation: spin 1s linear infinite;
+}
+
+/* Watermark preview overlay */
+.watermark-preview {
+  position: absolute;
+  pointer-events: none;
+  transition: all 0.3s ease;
+} 

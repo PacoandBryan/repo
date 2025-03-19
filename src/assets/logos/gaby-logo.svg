@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <rect width="200" height="200" fill="#6c63ff" rx="20" ry="20"/>
+  <text x="100" y="130" font-family="Arial, sans-serif" font-size="60" font-weight="bold" fill="white" text-anchor="middle">GABY</text>
+  <polygon points="100,30 120,80 170,80 130,110 145,160 100,130 55,160 70,110 30,80 80,80" fill="white"/>
+</svg> 
