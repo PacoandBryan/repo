@@ -1225,11 +1225,6 @@ const AdminDashboardPage: React.FC = () => {
             >
               Create Newsletter
             </button>
-            <button 
-              className="py-3 px-4 border border-[#fcc4d4] rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-[#fef4f7] focus:outline-none transition-colors duration-200"
-            >
-              View Orders
-            </button>
           </div>
         </div>
 
