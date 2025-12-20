@@ -17,6 +17,7 @@ import FlaskLoginPage from './pages/admin/FlaskLoginPage';
 import FlaskCategoriesPage from './pages/admin/FlaskCategoriesPage';
 import FlaskProductsPage from './pages/admin/FlaskProductsPage';
 import FlaskDashboardPage from './pages/admin/FlaskDashboardPage';
+import CherryBlossomChatbot from './components/CherryBlossomChatbot';
 
 // Layout Components
 import PublicLayout from './components/layout/PublicLayout';
@@ -55,7 +56,7 @@ function App() {
               <Route path="stitched-teddies" element={<StitchedTeddiesPage />} />
               <Route path="chocolate-delice" element={<ChocolateDelicePage />} />
             </Route>
-            
+
             {/* Admin Routes with Layout */}
             <Route path="/admin" element={<AdminLayout />}>
               <Route path="login" element={<FlaskLoginPage />} />
@@ -84,10 +85,11 @@ function App() {
                 }
               />
             </Route>
-            
+
             {/* Fallback route */}
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
+          <CherryBlossomChatbot />
         </div>
       </Router>
     </AdminProvider>

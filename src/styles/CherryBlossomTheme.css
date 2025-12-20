@@ -151,3 +151,53 @@
     box-shadow: 0 0 15px rgba(255, 107, 154, 0.2);
     outline: none;
 }
+
+/* Markdown Styles for Chatbot */
+.markdown-body p {
+    margin-bottom: 0.5rem;
+}
+
+.markdown-body p:last-child {
+    margin-bottom: 0;
+}
+
+.markdown-body ul,
+.markdown-body ol {
+    margin-left: 1.5rem;
+    margin-bottom: 0.5rem;
+    list-style-type: disc;
+}
+
+.markdown-body a {
+    text-decoration: underline;
+    font-weight: 500;
+}
+
+.markdown-body code {
+    background-color: rgba(255, 255, 255, 0.2);
+    padding: 0.1rem 0.3rem;
+    border-radius: 4px;
+    font-family: monospace;
+    font-size: 0.9em;
+}
+
+.markdown-body pre {
+    background-color: rgba(0, 0, 0, 0.05);
+    padding: 0.5rem;
+    border-radius: 8px;
+    overflow-x: auto;
+    margin-bottom: 0.5rem;
+}
+
+/* Specific overrides for bot bubble (light background) */
+.bg-white .markdown-body code {
+    background-color: rgba(0, 0, 0, 0.05);
+    color: #db2777;
+    /* pink-700 */
+}
+
+/* Specific overrides for user bubble (dark pink background) */
+.bg-gradient-to-br .markdown-body code {
+    background-color: rgba(255, 255, 255, 0.2);
+    color: white;
+}

@@ -93,6 +93,9 @@ def create_app(test_config=None):
     app.register_blueprint(catalog_api_bp)
     app.register_blueprint(public_bp)
     
+    from .routes.chat import chat_bp
+    app.register_blueprint(chat_bp)
+    
     # Serve React app for all non-API routes
     @app.route('/', defaults={'path': ''})
     @app.route('/<path:path>')
