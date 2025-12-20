@@ -1,6 +1,8 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
 import { useAdmin } from '../../contexts/AdminContext';
+import FallingYarn from '../../components/FallingYarn';
+import '../../styles/CherryBlossomTheme.css';
 
 interface Category {
   id: number;
@@ -14,24 +16,19 @@ const FlaskCategoriesPage: React.FC = () => {
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
+  const [editingCategory, setEditingCategory] = useState<Category | null>(null);
+
   const [formData, setFormData] = useState({
     name: '',
     description: '',
-    icon: '',
-    icon_path: ''
+    icon: ''
   });
-  const [iconPreview, setIconPreview] = useState<string | null>(null);
-  const [iconFileName, setIconFileName] = useState('');
-  
+
   const { logout, apiCall } = useAdmin();
   const navigate = useNavigate();
-  const blossomsRef = useRef<HTMLDivElement>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const uploadAreaRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     fetchCategories();
-    generateBlossoms();
   }, []);
 
   const fetchCategories = async () => {
@@ -46,704 +43,220 @@ const FlaskCategoriesPage: React.FC = () => {
     }
   };
 
-  const generateBlossoms = () => {
-    if (!blossomsRef.current) return;
-    
-    const root = blossomsRef.current;
-    const count = 24;
-    
-    for (let i = 0; i < count; i++) {
-      const el = document.createElement('div');
-      el.className = 'petal';
-      el.style.left = Math.random() * 100 + 'vw';
-      el.style.top = (-10 - Math.random() * 30) + 'vh';
-      el.style.opacity = (0.6 + Math.random() * 0.4).toFixed(2);
-      const dur = 8 + Math.random() * 10;
-      const delay = Math.random() * -20;
-      const drift = (Math.random() * 100 - 50) + 'px';
-      el.style.setProperty('--x', drift);
-      el.style.animation = `fall ${dur}s linear ${delay}s infinite`;
-      el.style.background = Math.random() > 0.3
-        ? 'radial-gradient(circle at 30% 30%, #fff 0 20%, transparent 21%), var(--petal)'
-        : 'radial-gradient(circle at 30% 30%, #fff 0 20%, transparent 21%), var(--petal-2)';
-      root.appendChild(el);
-    }
-  };
-
   const handleLogout = async (event: React.MouseEvent) => {
     event.preventDefault();
     try {
-      await fetch('/admin/logout?format=json', {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      });
+      await fetch('/admin/logout?format=json', { method: 'GET' });
       logout();
       navigate('/');
     } catch (error) {
-      console.error('Logout error:', error);
       logout();
       navigate('/');
     }
   };
 
-  const openModal = () => {
+  const openModal = (category?: Category) => {
+    if (category) {
+      setEditingCategory(category);
+      setFormData({
+        name: category.name,
+        description: category.description || '',
+        icon: category.icon || ''
+      });
+    } else {
+      setEditingCategory(null);
+      setFormData({
+        name: '',
+        description: '',
+        icon: ''
+      });
+    }
     setShowModal(true);
-    document.body.style.overflow = 'hidden';
-  };
-
-  const closeModal = () => {
-    setShowModal(false);
-    document.body.style.overflow = '';
-    setFormData({ name: '', description: '', icon: '', icon_path: '' });
-    setIconPreview(null);
-    setIconFileName('');
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
     try {
-      const data = {
-        name: formData.name,
-        description: formData.description,
-        icon: formData.icon_path || formData.icon
-      };
-      
-      await apiCall('/categories', 'POST', data);
-      
-      alert('Category added successfully!');
-      closeModal();
+      if (editingCategory) {
+        await apiCall(`/categories/${editingCategory.id}`, 'PUT', formData);
+      } else {
+        await apiCall('/categories', 'POST', formData);
+      }
+      setShowModal(false);
       fetchCategories();
     } catch (err) {
-      console.error('Error adding category:', err);
-      alert('Error adding category');
+      alert('Could not update the category garden.');
     }
   };
 
-  const handleFileUpload = (file: File) => {
-    const allowedTypes = ['image/svg+xml', 'image/png', 'image/jpeg', 'image/jpg'];
-    if (!allowedTypes.includes(file.type)) {
-      alert('Please upload only SVG, PNG, or JPG files');
-      return;
-    }
-
-    if (file.size > 2 * 1024 * 1024) {
-      alert('File size must be less than 2MB for icons');
-      return;
-    }
-
-    const reader = new FileReader();
-    reader.onload = function(e) {
-      const result = e.target?.result as string;
-      setIconPreview(result);
-      setIconFileName(file.name);
-      setFormData(prev => ({ ...prev, icon: result, icon_path: '' }));
-    };
-    reader.readAsDataURL(file);
-  };
-
-  const handleFileInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files.length > 0) {
-      handleFileUpload(e.target.files[0]);
+  const handleDelete = async (id: number) => {
+    if (window.confirm('Deleting a category will leave its treasures uncategorized. Proceed?')) {
+      try {
+        await apiCall(`/categories/${id}`, 'DELETE');
+        fetchCategories();
+      } catch (err) {
+        alert('Could not remove category.');
+      }
     }
   };
-
-  const handleDrop = (e: React.DragEvent) => {
-    e.preventDefault();
-    if (uploadAreaRef.current) {
-      uploadAreaRef.current.classList.remove('dragover');
-    }
-    
-    const files = e.dataTransfer.files;
-    if (files.length > 0) {
-      handleFileUpload(files[0]);
-    }
-  };
-
-  const removeIcon = () => {
-    setIconPreview(null);
-    setIconFileName('');
-    setFormData(prev => ({ ...prev, icon: '' }));
-    if (fileInputRef.current) {
-      fileInputRef.current.value = '';
-    }
-  };
-
-  if (loading) {
-    return (
-      <div className="categories-wrap">
-        <div className="text-center">
-          <div className="welcome-luz">Loading...</div>
-        </div>
-      </div>
-    );
-  }
 
   return (
-    <>
-      <style dangerouslySetInnerHTML={{
-        __html: `
-          :root{
-            --bg1:#fff0f6;
-            --bg2:#ffe3ee;
-            --petal:#ffb7c5;
-            --petal-2:#ff8fab;
-            --ink:#3d2a2a;
-            --muted:#8c6a6a;
-            --card:#fff7fb;
-            --border:#ffc2d1;
-            --accent:#ff6b9a;
-            --accent-2:#ff9ecf;
-          }
+    <div className="min-h-screen bg-gradient-to-br from-[#fff0f6] to-[#ffe3ee] relative overflow-hidden pb-20">
+      <FallingYarn />
 
-          html,body{height:100%; background:linear-gradient(120deg,var(--bg1),var(--bg2)); margin:0; padding:0;}
-          
-          .navbar-inverse{background:linear-gradient(90deg,#ff9ecf,#ff6b9a); border-color:transparent; border-radius:0; margin-bottom:0; position:fixed; top:0; left:0; right:0; z-index:1000; box-shadow:0 2px 10px rgba(255,107,154,.2); transition:all .4s cubic-bezier(0.4, 0, 0.2, 1);}
-          .navbar-inverse:hover{box-shadow:0 4px 20px rgba(255,107,154,.3); transform:translateY(-1px);}
-          .navbar-inverse .navbar-brand, .navbar-inverse .navbar-nav>li>a{color:#fff !important; text-shadow:none; transition:all .3s cubic-bezier(0.4, 0, 0.2, 1); position:relative; font-weight:500;}
-          .navbar-inverse .navbar-brand:hover, .navbar-inverse .navbar-nav>li>a:hover{color:#fff !important; transform:scale(1.02); opacity:0.95;}
-          .navbar-inverse .navbar-nav>li.active>a{background:rgba(255,255,255,.15) !important; border-radius:6px; font-weight:600;}
-          
-          .container-fluid{width:100% !important; padding:0 !important; background:transparent !important;}
-          .container{width:100% !important; max-width:none !important; padding-left:0 !important; padding-right:0 !important;}
-          .row{margin-left:0 !important; margin-right:0 !important;}
-
-          .categories-wrap{
-            position:relative;
-            min-height:100vh;
-            padding:92px 28px 28px;
-            color:var(--ink);
-            overflow:hidden;
-          }
-
-          .blossoms{position:absolute; inset:0; pointer-events:none;}
-          .petal{position:absolute; width:14px; height:14px; border-radius:67% 33% 67% 33%/33% 67% 33% 67%;
-            background:radial-gradient(circle at 30% 30%, #fff 0 20%, transparent 21%), var(--petal);
-            box-shadow: inset -2px -2px 0 rgba(255,150,170,.5);
-            opacity:.85; filter:saturate(105%);
-          }
-          @keyframes fall{
-            0%{ transform:translate3d(var(--x,0), -10%, 0) rotate(0deg); opacity:.0 }
-            8%{ opacity:.9 }
-            100%{ transform:translate3d(calc(var(--x,0) + 10px), 110vh, 0) rotate(360deg); opacity:.95 }
-          }
-
-          .categories-header{display:flex; align-items:center; justify-content:space-between; gap:16px; margin-bottom:24px;}
-          .categories-title{display:flex; align-items:center; gap:12px}
-          .categories-title h2{margin:0; font-weight:900; letter-spacing:.3px}
-
-          .category-grid{
-            display:grid;
-            grid-template-columns:repeat(auto-fill, minmax(280px, 1fr));
-            gap:20px;
-          }
-
-          .category-card{
-            background:linear-gradient(180deg, var(--card), #fffafd);
-            border:1px solid var(--border);
-            border-radius:14px;
-            padding:20px;
-            box-shadow:0 14px 34px rgba(255,170,200,.35);
-            transition:transform .12s ease, box-shadow .2s ease;
-            position:relative;
-            overflow:hidden;
-          }
-          .category-card:hover{ transform:translateY(-3px); box-shadow:0 18px 40px rgba(255,150,190,.45) }
-
-          .category-icon{
-            width:50px;
-            height:50px;
-            background:linear-gradient(135deg, var(--accent), var(--accent-2));
-            border-radius:12px;
-            display:flex;
-            align-items:center;
-            justify-content:center;
-            margin-bottom:16px;
-          }
-          .category-icon svg{width:24px; height:24px; stroke:#fff;}
-
-          .category-name{
-            font-size:18px;
-            font-weight:800;
-            color:var(--ink);
-            margin-bottom:8px;
-          }
-
-          .category-count{
-            color:var(--muted);
-            font-size:14px;
-            margin-bottom:16px;
-          }
-
-          .category-actions{
-            display:flex;
-            gap:8px;
-          }
-          .btn-action{
-            padding:8px 16px;
-            border-radius:8px;
-            text-decoration:none;
-            font-weight:600;
-            font-size:13px;
-            transition:all .2s;
-            flex:1;
-            text-align:center;
-            cursor:pointer;
-            border:none;
-          }
-          .btn-edit{
-            background:linear-gradient(135deg, #ff70a6, #ff96c5);
-            color:#fff;
-          }
-          .btn-edit:hover{transform:translateY(-1px); box-shadow:0 6px 20px rgba(255,120,170,.4);}
-          .btn-delete{
-            background:linear-gradient(135deg, #ff6b6b, #ff8787);
-            color:#fff;
-          }
-          .btn-delete:hover{transform:translateY(-1px); box-shadow:0 6px 20px rgba(255,100,100,.4);}
-
-          .btn-primary{
-            background:linear-gradient(135deg, #ff70a6, #ff96c5);
-            color:#fff; border:none; border-radius:12px; padding:12px 20px; font-weight:800;
-            text-decoration:none; display:inline-flex; align-items:center; gap:8px;
-            box-shadow:0 10px 28px rgba(255,120,170,.4);
-            transition:all .2s;
-            cursor:pointer;
-          }
-          .btn-primary:hover{transform:translateY(-2px); box-shadow:0 14px 35px rgba(255,120,170,.5);}
-
-          .add-category-card{
-            background:linear-gradient(180deg, rgba(255,183,197,.1), rgba(255,183,197,.05));
-            border:2px dashed var(--border);
-            display:flex;
-            flex-direction:column;
-            align-items:center;
-            justify-content:center;
-            min-height:200px;
-            cursor:pointer;
-            transition:all .2s;
-          }
-          .add-category-card:hover{
-            background:linear-gradient(180deg, rgba(255,183,197,.2), rgba(255,183,197,.1));
-            border-color:var(--accent);
-          }
-
-          .modal-overlay{
-            position:fixed;
-            top:0;
-            left:0;
-            right:0;
-            bottom:0;
-            background:rgba(0,0,0,.6);
-            backdrop-filter:blur(5px);
-            z-index:2000;
-            display:none;
-            align-items:center;
-            justify-content:center;
-            opacity:0;
-            transition:opacity .3s ease;
-          }
-          .modal-overlay.active{
-            display:flex;
-            opacity:1;
-          }
-          .modal-wizard{
-            background:linear-gradient(180deg, var(--card), #fffafd);
-            border:1px solid var(--border);
-            border-radius:20px;
-            padding:32px;
-            max-width:500px;
-            width:90%;
-            max-height:80vh;
-            overflow-y:auto;
-            box-shadow:0 20px 60px rgba(255,107,154,.4);
-            transform:scale(0.9) translateY(20px);
-            transition:transform .3s cubic-bezier(0.4, 0, 0.2, 1);
-          }
-          .modal-overlay.active .modal-wizard{
-            transform:scale(1) translateY(0);
-          }
-          .modal-header{
-            display:flex;
-            align-items:center;
-            justify-content:space-between;
-            margin-bottom:24px;
-          }
-          .modal-title{
-            font-size:24px;
-            font-weight:800;
-            color:var(--ink);
-            display:flex;
-            align-items:center;
-            gap:12px;
-          }
-          .modal-close{
-            background:transparent;
-            border:none;
-            font-size:24px;
-            color:var(--muted);
-            cursor:pointer;
-            padding:8px;
-            border-radius:8px;
-            transition:all .2s;
-          }
-          .modal-close:hover{
-            background:var(--bg2);
-            color:var(--accent);
-          }
-          .form-group{
-            margin-bottom:20px;
-          }
-          .form-label{
-            display:block;
-            margin-bottom:8px;
-            font-weight:600;
-            color:var(--ink);
-          }
-          .form-input, .form-textarea{
-            width:100%;
-            padding:12px 16px;
-            border:1px solid var(--border);
-            border-radius:10px;
-            background:var(--card);
-            color:var(--ink);
-            font-size:14px;
-            transition:all .2s;
-            outline:none;
-          }
-          .form-input:focus, .form-textarea:focus{
-            border-color:var(--accent);
-            box-shadow:0 0 0 4px rgba(255,107,154,.18);
-          }
-          .form-textarea{
-            min-height:80px;
-            resize:vertical;
-          }
-          .form-actions{
-            display:flex;
-            gap:12px;
-            justify-content:flex-end;
-            margin-top:24px;
-          }
-          .btn-cancel{
-            padding:12px 24px;
-            border:1px solid var(--border);
-            border-radius:10px;
-            background:transparent;
-            color:var(--ink);
-            font-weight:600;
-            cursor:pointer;
-            transition:all .2s;
-          }
-          .btn-cancel:hover{
-            background:var(--bg2);
-          }
-          .btn-submit{
-            padding:12px 24px;
-            border:none;
-            border-radius:10px;
-            background:linear-gradient(135deg, #ff70a6, #ff96c5);
-            color:#fff;
-            font-weight:700;
-            cursor:pointer;
-            transition:all .2s;
-            box-shadow:0 4px 15px rgba(255,120,170,.3);
-          }
-          .btn-submit:hover{
-            transform:translateY(-1px);
-            box-shadow:0 6px 20px rgba(255,120,170,.4);
-          }
-
-          .file-upload-area{
-            border:2px dashed var(--border);
-            border-radius:12px;
-            padding:20px;
-            text-align:center;
-            background:var(--card);
-            transition:all .3s ease;
-            cursor:pointer;
-            position:relative;
-          }
-          .file-upload-area:hover{
-            border-color:var(--accent);
-            background:rgba(255,183,197,.1);
-          }
-          .file-upload-area.dragover{
-            border-color:var(--accent);
-            background:rgba(255,183,197,.2);
-            transform:scale(1.02);
-          }
-          .file-upload-input{
-            display:none;
-          }
-          .file-upload-icon{
-            width:40px;
-            height:40px;
-            margin:0 auto 8px;
-            color:var(--muted);
-          }
-          .file-upload-text{
-            color:var(--ink);
-            font-weight:600;
-            margin-bottom:4px;
-            font-size:14px;
-          }
-          .file-upload-hint{
-            color:var(--muted);
-            font-size:11px;
-          }
-          .file-preview{
-            margin-top:12px;
-            display:none;
-          }
-          .file-preview.active{
-            display:block;
-          }
-          .preview-image{
-            max-width:100px;
-            max-height:100px;
-            border-radius:8px;
-            border:1px solid var(--border);
-          }
-          .preview-info{
-            display:flex;
-            justify-content:space-between;
-            align-items:center;
-            margin-top:8px;
-            padding:6px;
-            background:var(--bg2);
-            border-radius:6px;
-          }
-          .preview-filename{
-            font-size:11px;
-            color:var(--ink);
-            font-weight:500;
-          }
-          .preview-remove{
-            background:var(--accent);
-            color:#fff;
-            border:none;
-            border-radius:4px;
-            padding:3px 6px;
-            font-size:10px;
-            cursor:pointer;
-            transition:all .2s;
-          }
-          .preview-remove:hover{
-            background:var(--petal-2);
-          }
-        `
-      }} />
-
-      {/* Navigation Bar */}
-      <nav className="navbar navbar-inverse">
-        <div className="container-fluid">
-          <div className="navbar-header">
-            <button type="button" className="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
-              <span className="sr-only">Toggle navigation</span>
-              <span className="icon-bar"></span>
-              <span className="icon-bar"></span>
-              <span className="icon-bar"></span>
-            </button>
-            <a className="navbar-brand" href="/admin/dashboard">Blossom Admin</a>
+      {/* Navigation */}
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-white/40 backdrop-blur-xl border-b border-[#ffc2d1]/30">
+        <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+          <div className="flex items-center gap-12">
+            <a href="https://diky.mx" target="_blank" rel="noopener noreferrer" className="text-2xl font-black text-[#ff6b9a] hover:scale-105 transition-transform">
+              DIKY<span className="text-[#3d2a2a]">.mx</span>
+            </a>
+            <div className="hidden md:flex items-center gap-8">
+              <Link to="/admin/dashboard" className="text-sm font-bold text-[#8c6a6a] hover:text-[#ff6b9a] uppercase tracking-widest transition-colors">Dashboard</Link>
+              <Link to="/admin/products" className="text-sm font-bold text-[#8c6a6a] hover:text-[#ff6b9a] uppercase tracking-widest transition-colors">Products</Link>
+              <Link to="/admin/categories" className="text-sm font-bold text-[#ff6b9a] uppercase tracking-widest border-b-2 border-[#ff6b9a] pb-1">Categories</Link>
+            </div>
           </div>
-          <div id="navbar" className="navbar-collapse collapse">
-            <ul className="nav navbar-nav">
-              <li><a href="/admin/dashboard">Dashboard</a></li>
-              <li><a href="/admin/products">Products</a></li>
-              <li className="active"><a href="/admin/categories">Categories</a></li>
-            </ul>
-            <ul className="nav navbar-nav navbar-right">
-              <li><a href="#" onClick={handleLogout}>Logout</a></li>
-            </ul>
-          </div>
+          <button
+            onClick={handleLogout}
+            className="text-sm font-bold text-[#8c6a6a] hover:text-[#ff6b9a] uppercase tracking-widest flex items-center gap-2 transition-colors"
+          >
+            <span>Exit Garden</span>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9" />
+            </svg>
+          </button>
         </div>
       </nav>
 
-      <div className="categories-wrap">
-        <div className="blossoms" ref={blossomsRef}></div>
-
-        <div className="categories-header">
-          <div className="categories-title">
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
-              <defs>
-                <linearGradient id="g1" x1="0" x2="24" y1="0" y2="24">
-                  <stop offset="0%" stopColor="#ff6b9a"/>
-                  <stop offset="100%" stopColor="#ff9ecf"/>
-                </linearGradient>
-              </defs>
-              <path d="M12 2l-5.5 9h11z" stroke="url(#g1)" strokeWidth="2"/>
-              <circle cx="17.5" cy="17.5" r="4.5" stroke="url(#g1)" strokeWidth="2"/>
-              <path d="M3 13.5h8v8H3z" stroke="url(#g1)" strokeWidth="2"/>
-            </svg>
-            <h2>Categories Management</h2>
+      <main className="pt-32 max-w-7xl mx-auto px-6 relative z-10">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+          <div>
+            <h1 className="text-5xl font-black text-[#3d2a2a] tracking-tighter mb-2">Category Garden</h1>
+            <p className="text-[#8c6a6a] font-medium">Organize your treasures into beautiful blooming sections.</p>
           </div>
-          <button className="btn-primary" onClick={openModal}>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-              <path d="M12 5v14M5 12h14" stroke="white" strokeWidth="2"/>
+          <button
+            onClick={() => openModal()}
+            className="cherry-btn flex items-center gap-3"
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+              <path d="M12 5v14M5 12h14" />
             </svg>
-            Add Category
+            <span>Add New Category</span>
           </button>
         </div>
 
-        <div className="category-grid">
-          {categories.length > 0 ? (
-            categories.map((category) => (
-              <div className="category-card" key={category.id}>
-                <div className="category-icon">
-                  {category.icon ? (
-                    <svg viewBox="0 0 24 24" fill="none">
-                      <path d={category.icon} stroke="white" strokeWidth="2"/>
+        {loading ? (
+          <div className="flex items-center justify-center py-20">
+            <div className="w-12 h-12 border-4 border-[#ffb7c5] border-t-[#ff6b9a] rounded-full animate-spin"></div>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {categories.map((category) => (
+              <div key={category.id} className="cherry-card group relative">
+                <div className="absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <button onClick={() => openModal(category)} className="p-2 rounded-lg bg-white/60 text-[#ff6b9a] hover:bg-[#ff6b9a] hover:text-white transition-all">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
                     </svg>
-                  ) : (
-                    <svg viewBox="0 0 24 24" fill="none">
-                      <rect x="3" y="3" width="18" height="18" rx="2" stroke="white" strokeWidth="2"/>
+                  </button>
+                  <button onClick={() => handleDelete(category.id)} className="p-2 rounded-lg bg-white/60 text-red-400 hover:bg-red-400 hover:text-white transition-all">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                      <path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
                     </svg>
-                  )}
-                </div>
-                <div className="category-name">{category.name}</div>
-                <div className="category-count">{category.products_count || 0} products</div>
-                <div className="category-actions">
-                  <button className="btn-action btn-edit">Edit</button>
-                  <button 
-                    className="btn-action btn-delete" 
-                    onClick={() => {
-                      if (confirm('Are you sure you want to delete this category?')) {
-                        // Handle delete
-                      }
-                    }}
-                  >
-                    Delete
                   </button>
                 </div>
-              </div>
-            ))
-          ) : (
-            <div className="category-card" style={{gridColumn: '1/-1', textAlign: 'center', padding: '40px', color: 'var(--muted)'}}>
-              No categories found. <button onClick={openModal} style={{color: 'var(--accent)', background: 'none', border: 'none', cursor: 'pointer'}}>Create your first category</button>
-            </div>
-          )}
-          
-          <div className="add-category-card" onClick={openModal}>
-            <div style={{textAlign: 'center'}}>
-              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" style={{marginBottom: '12px'}}>
-                <path d="M12 5v14M5 12h14" stroke="var(--accent)" strokeWidth="2"/>
-              </svg>
-              <div style={{color: 'var(--accent)', fontWeight: '700'}}>Add New Category</div>
-            </div>
-          </div>
-        </div>
-      </div>
 
-      {/* Add Category Modal */}
-      <div className={`modal-overlay ${showModal ? 'active' : ''}`} onClick={(e) => {
-        if (e.target === e.currentTarget) closeModal();
-      }}>
-        <div className="modal-wizard">
-          <div className="modal-header">
-            <div className="modal-title">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                <defs>
-                  <linearGradient id="modal-gradient" x1="0" x2="24" y1="0" y2="24">
-                    <stop offset="0%" stopColor="#ff6b9a"/>
-                    <stop offset="100%" stopColor="#ff9ecf"/>
-                  </linearGradient>
-                </defs>
-                <path d="M12 2l-5.5 9h11z" stroke="url(#modal-gradient)" strokeWidth="2"/>
-                <circle cx="17.5" cy="17.5" r="4.5" stroke="url(#modal-gradient)" strokeWidth="2"/>
-                <path d="M3 13.5h8v8H3z" stroke="url(#modal-gradient)" strokeWidth="2"/>
-              </svg>
-              Add New Category
-            </div>
-            <button className="modal-close" onClick={closeModal}>&times;</button>
-          </div>
+                <div className="w-16 h-16 rounded-2xl bg-[#ffb7c5]/20 flex items-center justify-center mb-6 text-3xl group-hover:scale-110 transition-transform">
+                  {category.name.toLowerCase().includes('purse') ? '👜' :
+                    category.name.toLowerCase().includes('sweets') ? '🍭' :
+                      category.name.toLowerCase().includes('cake') ? '🍰' : '🌸'}
+                </div>
 
-          <form onSubmit={handleSubmit}>
-            <div className="form-group">
-              <label className="form-label" htmlFor="categoryName">Category Name</label>
-              <input 
-                type="text" 
-                className="form-input" 
-                id="categoryName" 
-                name="name" 
-                required
-                value={formData.name}
-                onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
-              />
-            </div>
+                <h3 className="text-2xl font-black text-[#3d2a2a] mb-2">{category.name}</h3>
+                <p className="text-[#8c6a6a] text-sm mb-6 line-clamp-2">{category.description || 'No description provided for this section of the garden.'}</p>
 
-            <div className="form-group">
-              <label className="form-label" htmlFor="categoryDescription">Description</label>
-              <textarea 
-                className="form-textarea" 
-                id="categoryDescription" 
-                name="description"
-                value={formData.description}
-                onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
-              />
-            </div>
-
-            <div className="form-group">
-              <label className="form-label">Category Icon</label>
-              <div 
-                className="file-upload-area" 
-                ref={uploadAreaRef}
-                onClick={() => fileInputRef.current?.click()}
-                onDragOver={(e) => {
-                  e.preventDefault();
-                  uploadAreaRef.current?.classList.add('dragover');
-                }}
-                onDragLeave={() => uploadAreaRef.current?.classList.remove('dragover')}
-                onDrop={handleDrop}
-              >
-                <input 
-                  type="file" 
-                  className="file-upload-input" 
-                  ref={fileInputRef}
-                  onChange={handleFileInput}
-                  accept=".svg,.png,.jpg,.jpeg"
-                />
-                <svg className="file-upload-icon" viewBox="0 0 24 24" fill="none">
-                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" stroke="currentColor" strokeWidth="2"/>
-                  <polyline points="17,8 12,3 7,8" stroke="currentColor" strokeWidth="2"/>
-                  <line x1="12" y1="3" x2="12" y2="15" stroke="currentColor" strokeWidth="2"/>
-                </svg>
-                <div className="file-upload-text">Upload icon or use SVG path</div>
-                <div className="file-upload-hint">SVG, PNG or JPG (Square format preferred)</div>
-              </div>
-              <div className={`file-preview ${iconPreview ? 'active' : ''}`}>
-                <img className="preview-image" src={iconPreview || ''} alt="Category icon preview"/>
-                <div className="preview-info">
-                  <span className="preview-filename">{iconFileName}</span>
-                  <button className="preview-remove" type="button" onClick={removeIcon}>Remove</button>
+                <div className="flex items-center justify-between pt-6 border-t border-[#ffc2d1]/20">
+                  <span className="text-xs font-black uppercase text-[#ff6b9a] tracking-widest">{category.products_count || 0} ITEMS</span>
+                  <Link to="/admin/products" className="text-xs font-bold text-[#8c6a6a] hover:text-[#ff6b9a] uppercase tracking-widest">View All</Link>
                 </div>
               </div>
-              <small style={{color: 'var(--muted)', fontSize: '11px', marginTop: '4px', display: 'block'}}>Or enter SVG path below:</small>
+            ))}
+
+            <div
+              onClick={() => openModal()}
+              className="cherry-card border-dashed border-2 border-[#ffc2d1] bg-white/10 flex flex-col items-center justify-center py-12 cursor-pointer hover:bg-white/30 transition-all group"
+            >
+              <div className="w-12 h-12 rounded-full border-2 border-[#ffb7c5] flex items-center justify-center text-[#ffb7c5] group-hover:scale-110 group-hover:border-[#ff6b9a] group-hover:text-[#ff6b9a] transition-all mb-4">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+                  <path d="M12 5v14M5 12h14" />
+                </svg>
+              </div>
+              <span className="font-black text-[#ffb7c5] group-hover:text-[#ff6b9a] uppercase tracking-widest text-sm">Grow New Section</span>
+            </div>
+          </div>
+        )}
+      </main>
+
+      {/* Modal */}
+      {showModal && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-[#3d2a2a]/40 backdrop-blur-md animate-fade-in">
+          <div className="cherry-card w-full max-w-lg shadow-2xl animate-scale-up">
+            <div className="flex items-center justify-between mb-8">
+              <h2 className="text-3xl font-black text-[#3d2a2a] tracking-tighter">
+                {editingCategory ? 'Edit Section' : 'Add New Section'}
+              </h2>
+              <button
+                onClick={() => setShowModal(false)}
+                className="text-[#8c6a6a] hover:text-[#ff6b9a] transition-colors"
+              >
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                  <path d="M18 6L6 18M6 6l12 12" />
+                </svg>
+              </button>
             </div>
 
-            <div className="form-group">
-              <label className="form-label" htmlFor="categoryIconPath">SVG Path (Alternative)</label>
-              <input 
-                type="text" 
-                className="form-input" 
-                id="categoryIconPath" 
-                name="icon_path" 
-                placeholder="M12 2l-5.5 9h11z"
-                value={formData.icon_path}
-                onChange={(e) => setFormData(prev => ({ ...prev, icon_path: e.target.value, icon: '' }))}
-              />
-            </div>
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div>
+                <label className="block text-sm font-bold text-[#3d2a2a] mb-2 uppercase tracking-tighter">Section Name</label>
+                <input
+                  className="cherry-input w-full"
+                  placeholder="e.g. Blossom Purses"
+                  required
+                  value={formData.name}
+                  onChange={e => setFormData({ ...formData, name: e.target.value })}
+                />
+              </div>
 
-            <div className="form-actions">
-              <button type="button" className="btn-cancel" onClick={closeModal}>Cancel</button>
-              <button type="submit" className="btn-submit">Add Category</button>
-            </div>
-          </form>
+              <div>
+                <label className="block text-sm font-bold text-[#3d2a2a] mb-2 uppercase tracking-tighter">Purpose / Description</label>
+                <textarea
+                  className="cherry-input w-full min-h-[100px]"
+                  placeholder="What treasures belong here?"
+                  value={formData.description}
+                  onChange={e => setFormData({ ...formData, description: e.target.value })}
+                />
+              </div>
+
+              <div className="pt-4">
+                <button type="submit" className="cherry-btn w-full">
+                  {editingCategory ? 'Save Changes' : 'Grow Section'}
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
-      </div>
-    </>
+      )}
+
+      {/* Styles for Modal Animations */}
+      <style dangerouslySetInnerHTML={{
+        __html: `
+        @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes scale-up { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+        .animate-fade-in { animation: fade-in 0.3s ease-out; }
+        .animate-scale-up { animation: scale-up 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+      `}} />
+    </div>
   );
 };
 
