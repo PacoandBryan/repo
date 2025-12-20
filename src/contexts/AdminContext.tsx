@@ -17,7 +17,7 @@ const AdminContext = createContext<AdminContextType>({
   isAuthenticated: false,
   admin: null,
   login: async () => false,
-  logout: () => {},
+  logout: () => { },
   loading: true,
   apiCall: async () => ({}),
 });
@@ -37,15 +37,15 @@ export const AdminProvider: React.FC<AdminProviderProps> = ({ children }) => {
   const validateToken = async () => {
     const token = localStorage.getItem('admin_token');
     const adminData = localStorage.getItem('admin_data');
-    
+
     console.log("Token validation - Token exists:", !!token);
     console.log("Token validation - Admin data exists:", !!adminData);
-    
+
     if (!token || !adminData) {
       setLoading(false);
       return;
     }
-    
+
     try {
       // Call a simple protected endpoint to validate the token
       console.log("Validating token with backend...");
@@ -56,9 +56,9 @@ export const AdminProvider: React.FC<AdminProviderProps> = ({ children }) => {
         },
         credentials: 'include'
       });
-      
+
       console.log("Token validation response:", response.status);
-      
+
       if (response.ok) {
         // Token is valid
         console.log("Token is valid, setting authenticated state");
@@ -84,10 +84,10 @@ export const AdminProvider: React.FC<AdminProviderProps> = ({ children }) => {
   const checkAuthState = () => {
     const token = localStorage.getItem('admin_token');
     const adminData = localStorage.getItem('admin_data');
-    
+
     console.log("Auth check - Token exists:", !!token);
     console.log("Auth check - Admin data exists:", !!adminData);
-    
+
     if (token && adminData) {
       try {
         setAdmin(JSON.parse(adminData));
@@ -114,28 +114,28 @@ export const AdminProvider: React.FC<AdminProviderProps> = ({ children }) => {
     try {
       console.log("Login attempt started for:", username);
       setLoading(true);
-      
+
       // Log the request details for debugging
       console.log("Making request to:", '/api/admin/auth', "with method: POST");
-      
+
       const response = await fetch('/api/admin/auth', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ 
-          username, 
-          password 
+        body: JSON.stringify({
+          username,
+          password
         })
       });
 
       console.log("Login response status:", response.status);
       console.log("Login response headers:", Object.fromEntries([...response.headers.entries()]));
-      
+
       // Get full response for debugging
       const responseText = await response.text();
       console.log("Full response text:", responseText.substring(0, 200) + (responseText.length > 200 ? '...' : ''));
-      
+
       // Try to parse it as JSON
       let data;
       try {
@@ -144,39 +144,39 @@ export const AdminProvider: React.FC<AdminProviderProps> = ({ children }) => {
         console.error("Failed to parse response as JSON:", e);
         throw new Error(`Login failed: Could not parse server response`);
       }
-      
+
       if (!response.ok) {
         // Handle non-JSON responses or empty responses safely
         let errorMessage = `Login failed with status ${response.status}`;
-        
+
         // For 405 errors, add more detailed information
         if (response.status === 405) {
           errorMessage = `Method Not Allowed (405): The server does not allow POST requests to this endpoint. Check your API routes configuration.`;
           console.error(errorMessage);
           throw new Error(errorMessage);
         }
-        
+
         errorMessage = data?.error || errorMessage;
         throw new Error(errorMessage);
       }
 
       console.log("Login successful, received data:", { ...data, access_token: data.access_token ? "[PRESENT]" : "[MISSING]" });
-      
+
       // Verify we received a token before proceeding
       if (!data.access_token) {
         throw new Error('No authentication token received');
       }
-      
+
       // Store the token and admin data
       localStorage.setItem('admin_token', data.access_token);
-      localStorage.setItem('admin_data', JSON.stringify({ 
+      localStorage.setItem('admin_data', JSON.stringify({
         username: data.user?.username || username,
-        email: data.user?.email 
+        email: data.user?.email
       }));
-      
-      setAdmin({ 
+
+      setAdmin({
         username: data.user?.username || username,
-        email: data.user?.email 
+        email: data.user?.email
       });
       setIsAuthenticated(true);
       setLoading(false);
@@ -199,11 +199,11 @@ export const AdminProvider: React.FC<AdminProviderProps> = ({ children }) => {
   // New method to make authenticated API calls to admin endpoints
   const apiCall = async (endpoint: string, method: string = 'GET', data?: any) => {
     const token = localStorage.getItem('admin_token');
-    
+
     if (!token) {
       throw new Error('Authentication required');
     }
-    
+
     const options: RequestInit = {
       method,
       headers: {
@@ -212,30 +212,40 @@ export const AdminProvider: React.FC<AdminProviderProps> = ({ children }) => {
       },
       credentials: 'include'
     };
-    
+
     if (data && (method === 'POST' || method === 'PUT')) {
-      options.body = JSON.stringify(data);
+      if (data instanceof FormData) {
+        options.body = data;
+        // When using FormData, fetch automatically sets the correct Content-Type with boundary
+        if (options.headers && typeof options.headers === 'object') {
+          const headers = { ...options.headers } as Record<string, string>;
+          delete headers['Content-Type'];
+          options.headers = headers;
+        }
+      } else {
+        options.body = JSON.stringify(data);
+      }
     }
-    
+
     try {
       // The backend already has '/api/admin' as the url_prefix, so we shouldn't duplicate it
-      const url = endpoint.startsWith('/') 
+      const url = endpoint.startsWith('/')
         ? `/api/admin${endpoint}`
         : `/api/admin/${endpoint}`;
-      
+
       const response = await fetch(url, options);
-      
+
       if (!response.ok) {
         if (response.status === 401) {
           // Token expired or invalid
           logout();
           throw new Error('Authentication expired. Please login again.');
         }
-        
+
         const errorData = await response.json();
         throw new Error(errorData.error || 'API request failed');
       }
-      
+
       return await response.json();
     } catch (error) {
       console.error(`API call error (${endpoint}):`, error);
@@ -256,14 +266,14 @@ interface ProtectedRouteProps {
   redirectTo?: string;
 }
 
-export const ProtectedAdminRoute: React.FC<ProtectedRouteProps> = ({ 
-  children, 
-  redirectTo = '/admin/login' 
+export const ProtectedAdminRoute: React.FC<ProtectedRouteProps> = ({
+  children,
+  redirectTo = '/admin/login'
 }) => {
   const { isAuthenticated, loading } = useAdmin();
   const navigate = useNavigate();
   const [redirected, setRedirected] = useState(false);
-  
+
   useEffect(() => {
     console.log("Protected route check - Auth:", isAuthenticated, "Loading:", loading);
     if (!loading && !isAuthenticated && !redirected) {
@@ -272,7 +282,7 @@ export const ProtectedAdminRoute: React.FC<ProtectedRouteProps> = ({
       navigate(redirectTo);
     }
   }, [isAuthenticated, loading, redirectTo, navigate, redirected]);
-  
+
   if (loading) {
     return (
       <div className="flex justify-center items-center h-screen">
@@ -283,6 +293,6 @@ export const ProtectedAdminRoute: React.FC<ProtectedRouteProps> = ({
       </div>
     );
   }
-  
+
   return isAuthenticated ? <>{children}</> : null;
 }; 

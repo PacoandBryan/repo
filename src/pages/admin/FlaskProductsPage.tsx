@@ -11,7 +11,9 @@ interface Product {
   price: number;
   category_id?: number;
   category_name?: string;
+  slug: string;
   image_url?: string;
+  image_filename?: string;
   is_active: boolean;
   sku?: string;
   inventory?: number;
@@ -24,6 +26,9 @@ const FlaskProductsPage: React.FC = () => {
   const [wizardStep, setWizardStep] = useState(1);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
+  const [categories, setCategories] = useState<{ id: number; name: string }[]>([]);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [uploading, setUploading] = useState(false);
 
   const [formData, setFormData] = useState({
     title: '',
@@ -31,6 +36,7 @@ const FlaskProductsPage: React.FC = () => {
     price: '',
     sku: '',
     inventory: '',
+    category_id: '',
     is_active: true
   });
 
@@ -39,12 +45,22 @@ const FlaskProductsPage: React.FC = () => {
 
   useEffect(() => {
     fetchProducts();
+    fetchCategories();
   }, []);
+
+  const fetchCategories = async () => {
+    try {
+      const data = await apiCall('/catalog/categories');
+      setCategories(data);
+    } catch (err) {
+      console.error('Error fetching categories:', err);
+    }
+  };
 
   const fetchProducts = async () => {
     try {
       setLoading(true);
-      const data = await apiCall('/products');
+      const data = await apiCall('/catalog/products');
       setProducts(data);
     } catch (err) {
       console.error('Error fetching products:', err);
@@ -74,6 +90,7 @@ const FlaskProductsPage: React.FC = () => {
         price: product.price.toString(),
         sku: product.sku || '',
         inventory: product.inventory?.toString() || '',
+        category_id: product.category_id?.toString() || '',
         is_active: product.is_active
       });
     } else {
@@ -84,10 +101,12 @@ const FlaskProductsPage: React.FC = () => {
         price: '',
         sku: '',
         inventory: '',
+        category_id: '',
         is_active: true
       });
     }
     setWizardStep(1);
+    setSelectedFile(null);
     setShowWizard(true);
   };
 
@@ -96,32 +115,57 @@ const FlaskProductsPage: React.FC = () => {
 
   const handleSubmit = async () => {
     try {
+      setUploading(true);
+      let imageUrl = editingProduct?.image_url;
+      let imageFilename = editingProduct?.image_filename;
+
+      // Handle image upload if a file is selected
+      if (selectedFile) {
+        const formDataUpload = new FormData();
+        formDataUpload.append('file', selectedFile);
+        formDataUpload.append('entity_type', 'product');
+
+        const uploadResponse = await apiCall('/upload', 'POST', formDataUpload);
+        imageUrl = uploadResponse.url;
+        imageFilename = uploadResponse.filename;
+      }
+
+      const finalSku = formData.sku || `${formData.title.substring(0, 3).toUpperCase()}-${Math.floor(Math.random() * 10000)}`.replace(/[^A-Z0-9-]/g, '');
+      const finalCategoryId = parseInt(formData.category_id) || (categories.length > 0 ? categories[0].id : 1);
+
       const data = {
         title: formData.title,
+        slug: editingProduct?.slug || formData.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''),
         description: formData.description,
-        price: parseFloat(formData.price),
-        sku: formData.sku,
+        price: parseFloat(formData.price) || 0,
+        sku: finalSku,
         inventory: formData.inventory ? parseInt(formData.inventory) : 0,
+        category_id: finalCategoryId,
+        image_url: imageUrl,
+        image_filename: imageFilename,
         is_active: formData.is_active
       };
 
       if (editingProduct) {
-        await apiCall(`/products/${editingProduct.id}`, 'PUT', data);
+        await apiCall(`/catalog/products/${editingProduct.id}`, 'PUT', data);
       } else {
-        await apiCall('/products', 'POST', data);
+        await apiCall('/catalog/products', 'POST', data);
       }
 
       setShowWizard(false);
       fetchProducts();
     } catch (err) {
+      console.error('Submit error:', err);
       alert('The garden encountered an issue saving your treasure.');
+    } finally {
+      setUploading(false);
     }
   };
 
   const handleDelete = async (id: number) => {
     if (window.confirm('Are you sure you want to remove this treasure from the garden?')) {
       try {
-        await apiCall(`/products/${id}`, 'DELETE');
+        await apiCall(`/catalog/products/${id}`, 'DELETE');
         fetchProducts();
       } catch (err) {
         alert('Could not remove the item.');
@@ -316,6 +360,19 @@ const FlaskProductsPage: React.FC = () => {
                       onChange={e => setFormData({ ...formData, sku: e.target.value })}
                     />
                   </div>
+                  <div>
+                    <label className="block text-sm font-bold text-[#3d2a2a] mb-2 uppercase tracking-tighter">Category</label>
+                    <select
+                      className="cherry-input w-full"
+                      value={formData.category_id}
+                      onChange={e => setFormData({ ...formData, category_id: e.target.value })}
+                    >
+                      <option value="">Select a Category</option>
+                      {categories.map(cat => (
+                        <option key={cat.id} value={cat.id}>{cat.name}</option>
+                      ))}
+                    </select>
+                  </div>
                 </div>
               )}
 
@@ -371,10 +428,30 @@ const FlaskProductsPage: React.FC = () => {
                       </button>
                     </div>
                   </div>
-                  <div className="text-center p-8 border-2 border-dashed border-[#ffc2d1] rounded-2xl">
-                    <div className="text-4xl mb-2">📸</div>
-                    <p className="font-bold text-[#8c6a6a]">Image Upload is coming soon!</p>
-                    <p className="text-xs text-[#ffb7c5] uppercase tracking-widest font-black mt-1">Luz's Prototype</p>
+                  <div className="text-center p-8 border-2 border-dashed border-[#ffc2d1] rounded-2xl relative overflow-hidden">
+                    {selectedFile ? (
+                      <div className="space-y-4">
+                        <div className="text-4xl">📸</div>
+                        <p className="font-bold text-[#ff6b9a]">{selectedFile.name}</p>
+                        <button
+                          onClick={() => setSelectedFile(null)}
+                          className="text-xs font-black text-[#8c6a6a] uppercase tracking-widest hover:text-red-400 transition-colors"
+                        >
+                          Remove Image
+                        </button>
+                      </div>
+                    ) : (
+                      <>
+                        <div className="text-4xl mb-2">📸</div>
+                        <p className="font-bold text-[#8c6a6a]">Select a beautiful image</p>
+                        <input
+                          type="file"
+                          accept="image/*"
+                          onChange={e => setSelectedFile(e.target.files?.[0] || null)}
+                          className="absolute inset-0 opacity-0 cursor-pointer"
+                        />
+                      </>
+                    )}
                   </div>
                 </div>
               )}
@@ -413,9 +490,10 @@ const FlaskProductsPage: React.FC = () => {
               ) : (
                 <button
                   onClick={handleSubmit}
-                  className="cherry-btn px-10 bg-green-500 shadow-green-200"
+                  disabled={uploading}
+                  className={`cherry-btn px-10 bg-green-500 shadow-green-200 ${uploading ? 'opacity-50 cursor-not-allowed' : ''}`}
                 >
-                  Confirm & Grow
+                  {uploading ? 'Planting...' : 'Confirm & Grow'}
                 </button>
               )}
             </div>

@@ -19,10 +19,10 @@ def create_app(test_config=None):
     
     # Enable CORS
     CORS(app, resources={
-        r"/api/*": {"origins": ["http://localhost:3000", "http://localhost:5002"]},
-        r"/graphql": {"origins": ["http://localhost:3000", "http://localhost:5002"]},
+        r"/api/*": {"origins": "*"},
+        r"/graphql": {"origins": "*"},
         r"/uploads/*": {"origins": "*"},
-        r"/ping": {"origins": ["http://localhost:3000", "http://localhost:5002"]}
+        r"/ping": {"origins": "*"}
     })
     
     # Set up logging
@@ -85,11 +85,13 @@ def create_app(test_config=None):
     from .routes.admin import admin_bp as catalog_admin_bp
     from .routes.catalog_public import public_catalog_bp
     from .routes.catalog_api import catalog_api_bp
+    from .routes.public import public_bp
     app.register_blueprint(admin_auth_bp)
     app.register_blueprint(admin_api_bp)
     app.register_blueprint(catalog_admin_bp)
     app.register_blueprint(public_catalog_bp)
     app.register_blueprint(catalog_api_bp)
+    app.register_blueprint(public_bp)
     
     # Serve React app for all non-API routes
     @app.route('/', defaults={'path': ''})
@@ -115,6 +117,10 @@ def create_app(test_config=None):
     @track_api_usage
     def ping():
         return {'message': 'pong', 'status': 'success'}
+    
+    @app.route('/uploads/<path:filename>')
+    def serve_upload(filename):
+        return send_from_directory(app.config['UPLOADS_FOLDER'], filename)
     
     # Ensure database tables and default admin user
     from sqlalchemy.exc import OperationalError, ProgrammingError

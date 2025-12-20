@@ -29,7 +29,7 @@ const FlaskDashboardPage: React.FC = () => {
         products_total: data.products.total,
         products_active: data.products.active,
         categories_total: data.categories.total,
-        total_inventory: data.products.total,
+        total_inventory: data.products.total_inventory,
       });
     } catch (err) {
       console.error('Error fetching stats:', err);
@@ -160,34 +160,6 @@ const FlaskDashboardPage: React.FC = () => {
           </Link>
         </div>
 
-        {/* Recent Activity Placeholder */}
-        <div className="mt-16">
-          <div className="flex items-center justify-between mb-8">
-            <h3 className="text-2xl font-black text-[#3d2a2a] tracking-tight">Recent Activity</h3>
-            <button className="text-[#ff6b9a] font-bold text-sm uppercase tracking-widest hover:underline">View All Logs</button>
-          </div>
-          <div className="cherry-card !p-0 overflow-hidden">
-            {[1, 2, 3].map((i) => (
-              <div key={i} className="p-6 border-b border-[#ffc2d1]/20 flex items-center justify-between hover:bg-white/30 transition-colors">
-                <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-sm">
-                    <span className="text-[#ff6b9a] text-lg">🌸</span>
-                  </div>
-                  <div>
-                    <p className="font-bold text-[#3d2a2a]">Product "{i === 1 ? 'Sugar Blush Purse' : i === 2 ? 'Cotton Candy Teddy' : 'Velvet Truffle Box'}" was updated</p>
-                    <p className="text-xs text-[#8c6a6a] uppercase tracking-widest font-bold">2 hours ago</p>
-                  </div>
-                </div>
-                <div className="px-3 py-1 rounded-full bg-green-50 text-green-600 text-[10px] font-black uppercase tracking-widest">
-                  Success
-                </div>
-              </div>
-            ))}
-            <div className="p-8 text-center bg-white/20">
-              <p className="text-[#8c6a6a] font-medium">All systems operational, Luz.</p>
-            </div>
-          </div>
-        </div>
       </main>
 
       {/* Footer Design Element */}

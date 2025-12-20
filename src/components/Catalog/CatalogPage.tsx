@@ -7,21 +7,7 @@ import ProductCard from './ProductCard';
 import FilterSidebar from './FilterSidebar';
 import QuickViewModal from './QuickViewModal';
 import { Product } from './types';
-import purse1 from '../../../assets/purse1.jpg';
-import purse2 from '../../../assets/purse2.jpg';
-import purse2V2 from '../../../assets/purse2-V2.jpg';
-import purse3 from '../../../assets/purse3.jpg';
-import purse4 from '../../../assets/purse4.jpg';
-import purse5 from '../../../assets/purse5.jpg';
-import purse6 from '../../../assets/purse6.jpg';
-import purse7 from '../../../assets/purse7.jpg';
-import purse8 from '../../../assets/purse8.jpg';
-import purse9 from '../../../assets/purse9.jpg';
-import purse10 from '../../../assets/purse10.jpg';
-import purse11 from '../../../assets/purse11.jpg';
-import truffles1 from '../../../assets/truffles.jpg';
-import truffles2 from '../../../assets/truffles1.jpg';
-import truffles3 from '../../../assets/truffles2.jpg';
+import { PublicCatalogService } from '../../services/PublicCatalogService';
 
 
 export default function CatalogPage() {
@@ -33,150 +19,34 @@ export default function CatalogPage() {
   const [sortBy] = useState<'newest' | 'price-asc' | 'price-desc'>('newest');
   const [activeFilters, setActiveFilters] = useState<string[]>([]);
   const [isSearchVisible, setIsSearchVisible] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [categories, setCategories] = useState<string[]>([]);
   const [notification, setNotification] = useState<{
     type: 'success' | 'error';
     message: string;
   } | null>(null);
   const [scrollProgress, setScrollProgress] = useState(0);
   const [hoveredProduct, setHoveredProduct] = useState<number | null>(null);
-  const products: Product[] = [
-    {
-      id: 1,
-      name: t('catalog.products.purse1.name'),
-      price: 1950,
-      description: t('catalog.products.purse1.description'),
-      image: purse1,
-      artisan: t('catalog.products.purse1.artisan'),
-      region: t('catalog.products.purse1.region'),
-      technique: t('catalog.products.purse1.technique'),
-      category: t('catalog.categories.purse'),
-    },
-    {
-      id: 2,
-      name: t('catalog.products.purse2.name'),
-      price: 2800,
-      description: t('catalog.products.purse2.description'),
-      image: purse2,
-      additionalImages: [purse2V2],
-      artisan: t('catalog.products.purse2.artisan'),
-      region: t('catalog.products.purse2.region'),
-      technique: t('catalog.products.purse2.technique'),
-      category: t('catalog.categories.purse'),
-    },
-    {
-      id: 3,
-      name: t('catalog.products.purse3.name'),
-      price: 1200,
-      description: t('catalog.products.purse3.description'),
-      image: purse3,
-      artisan: t('catalog.products.purse3.artisan'),
-      region: t('catalog.products.purse3.region'),
-      technique: t('catalog.products.purse3.technique'),
-      category: t('catalog.categories.purse'),
-    },
-    {
-      id: 4,
-      name: t('catalog.products.purse4.name'),
-      price: 2100,
-      description: t('catalog.products.purse4.description'),
-      image: purse4,
-      artisan: t('catalog.products.purse4.artisan'),
-      region: t('catalog.products.purse4.region'),
-      technique: t('catalog.products.purse4.technique'),
-      category: "Peluche"
-    },
-    {
-      id: 5,
-      name: t('catalog.products.purse5.name'),
-      price: 3200,
-      description: t('catalog.products.purse5.description'),
-      image: purse5,
-      artisan: t('catalog.products.purse5.artisan'),
-      region: t('catalog.products.purse5.region'),
-      technique: t('catalog.products.purse5.technique'),
-      category: t('catalog.categories.purse'),
-    },
-    {
-      id: 6,
-      name: t('catalog.products.purse6.name'),
-      price: 850,
-      description: t('catalog.products.purse6.description'),
-      image: purse6,
-      artisan: t('catalog.products.purse6.artisan'),
-      region: t('catalog.products.purse6.region'),
-      technique: t('catalog.products.purse6.technique'),
-      category: "Peluche"
-    },
-    {
-      id: 7,
-      name: t('catalog.products.purse7.name'),
-      price: 1800,
-      description: t('catalog.products.purse7.description'),
-      image: purse7,
-      artisan: t('catalog.products.purse7.artisan'),
-      region: t('catalog.products.purse7.region'),
-      technique: t('catalog.products.purse7.technique'),
-      category: "Peluche"
-    },
-    {
-      id: 8,
-      name: t('catalog.products.purse8.name'),
-      price: 1500,
-      description: t('catalog.products.purse8.description'),
-      image: purse8,
-      artisan: t('catalog.products.purse8.artisan'),
-      region: t('catalog.products.purse8.region'),
-      technique: t('catalog.products.purse8.technique'),
-      category: t('catalog.categories.purse'),
-    },
-    {
-      id: 9,
-      name: t('catalog.products.purse9.name'),
-      price: 1200,
-      description: t('catalog.products.purse9.description'),
-      image: purse9,
-      artisan: t('catalog.products.purse9.artisan'),
-      region: t('catalog.products.purse9.region'),
-      technique: t('catalog.products.purse9.technique'),
-      category: "Peluche"
-    },
-    {
-      id: 10,
-      name: t('catalog.products.purse10.name'),
-      price: 1350,
-      description: t('catalog.products.purse10.description'),
-      image: purse10,
-      artisan: t('catalog.products.purse10.artisan'),
-      region: t('catalog.products.purse10.region'),
-      technique: t('catalog.products.purse10.technique'),
-      category: "Peluche"
-    },
-    {
-      id: 11,
-      name: t('catalog.products.purse11.name'),
-      price: 980,
-      description: t('catalog.products.purse11.description'),
-      image: purse11,
-      artisan: t('catalog.products.purse11.artisan'),
-      region: t('catalog.products.purse11.region'),
-      technique: t('catalog.products.purse11.technique'),
-      category: "Peluche"
-    },
-    {
-      id: 21,
-      name: t('sweets.products.truffles.name'),
-      price: 180,
-      description: t('sweets.products.truffles.description'),
-      image: truffles1,
-      images: [truffles1, truffles2, truffles3],
-      artisan: "María de la Luz",
-      region: t('sweets.products.cake3.artisan.location'),
-      technique: t('sweets.products.cake3.technique'),
-      category: 'Chocolate'
-    }
-    
-  ];
+
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        setIsLoading(true);
+        const [productsData, categoriesData] = await Promise.all([
+          PublicCatalogService.fetchProducts(),
+          PublicCatalogService.fetchCategories()
+        ]);
+        setProducts(productsData.products);
+        setCategories(categoriesData.categories.map(c => c.name));
+      } catch (err) {
+        console.error('Failed to fetch catalog data:', err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    loadData();
+  }, []);
   // Update search query and filters when URL parameters change
   useEffect(() => {
     const searchFromUrl = searchParams.get('search');
@@ -207,12 +77,6 @@ export default function CatalogPage() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Simulate loading state when filters change
-  useEffect(() => {
-    setIsLoading(true);
-    const timer = setTimeout(() => setIsLoading(false), 800);
-    return () => clearTimeout(timer);
-  }, [activeFilters, searchQuery, sortBy]);
 
   // Show notification
   const showNotification = (type: 'success' | 'error', message: string) => {
@@ -275,19 +139,15 @@ export default function CatalogPage() {
       result = result.filter(product =>
         product.name.toLowerCase().includes(query) ||
         product.description.toLowerCase().includes(query) ||
-        (typeof product.artisan === 'string' ? product.artisan.toLowerCase() : product.artisan.name.toLowerCase()).includes(query) ||
-        product.technique.toLowerCase().includes(query) ||
         product.category.toLowerCase().includes(query)
       );
     }
 
-    // Apply category/region/technique filters
+    // Apply category filters
     if (activeFilters.length > 0) {
       result = result.filter(product =>
         activeFilters.some(filter =>
           product.category === filter ||
-          product.region === filter ||
-          product.technique === filter ||
           (filter === 'Under $1,000' && product.price < 1000) ||
           (filter === '$1,000 - $2,000' && product.price >= 1000 && product.price <= 2000) ||
           (filter === '$2,000 - $3,000' && product.price > 2000 && product.price <= 3000) ||
@@ -334,8 +194,8 @@ export default function CatalogPage() {
     },
     manufacturer: {
       "@type": "Organization",
-      name: product.artisan,
-      areaServed: product.region
+      name: "Diky Artisans",
+      areaServed: "Mexico"
     }
   }));
 
@@ -380,16 +240,15 @@ export default function CatalogPage() {
       />
       <div className="min-h-screen bg-secondary-light pt-16">
         {/* Scroll Progress Bar */}
-        <div 
+        <div
           className="fixed top-0 left-0 h-1 bg-accent z-50 transition-all duration-300"
           style={{ width: `${scrollProgress}%` }}
         />
 
         {/* Notification Toast */}
         {notification && (
-          <div className={`fixed top-4 right-4 z-50 p-4 rounded-lg shadow-lg transform transition-all duration-300 ${
-            notification.type === 'success' ? 'bg-green-500' : 'bg-red-500'
-          } text-white animate-slide-in-right`}>
+          <div className={`fixed top-4 right-4 z-50 p-4 rounded-lg shadow-lg transform transition-all duration-300 ${notification.type === 'success' ? 'bg-green-500' : 'bg-red-500'
+            } text-white animate-slide-in-right`}>
             {notification.message}
           </div>
         )}
@@ -520,8 +379,8 @@ export default function CatalogPage() {
           ) : filteredAndSortedProducts.length > 0 ? (
             <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-6">
               {filteredAndSortedProducts.map((product, index) => (
-                <div 
-                  key={product.id} 
+                <div
+                  key={product.id}
                   className="relative transform transition-all duration-300"
                   style={{
                     opacity: 0,
@@ -538,17 +397,11 @@ export default function CatalogPage() {
                     }}
                     isHovered={hoveredProduct === product.id}
                   />
-                  {/* Enhanced product labels */}
-                  {product.artisan === "Gaby" && (
-                    <span className="absolute top-2 right-2 bg-rose-500 text-white px-3 py-1 rounded-full text-xs font-medium shadow-sm z-10 transform transition-transform duration-300 hover:scale-110">
-                      {t('catalog.labels.external')}
-                    </span>
-                  )}
-                  
+
                   {/* Hover overlay with additional actions */}
                   {hoveredProduct === product.id && (
                     <div className="absolute inset-0 bg-black/5 backdrop-blur-sm rounded-lg flex items-center justify-center gap-4 transition-opacity duration-300">
-                      <button 
+                      <button
                         onClick={() => handleQuickView(product)}
                         className="btn btn-primary btn-sm transform hover:scale-110 transition-transform duration-300"
                       >
@@ -585,6 +438,7 @@ export default function CatalogPage() {
           }}
           activeFilters={activeFilters}
           onToggleFilter={toggleFilter}
+          categories={categories}
         />
 
         {/* Enhanced Quick View Modal */}

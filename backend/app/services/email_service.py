@@ -4,6 +4,8 @@ from datetime import datetime
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail, From, To, Subject, PlainTextContent, HtmlContent, CustomArg
 from urllib.parse import urljoin
+import resend
+
 
 
 def get_sendgrid_client():
@@ -12,6 +14,16 @@ def get_sendgrid_client():
     if not api_key:
         raise ValueError('SENDGRID_API_KEY environment variable not set')
     return SendGridAPIClient(api_key)
+
+
+def get_resend_client():
+    """Get Resend API client."""
+    api_key = os.getenv('RESEND_API_KEY', 're_MwTVjucC_N8WxWHGfHu5Dqgjz1unqjzTR')
+    if not api_key:
+        raise ValueError('RESEND_API_KEY environment variable not set')
+    resend.api_key = api_key
+    return resend
+
 
 
 def get_app_url():
@@ -257,4 +269,62 @@ def send_campaign_email(campaign, newsletter, subscribers, batch_start=0, batch_
         'batch_completed': batch_completed,
         'emails_sent': emails_sent,
         'total_subscribers': len(subscribers)
-    } 
+    }
+
+
+def send_contact_email(contact_data):
+    """
+    Send contact form email using Resend.
+    
+    Args:
+        contact_data: dict with firstName, lastName, email, and message
+        
+    Returns:
+        dict with success status and message
+    """
+    try:
+        client = get_resend_client()
+        
+        first_name = contact_data.get('firstName', '')
+        last_name = contact_data.get('lastName', '')
+        email = contact_data.get('email', '')
+        message = contact_data.get('message', '')
+        
+        # Recipient for contact form should be configured in env
+        to_email = os.getenv('CONTACT_RECEIVER_EMAIL', 'leo.th.legos@gmail.com')
+        # From email must be a domain verified in Resend
+        from_email = os.getenv('FROM_EMAIL', 'onboarding@resend.dev')
+        
+        params = {
+            "from": from_email,
+            "to": to_email,
+            "subject": f"New Contact Form Message from {first_name} {last_name}",
+            "html": f"""
+                <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eee; border-radius: 10px;">
+                    <h2 style="color: #333; border-bottom: 2px solid #eee; padding-bottom: 10px;">New Contact Form Submission</h2>
+                    <p><strong>Name:</strong> {first_name} {last_name}</p>
+                    <p><strong>Email:</strong> {email}</p>
+                    <div style="background-color: #f9f9f9; padding: 15px; border-radius: 5px; margin-top: 20px;">
+                        <p><strong>Message:</strong></p>
+                        <p style="white-space: pre-wrap;">{message}</p>
+                    </div>
+                    <p style="font-size: 12px; color: #999; margin-top: 30px; border-top: 1px solid #eee; pt-10px;">
+                        This message was sent via the contact form on your website.
+                    </p>
+                </div>
+            """
+        }
+        
+        email_sent = client.Emails.send(params)
+        
+        return {
+            'success': True,
+            'message_id': email_sent.get('id')
+        }
+    except Exception as e:
+        print(f"Error sending contact email: {str(e)}")
+        return {
+            'success': False,
+            'message': str(e)
+        }
+ 

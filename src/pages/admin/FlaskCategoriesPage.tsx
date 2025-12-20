@@ -34,7 +34,7 @@ const FlaskCategoriesPage: React.FC = () => {
   const fetchCategories = async () => {
     try {
       setLoading(true);
-      const data = await apiCall('/categories');
+      const data = await apiCall('/catalog/categories');
       setCategories(data);
     } catch (err) {
       console.error('Error fetching categories:', err);
@@ -78,21 +78,22 @@ const FlaskCategoriesPage: React.FC = () => {
     e.preventDefault();
     try {
       if (editingCategory) {
-        await apiCall(`/categories/${editingCategory.id}`, 'PUT', formData);
+        await apiCall(`/catalog/categories/${editingCategory.id}`, 'PUT', formData);
       } else {
-        await apiCall('/categories', 'POST', formData);
+        await apiCall('/catalog/categories', 'POST', formData);
       }
       setShowModal(false);
       fetchCategories();
-    } catch (err) {
-      alert('Could not update the category garden.');
+    } catch (err: any) {
+      const errorMsg = err.response?.data?.error || err.message || 'Could not update the category garden.';
+      alert(errorMsg);
     }
   };
 
   const handleDelete = async (id: number) => {
     if (window.confirm('Deleting a category will leave its treasures uncategorized. Proceed?')) {
       try {
-        await apiCall(`/categories/${id}`, 'DELETE');
+        await apiCall(`/catalog/categories/${id}`, 'DELETE');
         fetchCategories();
       } catch (err) {
         alert('Could not remove category.');

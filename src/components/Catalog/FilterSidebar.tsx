@@ -1,4 +1,3 @@
-import React from 'react';
 import { X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
@@ -7,40 +6,35 @@ interface FilterSidebarProps {
   onClose: () => void;
   activeFilters: string[];
   onToggleFilter: (filter: string) => void;
+  categories: string[];
 }
-
-const filterCategories = {
-  'productType': [
-    'Bolso',
-    "Peluche",
-    "Postres",
-    "Chocolate"
-  ],
-};
 
 export default function FilterSidebar({
   isOpen,
   onClose,
   activeFilters,
-  onToggleFilter
+  onToggleFilter,
+  categories
 }: FilterSidebarProps) {
   const { t } = useTranslation();
+
+  const filterCategories = {
+    'productType': categories
+  };
 
   return (
     <>
       {/* Overlay */}
       <div
-        className={`fixed inset-0 bg-black/30 backdrop-blur-sm transition-opacity z-50 ${
-          isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
-        }`}
+        className={`fixed inset-0 bg-black/30 backdrop-blur-sm transition-opacity z-50 ${isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
+          }`}
         onClick={onClose}
       />
 
       {/* Sidebar */}
       <div
-        className={`fixed top-0 right-0 h-full w-full sm:w-96 bg-white shadow-xl z-50 transform transition-transform duration-300 ease-in-out ${
-          isOpen ? 'translate-x-0' : 'translate-x-full'
-        }`}
+        className={`fixed top-0 right-0 h-full w-full sm:w-96 bg-white shadow-xl z-50 transform transition-transform duration-300 ease-in-out ${isOpen ? 'translate-x-0' : 'translate-x-full'
+          }`}
       >
         <div className="h-full flex flex-col">
           <div className="p-4 border-b border-primary/10 flex justify-between items-center">

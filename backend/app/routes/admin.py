@@ -1,4 +1,5 @@
 import os
+import re
 from flask import Blueprint, request, jsonify, current_app
 from flask_jwt_extended import (
     jwt_required, create_access_token, get_jwt_identity
@@ -282,25 +283,20 @@ def get_stats():
         products_featured = Product.query.filter_by(featured=True).count()
         categories_total = Category.query.count()
         categories_active = Category.query.filter_by(is_active=True).count()
-        users_total = User.query.count()
-        users_active = User.query.filter_by(is_active=True).count()
+        total_inventory = db.session.query(db.func.sum(Product.inventory)).scalar() or 0
         
         return jsonify({
             'products': {
                 'total': products_total,
                 'active': products_active,
                 'featured': products_featured,
-                'inactive': products_total - products_active
+                'inactive': products_total - products_active,
+                'total_inventory': int(total_inventory)
             },
             'categories': {
                 'total': categories_total,
                 'active': categories_active,
                 'inactive': categories_total - categories_active
-            },
-            'users': {
-                'total': users_total,
-                'active': users_active,
-                'inactive': users_total - users_active
             }
         }), 200
     except Exception as e:
@@ -347,12 +343,17 @@ def upload_file():
         # Save file
         file.save(file_path)
         
+        # Read file binary data
+        with open(file_path, 'rb') as f:
+            image_binary = f.read()
+        
         # Update entity with file info
         if entity_type == 'product' and entity_id:
             product = Product.query.get(entity_id)
             if product:
                 product.image_filename = unique_filename
                 product.image_url = f"/uploads/{unique_filename}"
+                product.image_data = image_binary
                 db.session.commit()
                 
                 return jsonify({
@@ -368,6 +369,8 @@ def upload_file():
             if category:
                 category.image_filename = unique_filename
                 category.image_url = f"/uploads/{unique_filename}"
+                # Category doesn't have image_data yet, but we could add it if needed
+                # For now let's just stick to Products as prioritised
                 db.session.commit()
                 
                 return jsonify({
@@ -450,17 +453,27 @@ def add_product():
     data = request.json
     
     # Validate required fields
-    required_fields = ['title', 'slug', 'price', 'sku', 'category_id']
+    required_fields = ['title', 'price', 'sku', 'category_id']
     for field in required_fields:
-        if field not in data or not data[field]:
+        if field not in data or data[field] is None or data[field] == '':
+            current_app.logger.error(f"Validation failed: {field} is missing or empty. Data: {data}")
             return jsonify({'error': f'{field} is required'}), 400
     
     # Check if SKU already exists
     if Product.query.filter_by(sku=data['sku']).first():
         return jsonify({'error': 'SKU already exists'}), 400
     
-    # Check if slug already exists
-    if Product.query.filter_by(slug=data['slug']).first():
+    # Auto-generate slug if missing
+    if 'slug' not in data or not data['slug']:
+        import re
+        base_slug = re.sub(r'[^a-z0-9]+', '-', data['title'].lower()).strip('-')
+        slug = base_slug
+        counter = 1
+        while Product.query.filter_by(slug=slug).first():
+            slug = f"{base_slug}-{counter}"
+            counter += 1
+        data['slug'] = slug
+    elif Product.query.filter_by(slug=data['slug']).first():
         return jsonify({'error': 'Slug already exists'}), 400
     
     # Verify category exists
@@ -469,6 +482,18 @@ def add_product():
         return jsonify({'error': 'Category not found'}), 400
     
     try:
+        # Resolve image_data if filename is provided
+        image_data = None
+        image_filename = data.get('image_filename')
+        if image_filename:
+            uploads_dir = current_app.config.get('UPLOADS_FOLDER', 'uploads')
+            if not os.path.isabs(uploads_dir):
+                uploads_dir = os.path.join(current_app.root_path, '..', uploads_dir)
+            file_path = os.path.join(uploads_dir, image_filename)
+            if os.path.exists(file_path):
+                with open(file_path, 'rb') as f:
+                    image_data = f.read()
+
         product = Product(
             title=data['title'],
             slug=data['slug'],
@@ -476,8 +501,9 @@ def add_product():
             price=data['price'],
             sale_price=data.get('sale_price'),
             sku=data['sku'],
-            image_filename=data.get('image_filename'),
+            image_filename=image_filename,
             image_url=data.get('image_url'),
+            image_data=image_data,
             inventory=data.get('inventory', 0),
             featured=data.get('featured', False),
             is_active=data.get('is_active', True),
@@ -569,7 +595,17 @@ def update_product(product_id):
                 return jsonify({'error': 'SKU already exists'}), 400
             product.sku = data['sku']
         if 'image_filename' in data:
-            product.image_filename = data['image_filename']
+            new_filename = data['image_filename']
+            if new_filename != product.image_filename:
+                product.image_filename = new_filename
+                # Attempt to populate image_data from the file
+                uploads_dir = current_app.config.get('UPLOADS_FOLDER', 'uploads')
+                if not os.path.isabs(uploads_dir):
+                    uploads_dir = os.path.join(current_app.root_path, '..', uploads_dir)
+                file_path = os.path.join(uploads_dir, new_filename)
+                if os.path.exists(file_path):
+                    with open(file_path, 'rb') as f:
+                        product.image_data = f.read()
         if 'image_url' in data:
             product.image_url = data['image_url']
         if 'inventory' in data:
@@ -665,14 +701,28 @@ def add_category():
     data = request.json
     
     # Validate required fields
-    required_fields = ['name', 'slug']
+    required_fields = ['name']
     for field in required_fields:
         if field not in data or not data[field]:
             return jsonify({'error': f'{field} is required'}), 400
     
-    # Check if slug already exists
-    if Category.query.filter_by(slug=data['slug']).first():
-        return jsonify({'error': 'Slug already exists'}), 400
+    # Auto-generate slug if missing
+    slug = data.get('slug')
+    if not slug:
+        slug = re.sub(r'[^a-z0-9]+', '-', data['name'].lower()).strip('-')
+        # Check for uniqueness and append suffix if needed
+        base_slug = slug
+        counter = 1
+        while Category.query.filter_by(slug=slug).first():
+            slug = f"{base_slug}-{counter}"
+            counter += 1
+    
+    # Check if slug already exists (if provided or after generation)
+    if 'slug' in data and data['slug']:
+        existing = Category.query.filter_by(slug=data['slug']).first()
+        if existing:
+            return jsonify({'error': 'Slug already exists'}), 400
+        slug = data['slug']
     
     # Check if name already exists
     if Category.query.filter_by(name=data['name']).first():
@@ -688,7 +738,7 @@ def add_category():
     try:
         category = Category(
             name=data['name'],
-            slug=data['slug'],
+            slug=slug,
             description=data.get('description', ''),
             image_filename=data.get('image_filename'),
             image_url=data.get('image_url'),

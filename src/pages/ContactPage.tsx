@@ -2,20 +2,12 @@ import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { NextSeo } from 'next-seo';
 import { JsonLd } from 'react-schemaorg';
-import { 
-  MapPin, 
-  Phone, 
-  Mail, 
-  Clock, 
-  Send, 
-  Instagram, 
-  Facebook, 
-  MessageCircle,
-  ChevronDown
+import {
+  Send
 } from 'lucide-react';
 
 export default function ContactPage() {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -23,7 +15,7 @@ export default function ContactPage() {
     message: ''
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [showChat, setShowChat] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState<{ type: 'success' | 'error', message: string } | null>(null);
 
   const businessInfo = {
     name: "Paco & Bryan",
@@ -43,10 +35,34 @@ export default function ContactPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    // Simulate form submission
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    setIsSubmitting(false);
-    setFormData({ firstName: '', lastName: '', email: '', message: '' });
+    setSubmitStatus(null);
+
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:5002'}/api/contact`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to send message');
+      }
+
+      setSubmitStatus({ type: 'success', message: t('contact.form.success') || 'Message sent successfully!' });
+      setFormData({ firstName: '', lastName: '', email: '', message: '' });
+    } catch (err: any) {
+      console.error('Error sending email:', err);
+      setSubmitStatus({
+        type: 'error',
+        message: err.message || 'There was an error sending your message. Please try again later.'
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -195,19 +211,24 @@ export default function ContactPage() {
                     required
                   />
                 </div>
+                {submitStatus && (
+                  <div className={`p-4 rounded-lg text-sm ${submitStatus.type === 'success' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                    }`}>
+                    {submitStatus.message}
+                  </div>
+                )}
                 <button
                   type="submit"
                   disabled={isSubmitting}
                   className="btn btn-primary w-full group"
                 >
-                  <Send className={`w-5 h-5 mr-2 transition-transform duration-300 ${
-                    isSubmitting ? 'translate-x-2' : 'group-hover:translate-x-1'
-                  }`} />
+                  <Send className={`w-5 h-5 mr-2 transition-transform duration-300 ${isSubmitting ? 'translate-x-2' : 'group-hover:translate-x-1'
+                    }`} />
                   {isSubmitting ? t('contact.form.sending') : t('contact.form.submit')}
                 </button>
               </form>
             </div>
-            
+
           </div>
         </div>
       </div>

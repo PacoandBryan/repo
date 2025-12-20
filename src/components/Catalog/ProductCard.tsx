@@ -49,16 +49,15 @@ export default function ProductCard({ product, onQuickView, isHovered: propHover
           <img
             src={images[currentImageIndex]}
             alt={product.name}
-            className={`w-full h-full object-cover transition-all duration-700 ${
-              isHovered ? 'scale-110' : 'scale-100'
-            } ${isImageLoaded ? 'opacity-100' : 'opacity-0'}`}
+            className={`w-full h-full object-cover transition-all duration-700 ${isHovered ? 'scale-110' : 'scale-100'
+              } ${isImageLoaded ? 'opacity-100' : 'opacity-0'}`}
             onLoad={() => setIsImageLoaded(true)}
             loading="lazy"
             decoding="async"
           />
-          
+
           {/* Quick View Button Overlay */}
-          <div 
+          <div
             className={`absolute inset-0 bg-black/40 transition-all duration-300 
               ${isHovered ? 'opacity-100 visible' : 'opacity-0 invisible sm:group-hover:opacity-100 sm:group-hover:visible'}
               flex items-center justify-center`}
@@ -83,9 +82,6 @@ export default function ProductCard({ product, onQuickView, isHovered: propHover
           <h3 className="font-serif text-base sm:text-lg text-primary line-clamp-2 group-hover:text-accent transition-colors duration-300">
             {product.name}
           </h3>
-          <p className="text-xs sm:text-sm text-primary/60 mt-1 line-clamp-1">
-            {t('catalog.by')} {typeof product.artisan === 'string' ? product.artisan : product.artisan?.name}
-          </p>
         </div>
       </div>
     </div>
