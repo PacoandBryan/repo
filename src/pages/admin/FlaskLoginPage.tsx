@@ -70,6 +70,7 @@ const FlaskLoginPage: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log('Form submitted with username:', username);
     setError(false);
     setLoading(true);
     
@@ -86,6 +87,7 @@ const FlaskLoginPage: React.FC = () => {
         setError(true);
       }
     } catch (err) {
+      console.error('Login error:', err);
       playErrorSound();
       setError(true);
     } finally {
@@ -188,14 +190,22 @@ const FlaskLoginPage: React.FC = () => {
 
           .actions { margin-top: 22px; display: grid; gap: 10px; }
           .btn {
-            display: inline-flex; align-items: center; justify-content: center; gap: 10px;
-            padding: 12px 16px;
-            border-radius: 10px;
-            border: none; cursor: pointer;
-            color: white; font-weight: 700; letter-spacing: .2px;
-            background: linear-gradient(135deg, var(--primary), var(--primary-2));
-            box-shadow: 0 10px 30px rgba(124,58,237,.35), 0 6px 14px rgba(34,211,238,.2);
-            transition: transform .08s ease, box-shadow .2s ease, filter .2s;
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            gap: 10px !important;
+            padding: 12px 16px !important;
+            border-radius: 10px !important;
+            border: none !important;
+            cursor: pointer !important;
+            color: white !important;
+            font-weight: 700 !important;
+            letter-spacing: .2px !important;
+            background: linear-gradient(135deg, var(--primary), var(--primary-2)) !important;
+            box-shadow: 0 10px 30px rgba(124,58,237,.35), 0 6px 14px rgba(34,211,238,.2) !important;
+            transition: transform .08s ease, box-shadow .2s ease, filter .2s !important;
+            position: relative !important;
+            z-index: 10 !important;
           }
           .btn:hover { filter: brightness(1.08); }
           .btn:active { transform: translateY(1px); }
