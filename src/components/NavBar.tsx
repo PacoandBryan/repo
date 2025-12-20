@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Menu, Search, X, Globe, ChevronDown, ChevronRight, Home, Mail } from 'lucide-react';
-import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
+import { Menu, Search, X, ChevronDown, ChevronRight, Home } from 'lucide-react';
 import Logo from './Logo';
 import Tooltip from './Tooltip';
 
 type NavItem = {
   label: string;
   href: string;
+  description?: string;
   children?: {
     label: string;
     href: string;
@@ -25,25 +25,24 @@ type SearchInputProps = {
 
 // ── Updated: SearchInput component with suggestions ──────────────────────
 function SearchInput({ searchQuery, setSearchQuery, onSearch, isSearchOpen }: SearchInputProps) {
-  const { t } = useTranslation();
   
   const suggestions = [
-    t('catalog.products.purse1.name'),
-    t('catalog.products.purse2.name'),
-    t('catalog.products.purse3.name'),
-    t('catalog.products.purse4.name'),
-    t('catalog.products.purse5.name'),
-    t('catalog.products.purse6.name'),
-    t('catalog.products.purse7.name'),
-    t('catalog.products.purse8.name'),
-    t('catalog.products.purse9.name'),
-    t('catalog.products.purse10.name'),
-    t('catalog.products.purse11.name'),
-    t('sweets.products.birthdayCake.name'),
-    t('sweets.products.weddingCake.name'),
-    t('sweets.products.cupcake.name'),
-    t('sweets.products.cupcakeCake.name'),
-    t('sweets.products.truffles.name')
+    'Bolso Floral Elegante',
+    'Bolso de Cuero Clásico',
+    'Cartera de Noche',
+    'Bolso Bandolera',
+    'Bolso de Diseñador',
+    'Bolso Vintage',
+    'Bolso de Playa',
+    'Mochila Pequeña',
+    'Bandolera',
+    'Bolso Tipo Hobo',
+    'Bolso Tipo Cubo',
+    'Pastel de Cumpleaños',
+    'Pastel de Bodas',
+    'Cupcakes',
+    'Pastel de Cupcakes',
+    'Trufas de Chocolate'
   ];
 
   return (
@@ -51,7 +50,7 @@ function SearchInput({ searchQuery, setSearchQuery, onSearch, isSearchOpen }: Se
       <div className="relative">
         <input
           type="text"
-          placeholder={t('nav.search')}
+          placeholder="Buscar productos..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           disabled={!isSearchOpen}
@@ -112,94 +111,66 @@ export default function NavBar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const [isLangDropdownOpen, setIsLangDropdownOpen] = useState(false);
-  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [expandedMobileItems, setExpandedMobileItems] = useState<string[]>([]);
-  const [isHoveringButton, setIsHoveringButton] = useState(false);
-  const [isHoveringContent, setIsHoveringContent] = useState(false);
-  const { t, i18n } = useTranslation();
-  const langDropdownRef = useRef<HTMLDivElement>(null);
+  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+  const [isHoveringDropdown, setIsHoveringDropdown] = useState(false);
   const closeTimeoutRef = useRef<NodeJS.Timeout>();
   const navRef = useRef<HTMLDivElement>(null);
-  const dropdownTimeoutRef = useRef<NodeJS.Timeout>();
   const sidebarRef = useRef<HTMLDivElement>(null);
-  const location = useLocation();
-  const navigate = useNavigate();
-  const [isLanguageChanging, setIsLanguageChanging] = useState(false);
   const searchButtonRef = useRef<HTMLButtonElement>(null);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
 
-  const languages = [
-    { code: 'en', label: 'English' },
-    { code: 'es', label: 'Español' }
-  ];
-
   const navItems: NavItem[] = [
     {
-      label: t('nav.courses'),
+      label: 'Cursos',
       href: '/courses',
     },
     {
-      label: t('nav.products'),
+      label: 'Productos',
       href: '#',
       children: [
         {
-          label: t('nav.sweets'),
+          label: 'Postres',
           href: '/sweets',
-          description: t('nav.sweetsDesc')
+          description: 'Explora nuestra deliciosa colección de postres artesanales'
         },
         {
-          label: t('nav.sweetTable'),
+          label: 'Mesa Dulce',
           href: '/sweet-table',
-          description: t('nav.sweetTableDesc')
+          description: 'Explora nuestras hermosas decoraciones para mesa dulce'
         },
         {
-          label: t('nav.stitchedTeddies'),
+          label: 'Peluches Cosidos',
           href: '/stitched-teddies',
-          description: t('nav.stitchedTeddiesDesc')
+          description: 'Ositos de peluche cosidos a mano'
         },
         {
-          label: t('nav.purses'),
+          label: 'Bolsos',
           href: '/purses',
-          description: t('nav.pursesDesc')
+          description: 'Elegante colección de bolsos'
         },
         {
-          label: t('nav.chocolateDelice'),
+          label: 'Delicias de Chocolate',
           href: '/chocolate-delice',
-          description: t('nav.chocolateDeliceDesc')
+          description: 'Disfruta de nuestros chocolates artesanales hechos con pasión y tradición'
         }
       ]
     },
     {
-      label: t('nav.catalog'),
+      label: 'Catálogo',
       href: '/catalog'
     },
     {
-      label: t('nav.contact'),
-      href: '#',
-      children: [
-        {
-          label: t('nav.contactUs'),
-          href: '/contact',
-          description: t('nav.contactUsDesc')
-        },
-        {
-          label: t('nav.contactGaby'),
-          href: '/contact-gaby',
-          description: t('nav.contactGabyDesc')
-        }
-      ]
+      label: 'Contacto',
+      href: '/contact',
+      description: 'Contáctanos'
     }
   ];
 
   useEffect(() => {
     const handleGlobalMouseMove = (e: MouseEvent) => {
       if (navRef.current && !navRef.current.contains(e.target as Node)) {
-        setIsHoveringButton(false);
-        setIsHoveringContent(false);
-        if (activeDropdown) {
-          setActiveDropdown(null);
-        }
+        // No need to handle hover states here anymore
       }
     };
 
@@ -210,13 +181,10 @@ export default function NavBar() {
         clearTimeout(closeTimeoutRef.current);
       }
     };
-  }, [activeDropdown]);
+  }, []);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (langDropdownRef.current && !langDropdownRef.current.contains(event.target as Node)) {
-        setIsLangDropdownOpen(false);
-      }
       if (sidebarRef.current && !sidebarRef.current.contains(event.target as Node) && isMenuOpen) {
         setIsMenuOpen(false);
       }
@@ -274,34 +242,23 @@ export default function NavBar() {
     return () => document.removeEventListener('keydown', handleKeyboard);
   }, [isSearchOpen]);
 
-  const handleLanguageChange = async (langCode: string) => {
-    setIsLanguageChanging(true);
-    try {
-      await i18n.changeLanguage(langCode);
-    } finally {
-      setIsLanguageChanging(false);
-      setIsLangDropdownOpen(false);
-    }
-  };
-
   const handleDropdownEnter = (label: string) => {
     if (window.innerWidth >= 768) {
       if (closeTimeoutRef.current) {
         clearTimeout(closeTimeoutRef.current);
       }
-      setIsHoveringButton(true);
       setActiveDropdown(label);
+      setIsHoveringDropdown(true);
     }
   };
 
   const handleDropdownLeave = () => {
     if (window.innerWidth >= 768) {
-      setIsHoveringButton(false);
       closeTimeoutRef.current = setTimeout(() => {
-        if (!isHoveringContent && !isHoveringButton) {
+        if (!isHoveringDropdown) {
           setActiveDropdown(null);
         }
-      }, 100);
+      }, 200);
     }
   };
 
@@ -310,30 +267,16 @@ export default function NavBar() {
       if (closeTimeoutRef.current) {
         clearTimeout(closeTimeoutRef.current);
       }
-      setIsHoveringContent(true);
+      setIsHoveringDropdown(true);
     }
   };
 
   const handleContentLeave = () => {
     if (window.innerWidth >= 768) {
-      setIsHoveringContent(false);
+      setIsHoveringDropdown(false);
       closeTimeoutRef.current = setTimeout(() => {
-        if (!isHoveringContent && !isHoveringButton) {
-          setActiveDropdown(null);
-        }
-      }, 100);
-    }
-  };
-
-  const handleDropdownClick = (label: string) => {
-    if (window.innerWidth >= 768) {
-      if (activeDropdown === label) {
         setActiveDropdown(null);
-        setIsHoveringButton(false);
-        setIsHoveringContent(false);
-      } else {
-        setActiveDropdown(label);
-      }
+      }, 200);
     }
   };
 
@@ -345,10 +288,27 @@ export default function NavBar() {
     );
   };
 
+  // Close dropdown when clicking outside on mobile
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (window.innerWidth < 768 && expandedMobileItems.length > 0) {
+        const target = event.target as HTMLElement;
+        if (!target.closest('.nav-item')) {
+          setExpandedMobileItems([]);
+        }
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [expandedMobileItems]);
+
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchQuery.trim()) {
-      navigate(`/catalog?search=${encodeURIComponent(searchQuery.trim())}`);
+      // navigate(`/catalog?search=${encodeURIComponent(searchQuery.trim())}`);
       setIsSearchOpen(true);
       setSearchQuery('');
     }
@@ -356,7 +316,7 @@ export default function NavBar() {
 
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
-  }, [location.pathname]);
+  }, []);
 
   useEffect(() => {
     if (isMenuOpen) {
@@ -420,7 +380,11 @@ export default function NavBar() {
                   {item.children ? (
                     <button
                       className="flex items-center space-x-1 px-2 py-1 text-gray-700 hover:text-gray-900"
-                      onClick={() => handleDropdownClick(item.label)}
+                      onClick={() => {
+                        if (window.innerWidth < 768) {
+                          toggleMobileDropdown(item.label);
+                        }
+                      }}
                     >
                       <span>{item.label}</span>
                       <ChevronDown className="h-4 w-4" />
@@ -434,11 +398,11 @@ export default function NavBar() {
                     </Link>
                   )}
 
-                  {item.children && activeDropdown === item.label && (
+                  {item.children && (
                     <div 
-                      className="absolute left-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5
+                      className={`absolute left-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5
                                  transform transition-all duration-200 ease-out
-                                 opacity-100 animate-fade-in"
+                                 ${activeDropdown === item.label ? 'opacity-100 scale-100' : 'opacity-0 scale-95 pointer-events-none'}`}
                       onMouseEnter={handleContentEnter}
                       onMouseLeave={handleContentLeave}
                     >
@@ -485,44 +449,7 @@ export default function NavBar() {
                 />
               </div>
 
-              <Tooltip content={t('nav.changeLanguage')} position="bottom">
-                <div className="relative" ref={langDropdownRef}>
-                  <button
-                    className="flex items-center space-x-1 text-primary/80 hover:text-primary transition-colors duration-300"
-                    onClick={() => setIsLangDropdownOpen(!isLangDropdownOpen)}
-                  >
-                    <Globe className="w-[18px] h-[18px] sm:w-5 sm:h-5" />
-                    <span className="hidden sm:inline text-sm font-medium">
-                      {isLanguageChanging ? (
-                        <span className="animate-pulse">...</span>
-                      ) : (
-                        i18n.language.toUpperCase()
-                      )}
-                    </span>
-                  </button>
-
-                  {isLangDropdownOpen && (
-                    <div className="absolute right-0 mt-2 w-36 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
-                      <div className="py-1" role="menu" aria-orientation="vertical">
-                        {languages.map((lang) => (
-                          <button
-                            key={lang.code}
-                            onClick={() => handleLanguageChange(lang.code)}
-                            className={`${
-                              i18n.language === lang.code ? 'bg-[#fcdce4]/30 text-primary' : 'text-primary/80'
-                            } group flex w-full items-center px-4 py-2 text-sm hover:bg-[#fcdce4]/20 transition-colors duration-300`}
-                            role="menuitem"
-                          >
-                            {lang.label}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </Tooltip>
-
-              <Tooltip content={`${t('nav.searchTooltip')} (${navigator.platform.includes('Mac') ? '⌘' : 'Ctrl'}+K)`} position="bottom">
+              <Tooltip content="Search" position="bottom">
                 <button 
                   ref={searchButtonRef}
                   className="text-primary/80 hover:text-primary"
@@ -541,12 +468,12 @@ export default function NavBar() {
                 </button>
               </Tooltip>
 
-              <Tooltip content={`${t('nav.menuTooltip')} (${navigator.platform.includes('Mac') ? '⌘' : 'Ctrl'}+M)`} position="bottom">
+              <Tooltip content={`Abrir menú (${navigator.platform.includes('Mac') ? '⌘' : 'Ctrl'}+M)`} position="bottom">
                 <button 
                   ref={menuButtonRef}
                   className="text-primary/80 hover:text-primary"
                   onClick={() => setIsMenuOpen(true)}
-                  aria-label={t('nav.openMenu')}
+                  aria-label="Abrir menú"
                 >
                   <Menu className="w-[18px] h-[18px] sm:w-5 sm:h-5" />
                 </button>
@@ -639,23 +566,6 @@ export default function NavBar() {
               ))}
             </div>
 
-            {/* Language selector */}
-            <div className="px-4 py-4 border-t border-primary/10">
-              <p className="text-sm font-medium text-primary/80 mb-2">Language</p>
-              <div className="space-y-2">
-                {languages.map((lang) => (
-                  <button
-                    key={lang.code}
-                    onClick={() => handleLanguageChange(lang.code)}
-                    className={`${
-                      i18n.language === lang.code ? 'bg-[#fcdce4]/30 text-primary' : 'text-primary/80'
-                    } flex items-center w-full px-4 py-2 text-sm rounded-md hover:bg-[#fcdce4]/20 transition-colors duration-200`}
-                  >
-                    {lang.label}
-                  </button>
-                ))}
-              </div>
-            </div>
           </div>
         </div>
       </div>

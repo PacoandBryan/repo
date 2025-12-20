@@ -1,16 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { Eye, Heart } from 'lucide-react';
+import { Eye } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Product } from './types';
 
 interface ProductCardProps {
   product: Product;
   onQuickView: () => void;
+  isHovered?: boolean;
 }
 
-export default function ProductCard({ product, onQuickView }: ProductCardProps) {
+export default function ProductCard({ product, onQuickView, isHovered: propHovered = false }: ProductCardProps) {
   const { t } = useTranslation();
-  const [isHovered, setIsHovered] = useState(false);
+  const [internalHovered, setInternalHovered] = useState(false);
+  const isHovered = propHovered !== undefined ? propHovered : internalHovered;
   const [isImageLoaded, setIsImageLoaded] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const images = [product.image, ...(product.additionalImages || [])];
@@ -36,10 +38,10 @@ export default function ProductCard({ product, onQuickView }: ProductCardProps) 
   return (
     <div
       className="group relative"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-      onTouchStart={() => setIsHovered(true)}
-      onTouchEnd={() => setIsHovered(false)}
+      onMouseEnter={() => propHovered === undefined && setInternalHovered(true)}
+      onMouseLeave={() => propHovered === undefined && setInternalHovered(false)}
+      onTouchStart={() => propHovered === undefined && setInternalHovered(true)}
+      onTouchEnd={() => propHovered === undefined && setInternalHovered(false)}
     >
       <div className="card overflow-hidden">
         {/* Image Container */}
@@ -82,7 +84,7 @@ export default function ProductCard({ product, onQuickView }: ProductCardProps) 
             {product.name}
           </h3>
           <p className="text-xs sm:text-sm text-primary/60 mt-1 line-clamp-1">
-            {t('catalog.by')} {product.artisan}
+            {t('catalog.by')} {typeof product.artisan === 'string' ? product.artisan : product.artisan?.name}
           </p>
         </div>
       </div>

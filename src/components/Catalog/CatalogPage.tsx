@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { Search, SlidersHorizontal, ChevronDown, X } from 'lucide-react';
+import { Search, SlidersHorizontal, X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useSearchParams } from 'react-router-dom';
 import { NextSeo, ProductJsonLd } from 'next-seo';
@@ -19,15 +19,6 @@ import purse8 from '../../../assets/purse8.jpg';
 import purse9 from '../../../assets/purse9.jpg';
 import purse10 from '../../../assets/purse10.jpg';
 import purse11 from '../../../assets/purse11.jpg';
-import purse12 from '../../../assets/SweetTable10.jpg';
-import purse13 from '../../../assets/SweetTable12.jpg';
-import purse14 from '../../../assets/SweetTable13.jpg';
-import purse15 from '../../../assets/WeddingCake1.jpg';
-import purse16 from '../../../assets/WeddingCake2.jpg';
-import purse17 from '../../../assets/WeddingCake3.jpg';
-import cupcake1 from '../../../assets/cupcakes1.jpg';
-import cupcake2 from '../../../assets/cupcakes2.jpg';
-import cupcakeCake from '../../../assets/CupCake-Cake.jpg';
 import truffles1 from '../../../assets/truffles.jpg';
 import truffles2 from '../../../assets/truffles1.jpg';
 import truffles3 from '../../../assets/truffles2.jpg';
@@ -39,7 +30,7 @@ export default function CatalogPage() {
   const [searchQuery, setSearchQuery] = useState(searchParams.get('search') || '');
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [sortBy, setSortBy] = useState<'newest' | 'price-asc' | 'price-desc'>('newest');
+  const [sortBy] = useState<'newest' | 'price-asc' | 'price-desc'>('newest');
   const [activeFilters, setActiveFilters] = useState<string[]>([]);
   const [isSearchVisible, setIsSearchVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -171,54 +162,6 @@ export default function CatalogPage() {
       region: t('catalog.products.purse11.region'),
       technique: t('catalog.products.purse11.technique'),
       category: "Peluche"
-    },
-    {
-      id: 17,
-      name: t('sweets.products.birthdayCake.name'),
-      price: 650,
-      description: t('sweets.products.birthdayCake.description'),
-      image : purse12,
-      images: [purse12, purse13, purse14],
-      artisan: "Gaby",
-      region: t('sweets.products.cake3.artisan.location'),
-      technique: t('sweets.products.cake3.technique'),
-      category: 'Postres'
-    },
-    {
-      id: 18,
-      name: t('sweets.products.weddingCake.name'),
-      price: 1200,
-      description: t('sweets.products.weddingCake.description'),
-      image : purse15,
-      images: [purse15, purse16, purse17],
-      artisan: "Gaby",
-      region: t('sweets.products.cake3.artisan.location'),
-      technique: t('sweets.products.cake3.technique'),
-      category: 'Postres'
-    },
-    {
-      id: 19,
-      name: t('sweets.products.cupcake.name'),
-      price: 180,
-      description: t('sweets.products.cupcake.description'),
-      image : cupcake1,
-      images: [cupcake1, cupcake2],
-      artisan: "Gaby",
-      region: t('sweets.products.cake3.artisan.location'),
-      technique: t('sweets.products.cake3.technique'),
-      category: 'Postres'
-    },
-    {
-      id: 20,
-      name: t('sweets.products.cupcakeCake.name'),
-      price: 180,
-      description: t('sweets.products.cupcakeCake.description'),
-      image : cupcakeCake,
-      images: [cupcakeCake],
-      artisan: "Gaby",
-      region: t('sweets.products.cake3.artisan.location'),
-      technique: t('sweets.products.cake3.technique'),
-      category: 'Postres'
     },
     {
       id: 21,
@@ -430,7 +373,9 @@ export default function CatalogPage() {
         ]}
       />
       <ProductJsonLd
+        productName="Diky Artisan Products"
         type="ItemList"
+        name="Diky Artisan Products"
         itemListElement={structuredProducts}
       />
       <div className="min-h-screen bg-secondary-light pt-16">

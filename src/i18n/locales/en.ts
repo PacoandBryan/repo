@@ -20,8 +20,6 @@ export default {
     contact: 'Contact',
     contactUs: 'Contact Us',
     contactUsDesc: 'Get in touch with our team',
-    contactGaby: 'Contact Gaby',
-    contactGabyDesc: 'Direct contact with Gaby Manzano for custom desserts',
     search: 'Search products...',
     stitchedTeddies: 'Stitched Teddies',
     stitchedTeddiesDesc: 'Handcrafted stitched teddy bears',
@@ -387,8 +385,8 @@ export default {
       cta: 'Explore Collection'
     },
     artisan: {
-      title: 'Handcrafted by Gaby Manzano',
-      description: 'Our delightful desserts are lovingly created by the talented Gaby Manzano, bringing sweetness and joy to every bite. These treats perfectly complement Diky\'s products, creating a harmonious blend of flavors and experiences.'
+      title: 'Handcrafted with Passion',
+      description: 'Our delightful desserts are lovingly created by skilled artisans, bringing sweetness and joy to every bite. These treats perfectly complement Diky\'s products, creating a harmonious blend of flavors and experiences.'
     },
     filters: {
       all: 'All',

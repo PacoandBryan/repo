@@ -20,8 +20,6 @@ export default {
     contact: 'Contacto',
     contactUs: 'Contáctanos',
     contactUsDesc: 'Ponte en contacto con nuestro equipo',
-    contactGaby: 'Contacta a Gaby',
-    contactGabyDesc: 'Contacto directo con Gaby Manzano para postres personalizados',
     search: 'Buscar productos...',
     stitchedTeddies: 'Peluches Cosidos',
     stitchedTeddiesDesc: 'Osos de peluche cosidos a mano',
@@ -457,8 +455,8 @@ export default {
       cta: 'Explorar Colección'
     },
     artisan: {
-      title: 'Elaborados por Gaby Manzano',
-      description: 'Nuestros deliciosos postres son creados con amor por la talentosa Gaby Manzano, llevando dulzura y alegría a cada bocado. Estos manjares complementan perfectamente los productos de Diky, creando una armoniosa mezcla de sabores y experiencias.'
+      title: 'Elaborados con Pasión',
+      description: 'Nuestros deliciosos postres son creados con amor por talentosos artesanos, llevando dulzura y alegría a cada bocado. Estos manjares complementan perfectamente los productos de Diky, creando una armoniosa mezcla de sabores y experiencias.'
     },
     filters: {
       all: 'Todos',

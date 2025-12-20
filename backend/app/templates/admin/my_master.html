@@ -1,0 +1,72 @@
+{% extends 'admin/master.html' %}
+{% block head %}
+  {{ super() }}
+  <style>
+    :root{
+      --bg1:#fff0f6; --bg2:#ffe3ee; --ink:#3d2a2a;
+      --card:#fff7fb; --border:#ffc2d1; --accent:#ff6b9a; --accent2:#ff9ecf;
+    }
+    html, body{ height:100%; background:linear-gradient(120deg,var(--bg1),var(--bg2)); }
+    /* Full-bleed layout */
+    .container-fluid, .container{ width:100% !important; max-width:none !important; padding-left:0 !important; padding-right:0 !important; }
+    .row{ margin-left:0 !important; margin-right:0 !important; }
+    #content{ padding:24px !important; background:transparent !important; min-height:calc(100vh - 50px); }
+
+    /* Navbar */
+    .navbar-inverse{ background:linear-gradient(90deg,var(--accent2),var(--accent)); border:none; box-shadow:0 8px 28px rgba(255,120,170,.35); }
+    .navbar-inverse .navbar-brand, .navbar-inverse .navbar-nav>li>a{ color:#fff !important; text-shadow:none; font-weight:700; }
+    .navbar-inverse .navbar-brand:hover, .navbar-inverse .navbar-nav>li>a:hover{ filter:brightness(1.05); }
+
+    /* Cards, panels */
+    .panel{ background:linear-gradient(180deg,var(--card),#fffafd); border:1px solid var(--border); border-radius:14px; box-shadow:0 12px 30px rgba(255,170,200,.35); }
+    .panel-heading{ border-bottom:1px solid var(--border); font-weight:800; color:#cc2f63; background:transparent; }
+
+    /* Tables */
+    .table{ background:transparent; border-radius:10px; overflow:hidden; }
+    .table>thead>tr>th{ border-bottom:1px solid var(--border); color:#8c6a6a; font-weight:700; }
+    .table>tbody>tr>td{ border-top:1px solid rgba(255,194,209,.5); }
+    .table-striped>tbody>tr:nth-of-type(odd){ background-color:#fff6fa; }
+
+    /* Forms */
+    .form-control{ background:#fffafd; border:1px solid var(--border); border-radius:10px; box-shadow:none; }
+    .form-control:focus{ border-color:var(--accent); box-shadow:0 0 0 3px rgba(255,120,170,.18); }
+    .control-label{ color:#8c6a6a; font-weight:700; }
+
+    /* Buttons */
+    .btn-primary{ background:linear-gradient(135deg,#ff70a6,#ff96c5); border:none; border-radius:10px; font-weight:800; box-shadow:0 8px 24px rgba(255,120,170,.35); }
+    .btn-default, .btn-secondary{ background:#ffe3ee; border:1px solid var(--border); color:#cc2f63; border-radius:10px; }
+
+    /* Alerts */
+    .alert{ border-radius:10px; }
+
+    /* Petals background on all admin pages */
+    .blossoms{ position:fixed; inset:0; pointer-events:none; z-index:0; }
+    .admin-body{ position:relative; z-index:1; }
+    .petal{ position:absolute; width:14px; height:14px; border-radius:67% 33% 67% 33%/33% 67% 33% 67%;
+      background:radial-gradient(circle at 30% 30%, #fff 0 20%, transparent 21%), #ffb7c5;
+      box-shadow: inset -2px -2px 0 rgba(255,150,170,.5); opacity:.85; filter:saturate(105%); }
+    @keyframes fall{ 0%{ transform:translate3d(var(--x,0), -10%, 0) rotate(0deg); opacity:.0 } 8%{ opacity:.9 } 100%{ transform:translate3d(calc(var(--x,0) + 10px), 110vh, 0) rotate(360deg); opacity:.95 }}
+  </style>
+{% endblock %}
+
+{% block body %}
+  <div class="blossoms" id="blossoms"></div>
+  <div class="admin-body">
+    {{ super() }}
+  </div>
+{% endblock %}
+
+{% block tail %}
+  {{ super() }}
+  <script>
+    (function(){
+      var root = document.getElementById('blossoms'); if(!root) return; var count = 16;
+      for(var i=0;i<count;i++){
+        var el = document.createElement('div'); el.className='petal';
+        el.style.left = (Math.random()*100)+'vw'; el.style.top = (-10 - Math.random()*30)+'vh';
+        var dur = 9 + Math.random()*10; var delay = Math.random()*-20; var drift = (Math.random()*100 - 50)+'px';
+        el.style.setProperty('--x', drift); el.style.animation = 'fall '+dur+'s linear '+delay+'s infinite'; root.appendChild(el);
+      }
+    })();
+  </script>
+{% endblock %}

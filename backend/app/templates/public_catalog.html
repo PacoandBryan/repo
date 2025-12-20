@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Diky — Catalog</title>
+  <style>
+    :root{
+      --bg1:#fff0f6; --bg2:#ffe3ee; --ink:#3d2a2a; --muted:#8c6a6a;
+      --card:#fff7fb; --border:#ffc2d1; --accent:#ff6b9a; --accent2:#ff9ecf;
+    }
+    html,body{height:100%; margin:0; background:linear-gradient(120deg,var(--bg1),var(--bg2)); color:var(--ink);}
+    .wrap{ min-height:100vh; padding:28px; }
+    .topbar{ display:flex; align-items:center; justify-content:space-between; margin-bottom:18px; }
+    .brand{ display:flex; align-items:center; gap:10px; font-weight:900; letter-spacing:.3px; }
+    .btn{ display:inline-flex; align-items:center; gap:8px; padding:10px 14px; border-radius:12px; text-decoration:none; }
+    .btn-primary{ background:linear-gradient(135deg,#ff70a6,#ff96c5); color:#fff; box-shadow:0 8px 24px rgba(255,120,170,.35); }
+    .grid{ display:grid; grid-template-columns:repeat(auto-fill, minmax(220px,1fr)); gap:16px; }
+    .card{ background:linear-gradient(180deg,var(--card),#fffafd); border:1px solid var(--border); border-radius:14px; padding:14px; box-shadow:0 12px 30px rgba(255,170,200,.35); }
+    .thumb{ width:100%; height:180px; object-fit:cover; border-radius:10px; margin-bottom:10px; }
+    .title{ font-weight:800; margin:4px 0; }
+    .price{ color:#cc2f63; font-weight:900; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="topbar">
+      <div class="brand">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M12 3l8 4v5c0 5-3.43 9.74-8 11-4.57-1.26-8-6-8-11V7l8-4z" stroke="url(#g1)" stroke-width="2"/></svg>
+        <span>Diky {{ page_title or 'Catalog' }}</span>
+        <svg width="0" height="0"><defs><linearGradient id="g1" x1="0" x2="24" y1="0" y2="24"><stop offset="0%" stop-color="#ff6b9a"/><stop offset="100%" stop-color="#ff9ecf"/></linearGradient></defs></svg>
+      </div>
+      <a href="/admin" class="btn btn-primary">Admin</a>
+    </div>
+
+    <!-- Categories Navigation -->
+    {% if categories %}
+    <div style="margin-bottom:20px;">
+      <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
+        <span style="font-weight:600; color:var(--ink);">Categories:</span>
+        <a href="/catalog" class="btn {% if not selected_category %}btn-primary{% else %}" style="background:var(--card); color:var(--ink); border:1px solid var(--border);">{% endif %}All</a>
+        {% for category in categories %}
+        <a href="/category/{{ category.slug }}" class="btn {% if selected_category == category.id %}btn-primary{% else %}" style="background:var(--card); color:var(--ink); border:1px solid var(--border);">{% endif %}{{ category.name }}</a>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+
+    <div class="grid">
+      {% for p in products %}
+      <div class="card">
+        {% if p.image_url or p.image_filename %}
+          <img class="thumb" src="{% if p.image_url %}{{ p.image_url }}{% else %}/uploads/{{ p.image_filename }}{% endif %}" alt="{{ p.title }}" />
+        {% else %}
+          <div class="thumb" style="display:flex;align-items:center;justify-content:center;background:#ffe3ee;color:#cc2f63">No Image</div>
+        {% endif %}
+        <div class="title">{{ p.title }}</div>
+        {% if p.category %}
+        <div style="font-size:12px; color:var(--muted); margin-bottom:4px;">{{ p.category.name }}</div>
+        {% endif %}
+        <div class="price">
+          {% if p.sale_price %}
+            <span style="text-decoration:line-through; color:var(--muted); font-size:14px;">${{ '%.2f'|format(p.price) }}</span>
+            ${{ '%.2f'|format(p.sale_price) }}
+          {% else %}
+            ${{ '%.2f'|format(p.price or 0) }}
+          {% endif %}
+        </div>
+        {% if p.inventory > 0 %}
+        <div style="font-size:12px; color:var(--muted);">In Stock: {{ p.inventory }}</div>
+        {% else %}
+        <div style="font-size:12px; color:#cc2f63; font-weight:600;">Out of Stock</div>
+        {% endif %}
+        {% if p.description %}
+        <div class="muted" style="font-size:14px; margin-top:8px;">{{ p.description[:100] }}{% if p.description|length > 100 %}...{% endif %}</div>
+        {% endif %}
+      </div>
+      {% else %}
+      <div class="card" style="grid-column:1/-1;text-align:center">No products yet. Add some in Admin.</div>
+      {% endfor %}
+    </div>
+  </div>
+</body>
+</html>

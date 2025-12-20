@@ -1,21 +1,9 @@
-import React, { useState } from 'react';
-import QuickViewModal from '../components/Catalog/QuickViewModal';
-import { Eye, Heart, Download, Share2, ChevronRight, Star, Leaf, Users } from 'lucide-react';
+import { useState } from 'react';
+import { Eye, Heart, Share2, Star, Leaf, Users } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { NextSeo } from 'next-seo';
-import { JsonLd } from 'react-schemaorg';
-import GabyLogo from '../../Images/GabyLogo.jpg';
-import purse12 from '../../assets/SweetTable10.jpg';
-import purse13 from '../../assets/SweetTable12.jpg';
-import purse14 from '../../assets/SweetTable13.jpg';
-import purse15 from '../../assets/WeddingCake1.jpg';
-import purse16 from '../../assets/WeddingCake2.jpg';
-import purse17 from '../../assets/WeddingCake3.jpg';
-import cupcake1 from '../../assets/cupcakes1.jpg';
-import cupcake2 from '../../assets/cupcakes2.jpg';
-import cupcakeCake from '../../assets/CupCake-Cake.jpg';
 import truffles1 from '../../assets/truffles.jpg';
 import truffles2 from '../../assets/truffles1.jpg';
 import truffles3 from '../../assets/truffles2.jpg';
@@ -74,66 +62,6 @@ export default function SweetsPage() {
 
   const sweets: Sweet[] = [
     {
-      id: 17,
-      name: t('sweets.products.birthdayCake.name'),
-      price: 650,
-      description: t('sweets.products.birthdayCake.description'),
-      technique: t('sweets.products.cake3.technique'),
-      artisan: {
-        name: "Gaby",
-        location: t('sweets.products.cake3.artisan.location'),
-        image: GabyLogo,
-        quote: t('sweets.products.cake3.artisan.quote')
-      },
-      images: [purse12, purse13, purse14],
-      category: t('sweets.filters.cakes')
-    },
-    {
-      id: 18,
-      name: t('sweets.products.weddingCake.name'),
-      price: 1200,
-      description: t('sweets.products.weddingCake.description'),
-      technique: t('sweets.products.cake3.technique'),
-      artisan: {
-        name: "Gaby",
-        location: t('sweets.products.cake3.artisan.location'),
-        image: GabyLogo,
-        quote: t('sweets.products.cake3.artisan.quote')
-      },
-      images: [purse15, purse16, purse17],
-      category: t('sweets.filters.cakes')
-    },
-    {
-      id: 19,
-      name: t('sweets.products.cupcake.name'),
-      price: 180,
-      description: t('sweets.products.cupcake.description'),
-      technique: t('sweets.products.cake3.technique'),
-      artisan: {
-        name: "Gaby",
-        location: t('sweets.products.cake3.artisan.location'),
-        image: GabyLogo,
-        quote: t('sweets.products.cake3.artisan.quote')
-      },
-      images: [cupcake1, cupcake2],
-      category: t('sweets.filters.cupcakes')
-    },
-    {
-      id: 20,
-      name: t('sweets.products.cupcakeCake.name'),
-      price: 180,
-      description: t('sweets.products.cupcakeCake.description'),
-      technique: t('sweets.products.cake3.technique'),
-      artisan: {
-        name: "Gaby",
-        location: t('sweets.products.cake3.artisan.location'),
-        image: GabyLogo,
-        quote: t('sweets.products.cake3.artisan.quote')
-      },
-      images: [cupcakeCake],
-      category: t('sweets.filters.cupcakes')
-    },
-    {
       id: 21,
       name: t('sweets.products.truffles.name'),
       price: 180,
@@ -142,7 +70,7 @@ export default function SweetsPage() {
       artisan: {
         name: "María de la Luz",
         location: t('sweets.products.cake3.artisan.location'),
-        image: GabyLogo,
+        image: '',
         quote: t('sweets.products.cake3.artisan.quote')
       },
       images: [truffles1, truffles2, truffles3],
@@ -150,15 +78,16 @@ export default function SweetsPage() {
     },
   ];
 
-  // Prepare structured data for sweets products
-  const sweetStructuredData = sweets.map(sweet => ({
+  // Structured data for SEO (commented out as it's not currently used)
+  /*
+  const sweetStructuredData = {
     "@type": "Product",
-    name: sweet.name,
-    description: sweet.description,
-    image: sweet.images[0],
+    name: "Truffles",
+    description: "Handcrafted chocolate truffles",
+    image: truffles1,
     offers: {
       "@type": "Offer",
-      price: sweet.price,
+      price: 180,
       priceCurrency: "MXN",
       availability: "https://schema.org/InStock",
       priceValidUntil: new Date(new Date().setFullYear(new Date().getFullYear() + 1)).toISOString()
@@ -169,15 +98,12 @@ export default function SweetsPage() {
     },
     manufacturer: {
       "@type": "Organization",
-      name: sweet.artisan.name,
-      address: {
-        "@type": "PostalAddress",
-        addressLocality: sweet.artisan.location
-      }
+      name: "María de la Luz"
     },
-    category: sweet.category,
+    category: "Chocolates",
     countryOfOrigin: "Mexico"
-  }));
+  };
+  */
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -198,21 +124,23 @@ export default function SweetsPage() {
   };
 
   return (
-    <div className="bg-white">
+    <div className="min-h-screen bg-secondary-light pt-16">
       <NextSeo
         title={t('sweets.seo.title')}
         description={t('sweets.seo.description')}
-      />
-      <JsonLd
-        item={{
-          "@context": "https://schema.org",
-          "@type": "WebPage",
-          name: t('sweets.seo.title'),
+        openGraph={{
+          title: t('sweets.seo.title'),
           description: t('sweets.seo.description'),
+          images: [
+            {
+              url: truffles1,
+              width: 1200,
+              height: 630,
+              alt: t('sweets.seo.title'),
+            },
+          ],
         }}
       />
-
-
       {/* Hero Section */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -262,13 +190,22 @@ export default function SweetsPage() {
             </p>
           </motion.div>
           <motion.div 
-            className="relative h-64 bg-secondary-light rounded-lg overflow-hidden"
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
+            className="relative h-80 rounded-lg overflow-hidden shadow-lg"
+            initial={{ opacity: 0, scale: 0.9 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.3 }}
             whileHover={{ scale: 1.02 }}
           >
-            <img src={GabyLogo} alt="Gaby Manzano Logo" className="absolute inset-0 w-full h-full object-contain" />
+            <img 
+              src="/assets/ShowcaseTruffles.webp"
+              alt="Artisanal truffles collection"
+              className="w-full h-full object-cover"
+              loading="lazy"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent flex items-end p-6">
+              <p className="text-white text-sm italic">Handcrafted with love by our skilled artisans</p>
+            </div>
           </motion.div>
         </div>
       </motion.div>
@@ -406,18 +343,59 @@ export default function SweetsPage() {
 
       {/* Quick View Modal */}
       {selectedSweet && (
-        <QuickViewModal
-          isOpen={!!selectedSweet}
-          onClose={() => setSelectedSweet(null)}
-          product={{
-            ...selectedSweet,
-            benefits: [
-              { icon: Star, text: 'Artisanal Quality' },
-              { icon: Leaf, text: 'Natural Ingredients' },
-              { icon: Users, text: 'Community Impact' }
-            ]
-          }}
-        />
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg p-6 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="flex justify-between items-start mb-4">
+              <h3 className="text-2xl font-serif text-primary">{selectedSweet.name}</h3>
+              <button 
+                onClick={() => setSelectedSweet(null)}
+                className="text-gray-500 hover:text-gray-700"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+            <div className="grid md:grid-cols-2 gap-6">
+              <div className="relative aspect-square bg-gray-100 rounded-lg overflow-hidden">
+                {selectedSweet.images[0] && (
+                  <img 
+                    src={selectedSweet.images[0]} 
+                    alt={selectedSweet.name} 
+                    className="w-full h-full object-cover"
+                  />
+                )}
+              </div>
+              <div>
+                <p className="text-lg text-gray-700 mb-4">{selectedSweet.description}</p>
+                <p className="text-2xl font-bold text-primary mb-4">${selectedSweet.price} MXN</p>
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="flex items-center">
+                    <Star className="text-yellow-400 fill-current w-5 h-5" />
+                    <Star className="text-yellow-400 fill-current w-5 h-5" />
+                    <Star className="text-yellow-400 fill-current w-5 h-5" />
+                    <Star className="text-yellow-400 fill-current w-5 h-5" />
+                    <Star className="text-yellow-400/30 fill-current w-5 h-5" />
+                  </div>
+                  <span className="text-gray-500">(24 {t('catalog.reviews')})</span>
+                </div>
+                <div className="flex flex-wrap gap-2 mb-6">
+                  <span className="px-3 py-1 bg-green-100 text-green-800 text-sm rounded-full flex items-center">
+                    <Leaf className="w-4 h-4 mr-1" />
+                    {t('catalog.organic')}
+                  </span>
+                  <span className="px-3 py-1 bg-blue-100 text-blue-800 text-sm rounded-full flex items-center">
+                    <Users className="w-4 h-4 mr-1" />
+                    {t('catalog.handmade')}
+                  </span>
+                </div>
+                <button className="w-full bg-primary text-white py-3 px-6 rounded-lg hover:bg-primary-dark transition-colors">
+                  {t('catalog.addToCart')}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
       )}
       {showCopyNotification && (
         <div className="fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg transform transition-all duration-300 ease-in-out z-50">

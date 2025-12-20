@@ -1,0 +1,1176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products Management - Blossom Admin</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<style>
+  :root{
+    --bg1:#fff0f6; /* blossom mist */
+    --bg2:#ffe3ee; /* petal haze */
+    --petal:#ffb7c5; /* sakura pink */
+    --petal-2:#ff8fab; /* deeper petal */
+    --ink:#3d2a2a; /* warm ink */
+    --muted:#8c6a6a;
+    --card:#fff7fb;
+    --border:#ffc2d1;
+    --accent:#ff6b9a;
+    --accent-2:#ff9ecf;
+  }
+
+  html,body{height:100%; background:linear-gradient(120deg,var(--bg1),var(--bg2)); margin:0; padding:0;}
+  /* Custom navbar styles */
+  .navbar-inverse{background:linear-gradient(90deg,#ff9ecf,#ff6b9a); border-color:transparent; border-radius:0; margin-bottom:0; position:fixed; top:0; left:0; right:0; z-index:1000; box-shadow:0 2px 10px rgba(255,107,154,.2); transition:all .4s cubic-bezier(0.4, 0, 0.2, 1);}
+  .navbar-inverse:hover{box-shadow:0 4px 20px rgba(255,107,154,.3); transform:translateY(-1px);}
+  .navbar-inverse .navbar-brand, .navbar-inverse .navbar-nav>li>a{color:#fff !important; text-shadow:none; transition:all .3s cubic-bezier(0.4, 0, 0.2, 1); position:relative; font-weight:500;}
+  .navbar-inverse .navbar-brand:hover, .navbar-inverse .navbar-nav>li>a:hover{color:#fff !important; transform:scale(1.02); opacity:0.95;}
+  .navbar-inverse .navbar-nav>li.active>a{background:rgba(255,255,255,.15) !important; border-radius:6px; font-weight:600;}
+  /* Force full-bleed content */
+  .container-fluid{width:100% !important; padding:0 !important; background:transparent !important;}
+  .container{width:100% !important; max-width:none !important; padding-left:0 !important; padding-right:0 !important;}
+  .row{margin-left:0 !important; margin-right:0 !important;}
+  #content{padding:0 !important; background:transparent !important;}
+
+  .products-wrap{
+    position:relative;
+    min-height:100vh;
+    padding:92px 28px 28px; /* leave room for top navbar */
+    color:var(--ink);
+    overflow:hidden; /* contain petals */
+  }
+
+  /* Falling petals */
+  .blossoms{position:absolute; inset:0; pointer-events:none;}
+  .petal{position:absolute; width:14px; height:14px; border-radius:67% 33% 67% 33%/33% 67% 33% 67%;
+    background:radial-gradient(circle at 30% 30%, #fff 0 20%, transparent 21%), var(--petal);
+    box-shadow: inset -2px -2px 0 rgba(255,150,170,.5);
+    opacity:.85; filter:saturate(105%);
+  }
+  @keyframes fall{
+    0%{ transform:translate3d(var(--x,0), -10%, 0) rotate(0deg); opacity:.0 }
+    8%{ opacity:.9 }
+    100%{ transform:translate3d(calc(var(--x,0) + 10px), 110vh, 0) rotate(360deg); opacity:.95 }
+  }
+
+  .products-header{display:flex; align-items:center; justify-content:space-between; gap:16px; margin-bottom:24px;}
+  .products-title{display:flex; align-items:center; gap:12px}
+  .products-title h2{margin:0; font-weight:900; letter-spacing:.3px}
+
+  .products-table-container{
+    background:linear-gradient(180deg, var(--card), #fffafd);
+    border:1px solid var(--border);
+    border-radius:14px;
+    box-shadow:0 14px 34px rgba(255,170,200,.35);
+    overflow:hidden;
+  }
+
+  .products-table{
+    width:100%;
+    border-collapse:collapse;
+  }
+  .products-table th{
+    background:linear-gradient(90deg,#ff9ecf,#ff6b9a);
+    color:#fff;
+    padding:16px;
+    text-align:left;
+    font-weight:700;
+    letter-spacing:.3px;
+  }
+  .products-table td{
+    padding:16px;
+    border-bottom:1px solid var(--border);
+  }
+  .products-table tr:hover{background:rgba(255,183,197,.1);}
+  .products-table tr:last-child td{border-bottom:none;}
+
+  .product-image{
+    width:60px;
+    height:60px;
+    border-radius:8px;
+    object-fit:cover;
+    border:2px solid var(--border);
+  }
+
+  .product-actions{
+    display:flex;
+    gap:8px;
+  }
+  .btn-action{
+    padding:6px 12px;
+    border-radius:8px;
+    text-decoration:none;
+    font-weight:600;
+    font-size:12px;
+    transition:all .2s;
+    cursor: pointer;
+    border: none;
+    position: relative;
+    overflow: hidden;
+  }
+  .btn-edit{
+    background:linear-gradient(135deg, #ff70a6, #ff96c5);
+    color:#fff;
+  }
+  .btn-edit:hover{transform:translateY(-1px); box-shadow:0 6px 20px rgba(255,120,170,.4);}
+  .btn-delete{
+    background:linear-gradient(135deg, #ff6b6b, #ff8787);
+    color:#fff;
+  }
+  .btn-delete:hover{transform:translateY(-1px); box-shadow:0 6px 20px rgba(255,100,100,.4);}
+
+  /* Hover wizard effects */
+  .product-actions{
+    display:flex;
+    gap:8px;
+    position: relative;
+  }
+  
+  .btn-action::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.5s;
+  }
+  
+  .btn-action:hover::before {
+    left: 100%;
+  }
+  
+  .btn-action::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.3);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+  }
+  
+  .btn-action:active::after {
+    width: 300px;
+    height: 300px;
+  }
+
+  /* Enhanced modal animations */
+  .modal-overlay{
+    position:fixed;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+    background:rgba(0,0,0,.6);
+    backdrop-filter:blur(5px);
+    z-index:2000;
+    display:none;
+    align-items:center;
+    justify-content:center;
+    opacity:0;
+    transition:opacity .3s ease;
+  }
+  .modal-overlay.active{
+    display:flex;
+    opacity:1;
+  }
+  .modal-wizard{
+    background:linear-gradient(180deg, var(--card), #fffafd);
+    border:1px solid var(--border);
+    border-radius:20px;
+    padding:32px;
+    max-width:600px;
+    width:90%;
+    max-height:80vh;
+    overflow-y:auto;
+    box-shadow:0 20px 60px rgba(255,107,154,.4);
+    transform:scale(0.9) translateY(20px) rotateX(10deg);
+    transition:transform .3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+  }
+  .modal-overlay.active .modal-wizard{
+    transform:scale(1) translateY(0) rotateX(0);
+  }
+  
+  /* Floating animation for modal */
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+  }
+  
+  .modal-wizard {
+    animation: float 3s ease-in-out infinite;
+  }
+  
+  .modal-overlay.active .modal-wizard {
+    animation: float 3s ease-in-out infinite;
+  }
+  
+  /* Sparkle effects */
+  .modal-wizard::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(45deg, #ff6b9a, #ff9ecf, #ffb7c5, #ff8fab, #ff6b9a);
+    border-radius: 20px;
+    z-index: -1;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    background-size: 400% 400%;
+    animation: gradientShift 4s ease infinite;
+  }
+  
+  .modal-overlay.active .modal-wizard::before {
+    opacity: 0.7;
+  }
+  
+  @keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  .btn-primary{
+    background:linear-gradient(135deg, #ff70a6, #ff96c5);
+    color:#fff; border:none; border-radius:12px; padding:12px 20px; font-weight:800;
+    text-decoration:none; display:inline-flex; align-items:center; gap:8px;
+    box-shadow:0 10px 28px rgba(255,120,170,.4);
+    transition:all .2s;
+  }
+  .btn-primary:hover{transform:translateY(-2px); box-shadow:0 14px 35px rgba(255,120,170,.5);}
+
+  .status-badge{
+    padding:4px 12px;
+    border-radius:20px;
+    font-size:11px;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:.5px;
+  }
+  .status-active{background:linear-gradient(135deg, #4ade80, #22c55e); color:#fff;}
+  .status-inactive{background:linear-gradient(135deg, #f87171, #ef4444); color:#fff;}
+
+  .search-box{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:12px 16px;
+    width:300px;
+    color:var(--ink);
+    outline:none;
+    transition:all .2s;
+  }
+  .search-box:focus{border-color:var(--accent); box-shadow:0 0 0 4px rgba(255,107,154,.18);}
+
+  .filter-dropdown{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:12px 16px;
+    color:var(--ink);
+    outline:none;
+    cursor:pointer;
+    transition:all .2s;
+  }
+  .filter-dropdown:focus{border-color:var(--accent); box-shadow:0 0 0 4px rgba(255,107,154,.18);}
+
+  /* Modal styles */
+  .modal-overlay{
+    position:fixed;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+    background:rgba(0,0,0,.6);
+    backdrop-filter:blur(5px);
+    z-index:2000;
+    display:none;
+    align-items:center;
+    justify-content:center;
+    opacity:0;
+    transition:opacity .3s ease;
+  }
+  .modal-overlay.active{
+    display:flex;
+    opacity:1;
+  }
+  .modal-wizard{
+    background:linear-gradient(180deg, var(--card), #fffafd);
+    border:1px solid var(--border);
+    border-radius:20px;
+    padding:32px;
+    max-width:600px;
+    width:90%;
+    max-height:80vh;
+    overflow-y:auto;
+    box-shadow:0 20px 60px rgba(255,107,154,.4);
+    transform:scale(0.9) translateY(20px);
+    transition:transform .3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .modal-overlay.active .modal-wizard{
+    transform:scale(1) translateY(0);
+  }
+  .modal-header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:24px;
+  }
+  .modal-title{
+    font-size:24px;
+    font-weight:800;
+    color:var(--ink);
+    display:flex;
+    align-items:center;
+    gap:12px;
+  }
+  .modal-close{
+    background:transparent;
+    border:none;
+    font-size:24px;
+    color:var(--muted);
+    cursor:pointer;
+    padding:8px;
+    border-radius:8px;
+    transition:all .2s;
+  }
+  .modal-close:hover{
+    background:var(--bg2);
+    color:var(--accent);
+  }
+  .form-group{
+    margin-bottom:20px;
+  }
+  .form-label{
+    display:block;
+    margin-bottom:8px;
+    font-weight:600;
+    color:var(--ink);
+  }
+  .form-input, .form-textarea, .form-select{
+    width:100%;
+    padding:12px 16px;
+    border:1px solid var(--border);
+    border-radius:10px;
+    background:var(--card);
+    color:var(--ink);
+    font-size:14px;
+    transition:all .2s;
+    outline:none;
+  }
+  .form-input:focus, .form-textarea:focus, .form-select:focus{
+    border-color:var(--accent);
+    box-shadow:0 0 0 4px rgba(255,107,154,.18);
+  }
+  .form-textarea{
+    min-height:100px;
+    resize:vertical;
+  }
+  .form-checkbox{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    margin-bottom:20px;
+  }
+  .form-checkbox input{
+    width:20px;
+    height:20px;
+    accent-color:var(--accent);
+  }
+  .form-actions{
+    display:flex;
+    gap:12px;
+    justify-content:flex-end;
+    margin-top:24px;
+  }
+  .btn-cancel{
+    padding:12px 24px;
+    border:1px solid var(--border);
+    border-radius:10px;
+    background:transparent;
+    color:var(--ink);
+    font-weight:600;
+    cursor:pointer;
+    transition:all .2s;
+  }
+  .btn-cancel:hover{
+    background:var(--bg2);
+  }
+  .btn-submit{
+    padding:12px 24px;
+    border:none;
+    border-radius:10px;
+    background:linear-gradient(135deg, #ff70a6, #ff96c5);
+    color:#fff;
+    font-weight:700;
+    cursor:pointer;
+    transition:all .2s;
+    box-shadow:0 4px 15px rgba(255,120,170,.3);
+  }
+  .btn-submit:hover{
+    transform:translateY(-1px);
+    box-shadow:0 6px 20px rgba(255,120,170,.4);
+  }
+
+  /* File upload styles */
+  .file-upload-area{
+    border:2px dashed var(--border);
+    border-radius:12px;
+    padding:24px;
+    text-align:center;
+    background:var(--card);
+    transition:all .3s ease;
+    cursor:pointer;
+    position:relative;
+  }
+  .file-upload-area:hover{
+    border-color:var(--accent);
+    background:rgba(255,183,197,.1);
+  }
+  .file-upload-area.dragover{
+    border-color:var(--accent);
+    background:rgba(255,183,197,.2);
+    transform:scale(1.02);
+  }
+  .file-upload-input{
+    display:none;
+  }
+  .file-upload-icon{
+    width:48px;
+    height:48px;
+    margin:0 auto 12px;
+    color:var(--muted);
+  }
+  .file-upload-text{
+    color:var(--ink);
+    font-weight:600;
+    margin-bottom:4px;
+  }
+  .file-upload-hint{
+    color:var(--muted);
+    font-size:12px;
+  }
+  .file-preview{
+    margin-top:16px;
+    display:none;
+  }
+  .file-preview.active{
+    display:block;
+  }
+  .preview-image{
+    max-width:100%;
+    max-height:200px;
+    border-radius:8px;
+    border:1px solid var(--border);
+  }
+  .preview-info{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-top:8px;
+    padding:8px;
+    background:var(--bg2);
+    border-radius:6px;
+  }
+  .preview-filename{
+    font-size:12px;
+    color:var(--ink);
+    font-weight:500;
+  }
+  .preview-remove{
+    background:var(--accent);
+    color:#fff;
+    border:none;
+    border-radius:4px;
+    padding:4px 8px;
+    font-size:11px;
+    cursor:pointer;
+    transition:all .2s;
+  }
+  .preview-remove:hover{
+    background:var(--petal-2);
+  }
+  .aspect-ratio-info{
+    font-size:11px;
+    color:var(--muted);
+    margin-top:4px;
+  }
+</style>
+
+<!-- Navigation Bar -->
+<nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/admin/dashboard">Blossom Admin</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li><a href="/admin/dashboard">Dashboard</a></li>
+        <li class="active"><a href="/admin/products">Products</a></li>
+        <li><a href="/admin/categories">Categories</a></li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="#" onclick="handleLogout(event)">Logout</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="products-wrap">
+  <div class="blossoms" id="blossoms"></div>
+
+  <div class="products-header">
+    <div class="products-title">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+        <path d="M20 7h-9l-2-2H4c-1.11 0-2 .89-2 2v10c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V9c0-1.11-.89-2-2-2z" stroke="url(#g1)" stroke-width="2"/>
+        <defs>
+          <linearGradient id="g1" x1="0" x2="24" y1="0" y2="24">
+            <stop offset="0%" stop-color="#ff6b9a"/>
+            <stop offset="100%" stop-color="#ff9ecf"/>
+          </linearGradient>
+        </defs>
+      </svg>
+      <h2>Products Management</h2>
+    </div>
+    <div style="display:flex; gap:12px; align-items:center;">
+      <input type="text" class="search-box" placeholder="Search products..." id="searchInput">
+      <select class="filter-dropdown" id="statusFilter">
+        <option value="">All Status</option>
+        <option value="active">Active</option>
+        <option value="inactive">Inactive</option>
+      </select>
+      <a class="btn-primary" href="#" onclick="openAddProductModal(event)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="white" stroke-width="2"/></svg>
+        Add Product
+      </a>
+    </div>
+  </div>
+
+  <div class="products-table-container">
+    <table class="products-table">
+      <thead>
+        <tr>
+          <th>Image</th>
+          <th>Title</th>
+          <th>Category</th>
+          <th>Price</th>
+          <th>Status</th>
+          <th>Created</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="productsTableBody">
+        {% for product, category in products %}
+        <tr>
+          <td>
+            {% if product.image_url %}
+              <img src="{{ product.image_url }}" alt="{{ product.title }}" class="product-image">
+            {% else %}
+              <div style="width:60px; height:60px; background:var(--bg2); border-radius:8px; display:flex; align-items:center; justify-content:center; color:var(--muted); font-size:10px;">No Image</div>
+            {% endif %}
+          </td>
+          <td style="font-weight:600;">{{ product.title }}</td>
+          <td>{{ category.name if category else 'Uncategorized' }}</td>
+          <td style="font-weight:700; color:var(--accent);">${{ "%.2f"|format(product.price or 0) }}</td>
+          <td>
+            <span class="status-badge {% if product.is_active %}status-active{% else %}status-inactive{% endif %}">
+              {% if product.is_active %}Active{% else %}Inactive{% endif %}
+            </span>
+          </td>
+          <td style="color:var(--muted); font-size:14px;">{{ product.created_at.strftime('%Y-%m-%d') if product.created_at else 'N/A' }}</td>
+          <td>
+            <div class="product-actions">
+              <button class="btn-action btn-edit" onclick="openEditProductModal({{ product.id }})">Edit</button>
+              <button class="btn-action btn-delete" onclick="openDeleteModal({{ product.id }}, {{ product.title|tojson }})">Delete</button>
+            </div>
+          </td>
+        </tr>
+        {% else %}
+        <tr>
+          <td colspan="7" style="text-align:center; padding:40px; color:var(--muted);">
+            No products found. <a href="#" onclick="openAddProductModal(event)" style="color:var(--accent);">Create your first product</a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+  // Generate floating sakura petals
+  (function(){
+    const root = document.getElementById('blossoms');
+    if(!root) return;
+    const count = 24;
+    for(let i=0;i<count;i++){
+      const el = document.createElement('div');
+      el.className = 'petal';
+      el.style.left = Math.random()*100 + 'vw';
+      el.style.top = (-10 - Math.random()*30) + 'vh';
+      el.style.opacity = (0.6 + Math.random()*0.4).toFixed(2);
+      const dur = 8 + Math.random()*10; // 8-18s
+      const delay = Math.random()*-20;  // start spread
+      const drift = (Math.random()*100 - 50) + 'px';
+      el.style.setProperty('--x', drift);
+      el.style.animation = `fall ${dur}s linear ${delay}s infinite`;
+      el.style.background = Math.random() > 0.3
+        ? 'radial-gradient(circle at 30% 30%, #fff 0 20%, transparent 21%), var(--petal)'
+        : 'radial-gradient(circle at 30% 30%, #fff 0 20%, transparent 21%), var(--petal-2)';
+      root.appendChild(el);
+    }
+  })();
+
+  // Search functionality
+  document.getElementById('searchInput').addEventListener('input', function(e) {
+    const searchTerm = e.target.value.toLowerCase();
+    const rows = document.querySelectorAll('#productsTableBody tr');
+    
+    rows.forEach(row => {
+      const text = row.textContent.toLowerCase();
+      row.style.display = text.includes(searchTerm) ? '' : 'none';
+    });
+  });
+
+  // Filter functionality
+  document.getElementById('statusFilter').addEventListener('change', function(e) {
+    const filterValue = e.target.value;
+    const rows = document.querySelectorAll('#productsTableBody tr');
+    
+    rows.forEach(row => {
+      if (filterValue === '') {
+        row.style.display = '';
+      } else {
+        const statusBadge = row.querySelector('.status-badge');
+        if (statusBadge) {
+          const isActive = statusBadge.classList.contains('status-active');
+          row.style.display = (filterValue === 'active' && isActive) || (filterValue === 'inactive' && !isActive) ? '' : 'none';
+        }
+      }
+    });
+  });
+
+  // Logout handler
+  function handleLogout(event) {
+    event.preventDefault();
+    fetch('/admin/logout?format=json', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+    .then(response => response.json())
+    .then(data => {
+      console.log('Logout response:', data);
+      alert('Logged out successfully');
+      window.location.href = '/';
+    })
+    .catch(error => {
+      console.error('Logout error:', error);
+      window.location.href = '/admin/logout';
+    });
+  }
+</script>
+
+<!-- Add Product Modal -->
+<div class="modal-overlay" id="addProductModal">
+  <div class="modal-wizard">
+    <div class="modal-header">
+      <div class="modal-title">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <path d="M20 7h-9l-2-2H4c-1.11 0-2 .89-2 2v10c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V9c0-1.11-.89-2-2-2z" stroke="url(#modal-gradient)" stroke-width="2"/>
+          <defs>
+            <linearGradient id="modal-gradient" x1="0" x2="24" y1="0" y2="24">
+              <stop offset="0%" stop-color="#ff6b9a"/>
+              <stop offset="100%" stop-color="#ff9ecf"/>
+            </linearGradient>
+          </defs>
+        </svg>
+        Add New Product
+      </div>
+      <button class="modal-close" onclick="closeAddProductModal()">&times;</button>
+    </div>
+
+    <form id="addProductForm">
+      <div class="form-group">
+        <label class="form-label" for="productTitle">Product Title</label>
+        <input type="text" class="form-input" id="productTitle" name="title" required>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="productDescription">Description</label>
+        <textarea class="form-textarea" id="productDescription" name="description"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="productPrice">Price</label>
+        <input type="number" class="form-input" id="productPrice" name="price" step="0.01" min="0" required>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="productCategory">Category</label>
+        <select class="form-select" id="productCategory" name="category_id" required>
+          <option value="">Select a category</option>
+          {% for category in categories %}
+          <option value="{{ category.id }}">{{ category.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="productSku">SKU</label>
+        <input type="text" class="form-input" id="productSku" name="sku" required>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Product Image</label>
+        <div class="file-upload-area" id="productImageUpload">
+          <input type="file" class="file-upload-input" id="productImageInput" accept=".svg,.png,.jpg,.jpeg" required>
+          <svg class="file-upload-icon" viewBox="0 0 24 24" fill="none">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" stroke="currentColor" stroke-width="2"/>
+            <polyline points="17,8 12,3 7,8" stroke="currentColor" stroke-width="2"/>
+            <line x1="12" y1="3" x2="12" y2="15" stroke="currentColor" stroke-width="2"/>
+          </svg>
+          <div class="file-upload-text">Click to upload or drag and drop</div>
+          <div class="file-upload-hint">SVG, PNG or JPG (Max 5MB, 1:1 or 16:9 aspect ratio)</div>
+          <div class="aspect-ratio-info">Recommended: Square (1:1) or Landscape (16:9)</div>
+        </div>
+        <div class="file-preview" id="productImagePreview">
+          <img class="preview-image" id="previewImg" alt="Product preview">
+          <div class="preview-info">
+            <span class="preview-filename" id="previewFilename"></span>
+            <button class="preview-remove" type="button" onclick="removeProductImage()">Remove</button>
+          </div>
+        </div>
+        <input type="hidden" id="productImageData" name="image">
+      </div>
+
+      <div class="form-checkbox">
+        <input type="checkbox" id="productActive" name="is_active" checked>
+        <label for="productActive">Active</label>
+      </div>
+
+      <div class="form-actions">
+        <button type="button" class="btn-cancel" onclick="closeAddProductModal()">Cancel</button>
+        <button type="submit" class="btn-submit">Add Product</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  function openAddProductModal(event) {
+    event.preventDefault();
+    const modal = document.getElementById('addProductModal');
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeAddProductModal() {
+    const modal = document.getElementById('addProductModal');
+    modal.classList.remove('active');
+    document.body.style.overflow = '';
+    document.getElementById('addProductForm').reset();
+  }
+
+  // Handle form submission
+  document.getElementById('addProductForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const formData = new FormData(this);
+    const data = Object.fromEntries(formData.entries());
+    
+    // Convert checkbox to boolean
+    data.is_active = formData.has('is_active');
+    
+    // Send data to backend
+    fetch('/admin/products/api/create', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        alert('Product added successfully!');
+        closeAddProductModal();
+        location.reload(); // Refresh to show new product
+      } else {
+        alert('Error: ' + data.message);
+      }
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      alert('Error adding product');
+    });
+  });
+
+  // Close modal on overlay click
+  document.getElementById('addProductModal').addEventListener('click', function(e) {
+    if (e.target === this) {
+      closeAddProductModal();
+    }
+  });
+
+  // File upload functionality
+  const productImageUpload = document.getElementById('productImageUpload');
+  const productImageInput = document.getElementById('productImageInput');
+  const productImagePreview = document.getElementById('productImagePreview');
+  const previewImg = document.getElementById('previewImg');
+  const previewFilename = document.getElementById('previewFilename');
+  const productImageData = document.getElementById('productImageData');
+
+  // Click to upload
+  productImageUpload.addEventListener('click', () => {
+    productImageInput.click();
+  });
+
+  // Drag and drop
+  productImageUpload.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    productImageUpload.classList.add('dragover');
+  });
+
+  productImageUpload.addEventListener('dragleave', () => {
+    productImageUpload.classList.remove('dragover');
+  });
+
+  productImageUpload.addEventListener('drop', (e) => {
+    e.preventDefault();
+    productImageUpload.classList.remove('dragover');
+    
+    const files = e.dataTransfer.files;
+    if (files.length > 0) {
+      handleFileUpload(files[0]);
+    }
+  });
+
+  // File input change
+  productImageInput.addEventListener('change', (e) => {
+    if (e.target.files.length > 0) {
+      handleFileUpload(e.target.files[0]);
+    }
+  });
+
+  function handleFileUpload(file) {
+    // Validate file type
+    const allowedTypes = ['image/svg+xml', 'image/png', 'image/jpeg', 'image/jpg'];
+    if (!allowedTypes.includes(file.type)) {
+      alert('Please upload only SVG, PNG, or JPG files');
+      return;
+    }
+
+    // Validate file size (5MB max)
+    if (file.size > 5 * 1024 * 1024) {
+      alert('File size must be less than 5MB');
+      return;
+    }
+
+    // For image files, validate aspect ratio
+    if (file.type !== 'image/svg+xml') {
+      const img = new Image();
+      img.onload = function() {
+        const aspectRatio = this.width / this.height;
+        // Allow 1:1 (square) or 16:9 (landscape) aspect ratios with some tolerance
+        if (Math.abs(aspectRatio - 1) > 0.1 && Math.abs(aspectRatio - 16/9) > 0.1) {
+          if (!confirm('The image aspect ratio is not 1:1 or 16:9. Continue anyway?')) {
+            return;
+          }
+        }
+        showPreview(file);
+      };
+      img.onerror = function() {
+        alert('Invalid image file');
+        return;
+      };
+      img.src = URL.createObjectURL(file);
+    } else {
+      // For SVG files, skip aspect ratio validation
+      showPreview(file);
+    }
+  }
+
+  function showPreview(file) {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      previewImg.src = e.target.result;
+      previewFilename.textContent = file.name;
+      productImageData.value = e.target.result; // Store base64 data
+      productImagePreview.classList.add('active');
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function removeProductImage() {
+    productImageInput.value = '';
+    productImageData.value = '';
+    productImagePreview.classList.remove('active');
+    previewImg.src = '';
+    previewFilename.textContent = '';
+  }
+
+  // Edit Product Modal Functions
+  let currentEditProductId = null;
+
+  function openEditProductModal(productId) {
+    currentEditProductId = productId;
+    
+    // Fetch product data from server
+    fetch(`/api/catalog/products/${productId}`)
+      .then(response => response.json())
+      .then(product => {
+        // Populate form fields
+        document.getElementById('editProductId').value = product.id;
+        document.getElementById('editProductTitle').value = product.title || '';
+        document.getElementById('editProductDescription').value = product.description || '';
+        document.getElementById('editProductPrice').value = product.price || 0;
+        document.getElementById('editProductCategory').value = product.category.id || '';
+        document.getElementById('editProductSku').value = product.sku || '';
+        document.getElementById('editProductInventory').value = product.inventory || 0;
+        
+        // Open modal
+        const modal = document.getElementById('editProductModal');
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      })
+      .catch(error => {
+        console.error('Error fetching product:', error);
+        alert('Error loading product data');
+      });
+  }
+
+  function closeEditProductModal() {
+    const modal = document.getElementById('editProductModal');
+    modal.classList.remove('active');
+    document.body.style.overflow = '';
+    document.getElementById('editProductForm').reset();
+    currentEditProductId = null;
+  }
+
+  // Handle edit form submission
+  document.getElementById('editProductForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const formData = new FormData(this);
+    const data = Object.fromEntries(formData.entries());
+    data.id = currentEditProductId;
+    
+    // Convert checkbox to boolean
+    data.is_active = formData.has('is_active');
+    
+    // Send data to backend
+    fetch(`/admin/products/api/update/${currentEditProductId}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        alert('Product updated successfully!');
+        closeEditProductModal();
+        location.reload(); // Refresh to show updated product
+      } else {
+        alert('Error: ' + data.message);
+      }
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      alert('Error updating product');
+    });
+  });
+
+  // Delete Modal Functions
+  let currentDeleteProductId = null;
+
+  function openDeleteModal(productId, productName) {
+    currentDeleteProductId = productId;
+    document.getElementById('deleteProductName').textContent = productName;
+    
+    const modal = document.getElementById('deleteModal');
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeDeleteModal() {
+    const modal = document.getElementById('deleteModal');
+    modal.classList.remove('active');
+    document.body.style.overflow = '';
+    currentDeleteProductId = null;
+  }
+
+  function confirmDelete() {
+    if (!currentDeleteProductId) return;
+    
+    fetch(`/admin/products/api/delete/${currentDeleteProductId}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        alert('Product deleted successfully!');
+        closeDeleteModal();
+        location.reload(); // Refresh to remove deleted product
+      } else {
+        alert('Error: ' + data.message);
+      }
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      alert('Error deleting product');
+    });
+  }
+
+  // Close modals on overlay click
+  document.getElementById('editProductModal').addEventListener('click', function(e) {
+    if (e.target === this) {
+      closeEditProductModal();
+    }
+  });
+
+  document.getElementById('deleteModal').addEventListener('click', function(e) {
+    if (e.target === this) {
+      closeDeleteModal();
+    }
+  });
+</script>
+
+<!-- Edit Product Modal -->
+<div class="modal-overlay" id="editProductModal">
+  <div class="modal-wizard">
+    <div class="modal-header">
+      <div class="modal-title">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" stroke="url(#edit-gradient)" stroke-width="2"/>
+          <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" stroke="url(#edit-gradient)" stroke-width="2"/>
+          <defs>
+            <linearGradient id="edit-gradient" x1="0" x2="24" y1="0" y2="24">
+              <stop offset="0%" stop-color="#ff6b9a"/>
+              <stop offset="100%" stop-color="#ff9ecf"/>
+            </linearGradient>
+          </defs>
+        </svg>
+        Edit Product
+      </div>
+      <button class="modal-close" onclick="closeEditProductModal()">&times;</button>
+    </div>
+
+    <form id="editProductForm">
+      <input type="hidden" id="editProductId" name="id">
+      
+      <div class="form-group">
+        <label class="form-label" for="editProductTitle">Product Title</label>
+        <input type="text" class="form-input" id="editProductTitle" name="title" required>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="editProductDescription">Description</label>
+        <textarea class="form-textarea" id="editProductDescription" name="description"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="editProductPrice">Price</label>
+        <input type="number" class="form-input" id="editProductPrice" name="price" step="0.01" min="0" required>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="editProductCategory">Category</label>
+        <select class="form-select" id="editProductCategory" name="category_id" required>
+          <option value="">Select a category</option>
+          {% for category in categories %}
+          <option value="{{ category.id }}">{{ category.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="editProductSku">SKU</label>
+        <input type="text" class="form-input" id="editProductSku" name="sku" required>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="editProductInventory">Inventory</label>
+        <input type="number" class="form-input" id="editProductInventory" name="inventory" min="0" value="0">
+      </div>
+
+      <div class="form-checkbox">
+        <input type="checkbox" id="editProductActive" name="is_active">
+        <label for="editProductActive">Active</label>
+      </div>
+
+      <div class="form-actions">
+        <button type="button" class="btn-cancel" onclick="closeEditProductModal()">Cancel</button>
+        <button type="submit" class="btn-submit">Update Product</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal-overlay" id="deleteModal">
+  <div class="modal-wizard" style="max-width: 400px;">
+    <div class="modal-header">
+      <div class="modal-title">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6h14zM10 11v6M14 11v6" stroke="url(#delete-gradient)" stroke-width="2"/>
+          <defs>
+            <linearGradient id="delete-gradient" x1="0" x2="24" y1="0" y2="24">
+              <stop offset="0%" stop-color="#ff6b6b"/>
+              <stop offset="100%" stop-color="#ff8787"/>
+            </linearGradient>
+          </defs>
+        </svg>
+        Delete Product
+      </div>
+      <button class="modal-close" onclick="closeDeleteModal()">&times;</button>
+    </div>
+
+    <div style="text-align: center; padding: 20px 0;">
+      <div style="width: 60px; height: 60px; margin: 0 auto 20px; background: linear-gradient(135deg, rgba(255,107,107,0.1), rgba(255,135,135,0.1)); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="none">
+          <path d="M12 9v6M12 15h.01M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z" stroke="url(#warning-gradient)" stroke-width="2"/>
+          <defs>
+            <linearGradient id="warning-gradient" x1="0" x2="24" y1="0" y2="24">
+              <stop offset="0%" stop-color="#ff6b6b"/>
+              <stop offset="100%" stop-color="#ff8787"/>
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
+      
+      <h3 style="color: var(--ink); margin: 0 0 10px 0;">Confirm Deletion</h3>
+      <p style="color: var(--muted); margin: 0 0 20px 0;">Are you sure you want to delete "<span id="deleteProductName" style="font-weight: 600; color: var(--accent);"></span>"?</p>
+      <p style="color: var(--muted); font-size: 14px; margin: 0 0 30px 0;">This action cannot be undone.</p>
+      
+      <div class="form-actions" style="justify-content: center;">
+        <button type="button" class="btn-cancel" onclick="closeDeleteModal()">Cancel</button>
+        <button type="button" class="btn-submit" style="background: linear-gradient(135deg, #ff6b6b, #ff8787);" onclick="confirmDelete()">Delete Product</button>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

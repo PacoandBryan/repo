@@ -1,22 +1,16 @@
 import os
-from flask import Flask, send_from_directory, json, request
+from flask import Flask, json, send_from_directory
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
-from pymongo import MongoClient
-from dotenv import load_dotenv
-import logging
+from flask_login import LoginManager
+from flask_migrate import Migrate
 from datetime import timedelta
-import time
-from .utils.middleware import api_error_handler, JSONEncoder, track_api_usage
+import logging
+from .utils.middleware import JSONEncoder, track_api_usage
+from .catalog_models import db, User
+from .admin_panel import setup_admin
 
-# Load environment variables
-load_dotenv()
-
-# Initialize MongoDB connection
-def get_db():
-    client = MongoClient(os.getenv('MONGODB_URI'))
-    db_name = os.getenv('MONGODB_DB', 'newsletter_service')
-    return client[db_name]
+# Using SQLite via SQLAlchemy (Mongo/in-memory removed)
 
 # Create app
 def create_app(test_config=None):
@@ -25,9 +19,10 @@ def create_app(test_config=None):
     
     # Enable CORS
     CORS(app, resources={
-        r"/api/*": {"origins": "*"},
-        r"/graphql": {"origins": "*"},
-        r"/uploads/*": {"origins": "*"}
+        r"/api/*": {"origins": ["http://localhost:3000", "http://localhost:5002"]},
+        r"/graphql": {"origins": ["http://localhost:3000", "http://localhost:5002"]},
+        r"/uploads/*": {"origins": "*"},
+        r"/ping": {"origins": ["http://localhost:3000", "http://localhost:5002"]}
     })
     
     # Set up logging
@@ -35,22 +30,22 @@ def create_app(test_config=None):
     
     # Configure the app
     app.config.from_mapping(
-        SECRET_KEY=os.environ.get('SECRET_KEY', 'dev'),
-        MONGO_URI=os.environ.get('MONGO_URI', 'mongodb://localhost:27017/diky'),
-        DATABASE_NAME=os.environ.get('DATABASE_NAME', 'diky'),
-        JWT_SECRET_KEY=os.environ.get('JWT_SECRET_KEY', 'jwt-secret-key'),
+        SECRET_KEY='dev-key-123',
+        JWT_SECRET_KEY='jwt-secret-key',
         JWT_ACCESS_TOKEN_EXPIRES=timedelta(days=1),
         JWT_REFRESH_TOKEN_EXPIRES=timedelta(days=30),
-        ADMIN_EMAIL=os.environ.get('ADMIN_EMAIL', 'admin@example.com'),
-        ADMIN_PASSWORD=os.environ.get('ADMIN_PASSWORD', 'dikythnks'),
+        SQLALCHEMY_DATABASE_URI=os.environ.get('DATABASE_URL', 'postgresql://diky_user:diky_password_2024@localhost/diky_db'),
+        SQLALCHEMY_TRACK_MODIFICATIONS=False,
         MAX_CONTENT_LENGTH=100 * 1024 * 1024,  # 100MB max upload
         UPLOADS_FOLDER=os.path.join(os.path.dirname(os.path.dirname(__file__)), 'uploads'),
         MEDIA_URL='/uploads',
-        ALLOWED_EXTENSIONS={'png', 'jpg', 'jpeg', 'gif', 'webp', 'svg', 'pdf', 'doc', 'docx', 'xls', 'xlsx'},
-        ENVIRONMENT=os.environ.get('FLASK_ENV', 'production'),
-        RATE_LIMIT_DEFAULT=60,  # Requests per minute
-        RATE_LIMIT_AUTH=200,     # Higher limit for authenticated users
-        GRAPHQL_INTROSPECTION=os.environ.get('ENVIRONMENT', 'development') != 'production'
+        ALLOWED_EXTENSIONS={'png', 'jpg', 'jpeg', 'gif', 'webp', 'svg'},
+        ENVIRONMENT='development',
+        # Session configuration for Flask-Login
+        SESSION_COOKIE_SECURE=False,
+        SESSION_COOKIE_HTTPONLY=True,
+        SESSION_COOKIE_SAMESITE='Lax',
+        PERMANENT_SESSION_LIFETIME=timedelta(days=1)
     )
     
     if test_config is None:
@@ -62,81 +57,91 @@ def create_app(test_config=None):
     
     # Use custom JSON encoder
     app.json_encoder = JSONEncoder
-    
-    # Initialize JWT
+
+    # Initialize extensions
+    db.init_app(app)
+    migrate = Migrate(app, db)
     jwt = JWTManager(app)
-    
-    # Set up MongoDB connection
-    client = MongoClient(app.config['MONGO_URI'])
-    app.db = client[app.config['DATABASE_NAME']]
-    
-    # Create TTL index for idempotency cache
-    app.db.idempotency_cache.create_index('expires_at', expireAfterSeconds=0)
-    
-    # Create TTL index for API logs
-    app.db.api_logs.create_index('timestamp', expireAfterSeconds=60 * 60 * 24 * 30)  # 30 days
-    
-    # Create uploads directory if it doesn't exist
-    if not os.path.exists(app.config['UPLOADS_FOLDER']):
-        os.makedirs(app.config['UPLOADS_FOLDER'])
-    
-    # Create directory for chunks
-    chunks_dir = os.path.join(app.config['UPLOADS_FOLDER'], 'chunks')
-    if not os.path.exists(chunks_dir):
-        os.makedirs(chunks_dir)
+    login_manager = LoginManager()
+    login_manager.init_app(app)
+    login_manager.login_view = 'admin_auth.login'
+
+    @login_manager.user_loader
+    def load_user(user_id):
+        try:
+            return User.query.get(int(user_id))
+        except Exception:
+            return None
     
     # Register error handlers
-    api_error_handler(app)
+    app.register_error_handler(404, lambda e: (json.dumps({'error': 'Not found'}), 404))
+    app.register_error_handler(500, lambda e: (json.dumps({'error': 'Internal server error'}), 500))
     
-    # Serve uploaded files
-    @app.route('/uploads/<path:filename>')
-    def uploaded_file(filename):
-        return send_from_directory(app.config['UPLOADS_FOLDER'], filename)
+    # Initialize Admin UI
+    setup_admin(app)
+
+    # Register admin auth + JSON API + public catalog
+    from .routes.admin_auth import admin_bp as admin_auth_bp, admin_api_bp
+    from .routes.admin import admin_bp as catalog_admin_bp
+    from .routes.catalog_public import public_catalog_bp
+    from .routes.catalog_api import catalog_api_bp
+    app.register_blueprint(admin_auth_bp)
+    app.register_blueprint(admin_api_bp)
+    app.register_blueprint(catalog_admin_bp)
+    app.register_blueprint(public_catalog_bp)
+    app.register_blueprint(catalog_api_bp)
     
-    # Register blueprints
-    from .routes.public import public_bp
-    from .routes.admin import admin_bp
-    from .routes.webhooks import webhook_bp
-    from .routes.products import products_bp
-    from .routes.uploads import uploads_bp
-    from .routes.graphql import graphql_bp
-    from .routes.catalog import catalog_bp
-    
-    app.register_blueprint(public_bp)
-    app.register_blueprint(admin_bp)
-    app.register_blueprint(webhook_bp)
-    app.register_blueprint(products_bp, url_prefix='/api/products')
-    app.register_blueprint(uploads_bp, url_prefix='/api/uploads')
-    app.register_blueprint(graphql_bp, url_prefix='/graphql')
-    app.register_blueprint(catalog_bp, url_prefix='/api/catalog')
-    
-    # Initialize database indexes
-    with app.app_context():
-        db = get_db()
-        from .models.subscriber import Subscriber
-        Subscriber.create_indexes(db)
+    # Serve React app for all non-API routes
+    @app.route('/', defaults={'path': ''})
+    @app.route('/<path:path>')
+    def serve_react_app(path):
+        # Check if it's an API route
+        if path.startswith('api/') or path.startswith('admin/'):
+            return {'error': 'API endpoint not found'}, 404
+        
+        # Check if it's a static file in the React build
+        react_build_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'dist')
+        if path and os.path.exists(os.path.join(react_build_path, path)):
+            return send_from_directory(react_build_path, path)
+        
+        # Serve React app's index.html for all other routes
+        try:
+            return send_from_directory(react_build_path, 'index.html')
+        except FileNotFoundError:
+            return {'error': 'React app not built. Please run "npm run build" first.'}, 404
     
     # Simple route for testing
     @app.route('/ping')
     @track_api_usage
     def ping():
-        return {'message': 'pong', 'timestamp': time.time()}
+        return {'message': 'pong', 'status': 'success'}
     
-    # API documentation route
-    @app.route('/api/docs')
-    def api_docs():
-        """Serve API documentation."""
-        return {
-            'api': 'Diky API',
-            'version': '1.0.0',
-            'documentation': 'https://your-api-docs-url.com',
-            'endpoints': {
-                'graphql': '/graphql',
-                'products': '/api/products',
-                'uploads': '/api/uploads',
-                'admin': '/api/admin',
-                'catalog': '/api/catalog'
-            }
-        }
+    # Ensure database tables and default admin user
+    from sqlalchemy.exc import OperationalError, ProgrammingError
+    with app.app_context():
+        try:
+            db.create_all()
+        except (OperationalError, ProgrammingError) as e:
+            logging.exception(f"Database error during table creation: {e}")
+        
+        try:
+            if not User.query.filter_by(username='admin').first():
+                logging.info("Creating default admin user 'admin'")
+                admin_user = User(username='admin')
+                admin_user.set_password('dikythnks')
+                db.session.add(admin_user)
+                db.session.commit()
+        except Exception as e:
+            logging.exception(f"Error creating admin user: {e}")
+            # If email column doesn't exist, try to add it or create user without email
+            try:
+                db.session.rollback()
+                admin_user = User(username='admin')
+                admin_user.set_password('dikythnks')
+                db.session.add(admin_user)
+                db.session.commit()
+                logging.info("Admin user created successfully")
+            except Exception as e2:
+                logging.exception(f"Failed to create admin user: {e2}")
     
     return app 

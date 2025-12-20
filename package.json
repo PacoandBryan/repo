@@ -8,7 +8,11 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "serve": "parcel index.html"
+    "serve": "parcel index.html",
+    "build:prod": "vite build",
+    "start:backend": "python backend/app.py",
+    "dev:full": "concurrently \"npm run dev\" \"npm run start:backend\"",
+    "build:serve": "npm run build && npm run start:backend"
   },
   "dependencies": {
     "@next/bundle-analyzer": "^15.1.7",
@@ -42,6 +46,7 @@
     "@vitejs/plugin-react": "^4.3.1",
     "autoprefixer": "^10.4.18",
     "buffer": "^6.0.3",
+    "concurrently": "^9.2.1",
     "eslint": "^9.9.1",
     "eslint-plugin-react-hooks": "^5.1.0-rc.0",
     "eslint-plugin-react-refresh": "^0.4.11",

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{{ product.title }} — Diky</title>
+  <style>
+    :root{
+      --bg1:#fff0f6; --bg2:#ffe3ee; --ink:#3d2a2a; --muted:#8c6a6a;
+      --card:#fff7fb; --border:#ffc2d1; --accent:#ff6b9a; --accent2:#ff9ecf;
+    }
+    html,body{height:100%; margin:0; background:linear-gradient(120deg,var(--bg1),var(--bg2)); color:var(--ink);}
+    .wrap{ min-height:100vh; padding:28px; max-width:1200px; margin:0 auto; }
+    .topbar{ display:flex; align-items:center; justify-content:space-between; margin-bottom:24px; }
+    .brand{ display:flex; align-items:center; gap:10px; font-weight:900; letter-spacing:.3px; }
+    .btn{ display:inline-flex; align-items:center; gap:8px; padding:10px 14px; border-radius:12px; text-decoration:none; }
+    .btn-primary{ background:linear-gradient(135deg,#ff70a6,#ff96c5); color:#fff; box-shadow:0 8px 24px rgba(255,120,170,.35); }
+    .product-container{ display:grid; grid-template-columns:1fr 1fr; gap:32px; margin-bottom:48px; }
+    .product-image{ width:100%; height:400px; object-fit:cover; border-radius:14px; box-shadow:0 12px 30px rgba(255,170,200,.35); }
+    .product-info{ padding:20px 0; }
+    .product-title{ font-size:32px; font-weight:900; margin:0 0 12px 0; }
+    .product-category{ font-size:16px; color:var(--muted); margin-bottom:16px; }
+    .product-price{ font-size:28px; color:#cc2f63; font-weight:900; margin-bottom:16px; }
+    .product-description{ font-size:16px; line-height:1.6; margin-bottom:24px; }
+    .product-meta{ display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:24px; }
+    .meta-item{ padding:12px; background:var(--card); border:1px solid var(--border); border-radius:8px; }
+    .meta-label{ font-size:12px; color:var(--muted); text-transform:uppercase; letter-spacing:.5px; }
+    .meta-value{ font-size:16px; font-weight:600; margin-top:4px; }
+    .related-section{ margin-top:48px; }
+    .section-title{ font-size:24px; font-weight:800; margin-bottom:20px; }
+    .related-grid{ display:grid; grid-template-columns:repeat(auto-fill, minmax(200px,1fr)); gap:16px; }
+    .related-card{ background:linear-gradient(180deg,var(--card),#fffafd); border:1px solid var(--border); border-radius:14px; padding:14px; box-shadow:0 12px 30px rgba(255,170,200,.35); }
+    .related-thumb{ width:100%; height:120px; object-fit:cover; border-radius:8px; margin-bottom:8px; }
+    .related-title{ font-weight:700; margin:4px 0; font-size:14px; }
+    .related-price{ color:#cc2f63; font-weight:800; font-size:16px; }
+    @media (max-width:768px) {
+      .product-container{ grid-template-columns:1fr; }
+      .product-image{ height:300px; }
+      .related-grid{ grid-template-columns:repeat(auto-fill, minmax(150px,1fr)); }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="topbar">
+      <div class="brand">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M12 3l8 4v5c0 5-3.43 9.74-8 11-4.57-1.26-8-6-8-11V7l8-4z" stroke="url(#g1)" stroke-width="2"/></svg>
+        <span>Diky</span>
+        <svg width="0" height="0"><defs><linearGradient id="g1" x1="0" x2="24" y1="0" y2="24"><stop offset="0%" stop-color="#ff6b9a"/><stop offset="100%" stop-color="#ff9ecf"/></linearGradient></defs></svg>
+      </div>
+      <a href="/admin" class="btn btn-primary">Admin</a>
+    </div>
+
+    <div class="product-container">
+      <div>
+        {% if product.image_url or product.image_filename %}
+          <img class="product-image" src="{% if product.image_url %}{{ product.image_url }}{% else %}/uploads/{{ product.image_filename }}{% endif %}" alt="{{ product.title }}" />
+        {% else %}
+          <div class="product-image" style="display:flex;align-items:center;justify-content:center;background:#ffe3ee;color:#cc2f63; border-radius:14px;">No Image</div>
+        {% endif %}
+      </div>
+      
+      <div class="product-info">
+        <h1 class="product-title">{{ product.title }}</h1>
+        {% if product.category %}
+          <div class="product-category">Category: <a href="/category/{{ product.category.slug }}" style="color:var(--accent);">{{ product.category.name }}</a></div>
+        {% endif %}
+        
+        <div class="product-price">
+          {% if product.sale_price %}
+            <span style="text-decoration:line-through; color:var(--muted); font-size:20px;">${{ '%.2f'|format(product.price) }}</span>
+            ${{ '%.2f'|format(product.sale_price) }}
+          {% else %}
+            ${{ '%.2f'|format(product.price or 0) }}
+          {% endif %}
+        </div>
+        
+        {% if product.description %}
+          <div class="product-description">{{ product.description }}</div>
+        {% endif %}
+        
+        <div class="product-meta">
+          <div class="meta-item">
+            <div class="meta-label">SKU</div>
+            <div class="meta-value">{{ product.sku }}</div>
+          </div>
+          <div class="meta-item">
+            <div class="meta-label">Availability</div>
+            <div class="meta-value">
+              {% if product.inventory > 0 %}
+                <span style="color:#2f865a;">In Stock ({{ product.inventory }})</span>
+              {% else %}
+                <span style="color:#cc2f63;">Out of Stock</span>
+              {% endif %}
+            </div>
+          </div>
+          {% if product.featured %}
+          <div class="meta-item">
+            <div class="meta-label">Status</div>
+            <div class="meta-value" style="color:var(--accent);">Featured</div>
+          </div>
+          {% endif %}
+        </div>
+        
+        <div style="margin-top:24px;">
+          <a href="/catalog" class="btn btn-primary">← Back to Catalog</a>
+        </div>
+      </div>
+    </div>
+
+    {% if related_products %}
+    <div class="related-section">
+      <h2 class="section-title">Related Products</h2>
+      <div class="related-grid">
+        {% for p in related_products %}
+        <div class="related-card">
+          <a href="/product/{{ p.slug }}" style="text-decoration:none; color:inherit;">
+            {% if p.image_url or p.image_filename %}
+              <img class="related-thumb" src="{% if p.image_url %}{{ p.image_url }}{% else %}/uploads/{{ p.image_filename }}{% endif %}" alt="{{ p.title }}" />
+            {% else %}
+              <div class="related-thumb" style="display:flex;align-items:center;justify-content:center;background:#ffe3ee;color:#cc2f63; border-radius:8px;">No Image</div>
+            {% endif %}
+            <div class="related-title">{{ p.title }}</div>
+            <div class="related-price">
+              {% if p.sale_price %}
+                ${{ '%.2f'|format(p.sale_price) }}
+              {% else %}
+                ${{ '%.2f'|format(p.price or 0) }}
+              {% endif %}
+            </div>
+          </a>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+  </div>
+</body>
+</html>

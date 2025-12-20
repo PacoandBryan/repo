@@ -10,7 +10,12 @@ export default defineConfig({
     port: 3000,
     proxy: {
       '/api': {
-        target: 'http://localhost:5000',
+        target: 'http://localhost:5002',
+        changeOrigin: true,
+        secure: false,
+      },
+      '/uploads': {
+        target: 'http://localhost:5002',
         changeOrigin: true,
         secure: false,
       }
@@ -36,5 +41,15 @@ export default defineConfig({
       }
     }
   },
-  assetsInclude: ['**/*.JPG']
+  assetsInclude: ['**/*.JPG', '**/*.jpg', '**/*.jpeg', '**/*.png', '**/*.svg', '**/*.gif'],
+  // Handle SPA fallback for production
+  preview: {
+    port: 3000,
+    strictPort: true,
+    host: true,
+    proxy: {
+      '/api': 'http://localhost:5002',
+      '/uploads': 'http://localhost:5002'
+    }
+  }
 });

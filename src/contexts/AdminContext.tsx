@@ -4,9 +4,10 @@ import { useNavigate } from 'react-router-dom';
 interface AdminContextType {
   isAuthenticated: boolean;
   admin: {
-    email: string;
+    username: string;
+    email?: string;
   } | null;
-  login: (email: string, password: string) => Promise<boolean>;
+  login: (username: string, password: string) => Promise<boolean>;
   logout: () => void;
   loading: boolean;
   apiCall: (endpoint: string, method?: string, data?: any) => Promise<any>;
@@ -29,7 +30,7 @@ interface AdminProviderProps {
 
 export const AdminProvider: React.FC<AdminProviderProps> = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
-  const [admin, setAdmin] = useState<{ email: string } | null>(null);
+  const [admin, setAdmin] = useState<{ username: string; email?: string } | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
   // Function to validate stored token
@@ -109,22 +110,21 @@ export const AdminProvider: React.FC<AdminProviderProps> = ({ children }) => {
     validateToken();
   }, []);
 
-  const login = async (email: string, password: string): Promise<boolean> => {
+  const login = async (username: string, password: string): Promise<boolean> => {
     try {
-      console.log("Login attempt started for:", email);
+      console.log("Login attempt started for:", username);
       setLoading(true);
       
       // Log the request details for debugging
-      console.log("Making request to:", 'http://localhost:5000/api/admin/auth', "with method: POST");
+      console.log("Making request to:", '/api/admin/auth', "with method: POST");
       
-      // Using the full URL with localhost:5000 instead of relative URL
-      const response = await fetch('http://localhost:5000/api/admin/auth', {
+      const response = await fetch('/api/admin/auth', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ 
-          email, 
+          username, 
           password 
         })
       });
@@ -169,9 +169,15 @@ export const AdminProvider: React.FC<AdminProviderProps> = ({ children }) => {
       
       // Store the token and admin data
       localStorage.setItem('admin_token', data.access_token);
-      localStorage.setItem('admin_data', JSON.stringify({ email: data.email }));
+      localStorage.setItem('admin_data', JSON.stringify({ 
+        username: data.user?.username || username,
+        email: data.user?.email 
+      }));
       
-      setAdmin({ email: data.email });
+      setAdmin({ 
+        username: data.user?.username || username,
+        email: data.user?.email 
+      });
       setIsAuthenticated(true);
       setLoading(false);
       console.log("Authentication state updated, redirecting...");

@@ -1,19 +1,21 @@
 import axios from 'axios';
+let env: any = {};
+try { env = (import.meta as any)?.env || {}; } catch (_e) { env = {}; }
 
 // Default API configuration 
 const DEFAULT_CONFIG = {
   // MyMemory Translation API - Free tier allows 1000 words/day
   mymemory: {
     baseUrl: 'https://api.mymemory.translated.net/get',
-    email: process.env.REACT_APP_TRANSLATION_EMAIL, // Optional: increases daily limit if provided
+    email: env?.VITE_TRANSLATION_EMAIL || '', // Optional: increases daily limit if provided
   },
   // LibreTranslate API - public instances available or self-host
   libretranslate: {
-    baseUrl: process.env.REACT_APP_LIBRETRANSLATE_URL || 'https://libretranslate.de/translate',
-    apiKey: process.env.REACT_APP_LIBRETRANSLATE_API_KEY,
+    baseUrl: env?.VITE_LIBRETRANSLATE_URL || 'https://libretranslate.de/translate',
+    apiKey: env?.VITE_LIBRETRANSLATE_API_KEY || '',
   },
   // Which API to use ('mymemory', 'libretranslate', or 'mock')
-  provider: process.env.REACT_APP_TRANSLATION_PROVIDER || 'mymemory',
+  provider: env?.VITE_TRANSLATION_PROVIDER || 'mymemory',
   // Fallback to mock if real API fails
   fallbackToMock: true
 };

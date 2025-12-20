@@ -169,18 +169,6 @@ export default function SweetTablePage() {
     {
       image: Image8,
       animation: "spin"
-    },
-    {
-      image: Image9,
-      animation: "float"
-    },
-    {
-      image: Image10,
-      animation: "zoom"
-    },
-    {
-      image: Image11,
-      animation: "spin"
     }
   ];
 
@@ -236,7 +224,7 @@ export default function SweetTablePage() {
         canonical="https://yoursite.com/sweet-table"
         openGraph={{
           url: 'https://yoursite.com/sweet-table',
-          title: 'Sweet Table Designs & Inspiration | Paco & Bryan',
+          title: 'Sweet Table Designs & Inspiration ',
           description: 'Create magical moments with our stunning sweet table designs. Perfect for weddings and special events.',
           images: sweetTableImages.map(image => ({
             url: image,
