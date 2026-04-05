@@ -1,7 +1,7 @@
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
-from datetime import datetime
+from datetime import datetime, timezone
 from sqlalchemy.orm import relationship
 
 
@@ -68,6 +68,36 @@ class Product(db.Model):
     # Relationships
     category = relationship('Category', back_populates='products')
     images = relationship('ProductImage', back_populates='product', cascade='all, delete-orphan')
+    promotions = relationship('Promotion', back_populates='product', cascade='all, delete-orphan')
+
+    @property
+    def active_promotion(self):
+        """Return the currently active promotion (if any)."""
+        now = datetime.now(timezone.utc).replace(tzinfo=None)
+        for promo in self.promotions:
+            if not promo.is_active:
+                continue
+            if promo.starts_at and promo.starts_at > now:
+                continue
+            if promo.ends_at and promo.ends_at < now:
+                continue
+            return promo
+        return None
+
+    def effective_price(self):
+        """Return the price after applying any active promotion or manual sale price."""
+        promo = self.active_promotion
+        if promo:
+            if promo.discount_type == 'percentage':
+                return round(float(self.price) * (1 - float(promo.discount_value) / 100), 2)
+            elif promo.discount_type == 'fixed':
+                return round(max(float(self.price) - float(promo.discount_value), 0), 2)
+        
+        # Fallback to manual sale_price column if no active promotion
+        if self.sale_price is not None:
+            return float(self.sale_price)
+            
+        return float(self.price)
 
 
 class ProductImage(db.Model):
@@ -86,3 +116,21 @@ class ProductImage(db.Model):
     
     # Relationships
     product = relationship('Product', back_populates='images')
+
+
+class Promotion(db.Model):
+    __tablename__ = 'promotions'
+
+    id = db.Column(db.Integer, primary_key=True)
+    product_id = db.Column(db.Integer, db.ForeignKey('products.id'), nullable=False)
+    label = db.Column(db.String(100), nullable=False)  # e.g. "Flash Sale 🔥"
+    discount_type = db.Column(db.String(20), nullable=False, default='percentage')  # 'percentage' | 'fixed'
+    discount_value = db.Column(db.Numeric(10, 2), nullable=False)
+    starts_at = db.Column(db.DateTime, nullable=True)   # null = always started
+    ends_at = db.Column(db.DateTime, nullable=True)     # null = never expires
+    is_active = db.Column(db.Boolean, default=True)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    # Relationships
+    product = relationship('Product', back_populates='promotions')

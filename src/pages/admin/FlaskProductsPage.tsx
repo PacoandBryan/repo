@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAdmin } from '../../contexts/AdminContext';
 import FallingYarn from '../../components/FallingYarn';
+import { API_URLS } from '../../config/api';
 import '../../styles/CherryBlossomTheme.css';
 
 interface Product {
@@ -263,7 +264,11 @@ const FlaskProductsPage: React.FC = () => {
                       <div className="flex items-center gap-4">
                         <div className="w-14 h-14 rounded-xl bg-white shadow-sm overflow-hidden flex-shrink-0 border border-[#ffc2d1]/30">
                           {product.image_url ? (
-                            <img src={product.image_url} alt="" className="w-full h-full object-cover" />
+                            <img
+                              src={product.image_url.startsWith('http') ? product.image_url : `${API_URLS.BASE}${product.image_url}`}
+                              alt=""
+                              className="w-full h-full object-cover"
+                            />
                           ) : (
                             <div className="w-full h-full flex items-center justify-center text-2xl">🍬</div>
                           )}

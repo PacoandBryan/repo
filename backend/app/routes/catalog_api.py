@@ -1,7 +1,8 @@
 from flask import Blueprint, jsonify, request
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from app.catalog_models import Product, Category, ProductImage, db
+from app.catalog_models import Product, Category, ProductImage, Promotion, db
 from sqlalchemy import or_
+from sqlalchemy.orm import joinedload
 
 # API Blueprint for catalog data
 catalog_api_bp = Blueprint('catalog_api', __name__, url_prefix='/api/catalog')
@@ -19,7 +20,7 @@ def get_products():
     featured = request.args.get('featured', type=bool)
     
     # Build query
-    query = db.session.query(Product, Category).join(Category).filter(Product.is_active == True)
+    query = db.session.query(Product, Category).join(Category).options(joinedload(Product.promotions)).filter(Product.is_active == True)
     
     # Apply filters
     if category_slug:
@@ -48,13 +49,17 @@ def get_products():
     # Format response
     products = []
     for product, category in products_data:
+        promo = product.active_promotion
+        price = float(product.price)
+        sale_price = product.effective_price()
+        
         product_dict = {
             'id': product.id,
             'title': product.title,
             'slug': product.slug,
             'description': product.description,
-            'price': float(product.price),
-            'sale_price': float(product.sale_price) if product.sale_price else None,
+            'price': price,
+            'sale_price': sale_price if sale_price < price else None,
             'sku': product.sku,
             'image_url': product.image_url,
             'inventory': product.inventory,
@@ -64,6 +69,13 @@ def get_products():
                 'name': category.name,
                 'slug': category.slug
             },
+            'promotion': {
+                'id': promo.id,
+                'label': promo.label,
+                'discount_type': promo.discount_type,
+                'discount_value': float(promo.discount_value),
+                'ends_at': promo.ends_at.isoformat() if promo.ends_at else None,
+            } if promo else None,
             'created_at': product.created_at.isoformat() if product.created_at else None
         }
         products.append(product_dict)
@@ -78,7 +90,7 @@ def get_products():
 def get_product(product_id):
     """Get a single product by ID"""
     
-    product_data = db.session.query(Product, Category).join(Category).filter(
+    product_data = db.session.query(Product, Category).join(Category).options(joinedload(Product.promotions)).filter(
         Product.id == product_id,
         Product.is_active == True
     ).first()
@@ -87,6 +99,7 @@ def get_product(product_id):
         return jsonify({'error': 'Product not found'}), 404
     
     product, category = product_data
+    promo = product.active_promotion
     
     # Get product images
     images = ProductImage.query.filter_by(product_id=product_id).order_by(ProductImage.sort_order).all()
@@ -97,7 +110,7 @@ def get_product(product_id):
         'slug': product.slug,
         'description': product.description,
         'price': float(product.price),
-        'sale_price': float(product.sale_price) if product.sale_price else None,
+        'sale_price': product.effective_price() if product.effective_price() < float(product.price) else None,
         'sku': product.sku,
         'image_url': product.image_url,
         'inventory': product.inventory,
@@ -108,6 +121,13 @@ def get_product(product_id):
             'slug': category.slug,
             'description': category.description
         },
+        'promotion': {
+            'id': promo.id,
+            'label': promo.label,
+            'discount_type': promo.discount_type,
+            'discount_value': float(promo.discount_value),
+            'ends_at': promo.ends_at.isoformat() if promo.ends_at else None,
+        } if promo else None,
         'images': [
             {
                 'id': img.id,
@@ -122,6 +142,34 @@ def get_product(product_id):
     }
     
     return jsonify(product_dict)
+
+
+@catalog_api_bp.route('/promotions', methods=['GET'])
+def get_active_promotions():
+    """Get all currently active promotions (public endpoint)"""
+    from datetime import datetime
+    now = datetime.utcnow()
+    
+    promotions = Promotion.query.filter_by(is_active=True).all()
+    active = []
+    for promo in promotions:
+        if promo.starts_at and promo.starts_at > now:
+            continue
+        if promo.ends_at and promo.ends_at < now:
+            continue
+        product = Product.query.get(promo.product_id)
+        active.append({
+            'id': promo.id,
+            'product_id': promo.product_id,
+            'product_title': product.title if product else None,
+            'label': promo.label,
+            'discount_type': promo.discount_type,
+            'discount_value': float(promo.discount_value),
+            'starts_at': promo.starts_at.isoformat() if promo.starts_at else None,
+            'ends_at': promo.ends_at.isoformat() if promo.ends_at else None,
+        })
+    
+    return jsonify({'promotions': active, 'total': len(active)})
 
 
 @catalog_api_bp.route('/categories', methods=['GET'])
@@ -174,7 +222,7 @@ def get_category(slug):
             'slug': product.slug,
             'description': product.description,
             'price': float(product.price),
-            'sale_price': float(product.sale_price) if product.sale_price else None,
+            'sale_price': product.effective_price() if product.effective_price() < float(product.price) else None,
             'sku': product.sku,
             'image_url': product.image_url,
             'inventory': product.inventory,
@@ -236,6 +284,7 @@ def search_catalog():
             'slug': product.slug,
             'description': product.description,
             'price': float(product.price),
+            'sale_price': product.effective_price() if product.effective_price() < float(product.price) else None,
             'image_url': product.image_url,
             'category': {
                 'id': category.id,

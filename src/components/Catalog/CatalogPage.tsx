@@ -2,7 +2,8 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { Search, SlidersHorizontal, X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useSearchParams } from 'react-router-dom';
-import { NextSeo, ProductJsonLd } from 'next-seo';
+import SEO from '../SEO';
+import { JsonLd } from 'react-schemaorg';
 import ProductCard from './ProductCard';
 import FilterSidebar from './FilterSidebar';
 import QuickViewModal from './QuickViewModal';
@@ -148,10 +149,10 @@ export default function CatalogPage() {
       result = result.filter(product =>
         activeFilters.some(filter =>
           product.category === filter ||
-          (filter === 'Under $1,000' && product.price < 1000) ||
-          (filter === '$1,000 - $2,000' && product.price >= 1000 && product.price <= 2000) ||
-          (filter === '$2,000 - $3,000' && product.price > 2000 && product.price <= 3000) ||
-          (filter === 'Over $3,000' && product.price > 3000)
+          (filter === 'Under $1,000' && (product.sale_price || product.price) < 1000) ||
+          (filter === '$1,000 - $2,000' && (product.sale_price || product.price) >= 1000 && (product.sale_price || product.price) <= 2000) ||
+          (filter === '$2,000 - $3,000' && (product.sale_price || product.price) > 2000 && (product.sale_price || product.price) <= 3000) ||
+          (filter === 'Over $3,000' && (product.sale_price || product.price) > 3000)
         )
       );
     }
@@ -159,10 +160,10 @@ export default function CatalogPage() {
     // Apply sorting
     switch (sortBy) {
       case 'price-asc':
-        result.sort((a, b) => a.price - b.price);
+        result.sort((a, b) => (a.sale_price || a.price) - (b.sale_price || b.price));
         break;
       case 'price-desc':
-        result.sort((a, b) => b.price - a.price);
+        result.sort((a, b) => (b.sale_price || b.price) - (a.sale_price || a.price));
         break;
       case 'newest':
         result.sort((a, b) => b.id - a.id);
@@ -179,7 +180,7 @@ export default function CatalogPage() {
     image: [product.image, ...(product.additionalImages || [])],
     offers: {
       "@type": "Offer",
-      price: product.price,
+      price: product.sale_price || product.price,
       priceCurrency: "MXN",
       availability: "https://schema.org/InStock",
       seller: {
@@ -201,42 +202,30 @@ export default function CatalogPage() {
 
   return (
     <>
-      <NextSeo
-        title={t('catalog.meta.title')}
-        description={t('catalog.meta.description')}
-        canonical="https://yoursite.com/catalog"
+      <SEO
+        title="Catálogo de Artesanías Mexicanas"
+        description="Explora nuestro catálogo de bolsas, textiles y accesorios hechos a mano. Piezas únicas de artesanía mexicana."
+        canonical="https://diky.com/catalog"
         openGraph={{
-          type: 'website',
-          locale: 'es_MX',
-          url: 'https://yoursite.com/catalog',
-          title: t('catalog.meta.title'),
-          description: t('catalog.meta.description'),
+          title: "Catálogo de Artesanías Mexicanas | Diky",
+          description: "Explora nuestro catálogo de bolsas, textiles y accesorios hechos a mano. Piezas únicas de artesanía mexicana.",
           images: [
             {
-              url: 'https://yoursite.com/images/catalog-og.jpg',
-              width: 1200,
-              height: 630,
-              alt: t('catalog.meta.ogImageAlt'),
+              url: 'https://diky.com/images/catalog-og.jpg',
+              alt: 'Catálogo Diky',
             }
-          ],
-          site_name: 'Paco & Bryan',
+          ]
         }}
-        additionalMetaTags={[
-          {
-            name: 'keywords',
-            content: t('catalog.meta.keywords')
-          },
-          {
-            name: 'geo.region',
-            content: 'MX'
-          }
-        ]}
       />
-      <ProductJsonLd
-        productName="Diky Artisan Products"
-        type="ItemList"
-        name="Diky Artisan Products"
-        itemListElement={structuredProducts}
+      <JsonLd
+        item={{
+          "@context": "https://schema.org",
+          "@type": "ItemList",
+          name: "Catálogo Diky",
+          description: "Catálogo completo de artesanías mexicanas.",
+          url: "https://diky.com/catalog",
+          itemListElement: structuredProducts as any
+        }}
       />
       <div className="min-h-screen bg-secondary-light pt-16">
         {/* Scroll Progress Bar */}

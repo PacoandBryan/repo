@@ -9,6 +9,7 @@ interface DashboardStats {
   products_active: number;
   categories_total: number;
   total_inventory: number;
+  promotions_total: number;
 }
 
 const FlaskDashboardPage: React.FC = () => {
@@ -30,6 +31,7 @@ const FlaskDashboardPage: React.FC = () => {
         products_active: data.products.active,
         categories_total: data.categories.total,
         total_inventory: data.products.total_inventory,
+        promotions_total: data.promotions?.total || 0,
       });
     } catch (err) {
       console.error('Error fetching stats:', err);
@@ -73,6 +75,7 @@ const FlaskDashboardPage: React.FC = () => {
               <Link to="/admin/dashboard" className="text-sm font-bold text-[#ff6b9a] uppercase tracking-widest border-b-2 border-[#ff6b9a] pb-1">Dashboard</Link>
               <Link to="/admin/products" className="text-sm font-bold text-[#8c6a6a] hover:text-[#ff6b9a] uppercase tracking-widest transition-colors">Products</Link>
               <Link to="/admin/categories" className="text-sm font-bold text-[#8c6a6a] hover:text-[#ff6b9a] uppercase tracking-widest transition-colors">Categories</Link>
+              <Link to="/admin/promotions" className="text-sm font-bold text-[#8c6a6a] hover:text-[#ff6b9a] uppercase tracking-widest transition-colors">Promotions</Link>
             </div>
           </div>
           <button
@@ -134,13 +137,23 @@ const FlaskDashboardPage: React.FC = () => {
           </div>
 
           <div className="cherry-card group cursor-default">
-            <div className="w-12 h-12 rounded-2xl bg-[#ffc2d1]/20 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+            <div className="w-12 h-12 rounded-2xl bg-[#ff9ecf]/20 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" className="text-[#ff6b9a]">
                 <path d="M12 2v20M2 12h20" stroke="currentColor" strokeWidth="2" />
               </svg>
             </div>
             <div className="text-4xl font-black text-[#3d2a2a] mb-1">{stats?.total_inventory || 0}</div>
             <div className="text-sm font-bold text-[#8c6a6a] uppercase tracking-wider">Storage Load</div>
+          </div>
+
+          <div className="cherry-card group cursor-default">
+            <div className="w-12 h-12 rounded-2xl bg-indigo-100 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" className="text-indigo-600" stroke="currentColor" strokeWidth="2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </div>
+            <div className="text-4xl font-black text-[#3d2a2a] mb-1">{stats?.promotions_total || 0}</div>
+            <div className="text-sm font-bold text-[#8c6a6a] uppercase tracking-wider">Active Promos</div>
           </div>
         </div>
 
@@ -157,6 +170,12 @@ const FlaskDashboardPage: React.FC = () => {
               <path d="M4 6h16M4 12h16M4 18h7" />
             </svg>
             <span>Sort Categories</span>
+          </Link>
+          <Link to="/admin/promotions" className="cherry-btn flex-1 flex items-center justify-center gap-4 bg-indigo-600 !text-white group">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="group-hover:rotate-12 transition-transform">
+              <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+            <span>Manage Promotions</span>
           </Link>
         </div>
 

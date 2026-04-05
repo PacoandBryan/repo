@@ -1,127 +1,76 @@
-import React, { useState } from 'react';
+
+import { useState, useEffect } from 'react';
 import QuickViewModal from '../components/Catalog/QuickViewModal';
-import { Eye, Heart, Leaf, Users } from 'lucide-react';
+import ProductCard from '../components/Catalog/ProductCard';
+import { Leaf, Heart, Users } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
-import TeddyImage1 from "../../assets/purse4.jpg";
-import TeddyImage2 from "../../assets/purse6.jpg";
-import TeddyImage3 from "../../assets/purse7.jpg";
+import SEO from '../components/SEO';
 import { Product } from '../components/Catalog/types';
-
-interface Teddy {
-  id: number;
-  name: string;
-  price: number;
-  description: string;
-  technique: string;
-  artisan: {
-    name: string;
-    location: string;
-    image: string;
-    quote: string;
-  };
-  images: string[];
-  category: string;
-}
-
+import { PublicCatalogService } from '../services/PublicCatalogService';
 
 export default function StitchedTeddiesPage() {
   const { t } = useTranslation();
   const [selectedTeddy, setSelectedTeddy] = useState<Product | null>(null);
-  const [activeFilter, setActiveFilter] = useState('all');
-  const teddies: Teddy[] = [
-    {
-      id: 1,
-      name: t('stitchedTeddies.products.teddy1.name'),
-      price: 2100,
-      description: t('stitchedTeddies.products.teddy1.description'),
-      technique: t('stitchedTeddies.products.teddy1.technique'),
-      artisan: {
-        name: t('stitchedTeddies.products.teddy1.artisan.name'),
-        location: t('stitchedTeddies.products.teddy1.artisan.location'),
-        image: "https://cdn.pixabay.com/photo/2016/11/14/17/39/person-1824144_1280.png",
-        quote: t('stitchedTeddies.products.teddy1.artisan.quote')
-      },
-      images: [
-        TeddyImage1, // purse4
-        TeddyImage2  // purse6
-      ],
-      category: t('stitchedTeddies.filters.bears')
-    },
-    {
-      id: 2,
-      name: t('stitchedTeddies.products.teddy2.name'),
-      price: 850,
-      description: t('stitchedTeddies.products.teddy2.description'),
-      technique: t('stitchedTeddies.products.teddy2.technique'),
-      artisan: {
-        name: t('stitchedTeddies.products.teddy2.artisan.name'),
-        location: t('stitchedTeddies.products.teddy2.artisan.location'),
-        image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&q=80&w=400",
-        quote: t('stitchedTeddies.products.teddy2.artisan.quote')
-      },
-      images: [
-        TeddyImage2, // purse6
-        TeddyImage3  // purse7
-      ],
-      category: t('stitchedTeddies.filters.dolls')
-    },
-    {
-      id: 3,
-      name: t('stitchedTeddies.products.teddy3.name'),
-      price: 1800,
-      description: t('stitchedTeddies.products.teddy3.description'),
-      technique: t('stitchedTeddies.products.teddy3.technique'),
-      artisan: {
-        name: t('stitchedTeddies.products.teddy3.artisan.name'),
-        location: t('stitchedTeddies.products.teddy3.artisan.location'),
-        image: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=400",
-        quote: t('stitchedTeddies.products.teddy3.artisan.quote')
-      },
-      images: [
-        TeddyImage3, // purse7
-        TeddyImage2  // purse6
-      ],
-      category: t('stitchedTeddies.filters.monsters')
-    }
-  ];
-  const handleQuickView = (teddy: Teddy) => {
-    const productView: Product = {
-      id: teddy.id,
-      name: teddy.name,
-      price: teddy.price,
-      description: teddy.description,
-      image: teddy.images[0],
-      artisan: teddy.artisan.name,
-      region: teddy.artisan.location,
-      technique: teddy.technique,
-      category: teddy.category,
-      images: teddy.images
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        setLoading(true);
+        const data = await PublicCatalogService.fetchProducts({ category: 'peluche' });
+        setProducts(data.products);
+      } catch (error) {
+        console.error("Error fetching teddy products:", error);
+      } finally {
+        setLoading(false);
+      }
     };
-    setSelectedTeddy(productView);
+
+    fetchProducts();
+  }, []);
+
+  const handleQuickView = (product: Product) => {
+    setSelectedTeddy(product);
   };
 
   return (
     <div className="pt-16">
+      <SEO
+        title="Peluches Artesanales Cosidos a Mano"
+        description="Peluches hechos a mano con materiales seguros y ecológicos. Compañeros únicos para toda la vida."
+        canonical="https://diky.com/stitched-teddies"
+        openGraph={{
+          title: 'Peluches Artesanales | Diky',
+          description: 'Peluches hechos a mano con materiales seguros y ecológicos.',
+          images: [
+            {
+              url: 'https://cdn.pixabay.com/photo/2014/11/09/21/44/teddy-bear-524251_1280.jpg',
+              alt: 'Peluches Diky',
+            }
+          ]
+        }}
+      />
       {/* Hero Section */}
       <div className="animate-slide-up" style={{ animationDelay: "0s" }}>
         <div className="relative h-[70vh] overflow-hidden">
           <img
             src="https://cdn.pixabay.com/photo/2014/11/09/21/44/teddy-bear-524251_1280.jpg"
-            alt="Handcrafted teddy bears collection"
+            alt="Peluches artesanales"
             className="w-full h-full object-cover"
           />
           <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
             <div className="text-center text-white max-w-4xl px-4">
               <h1 className="text-4xl md:text-6xl font-serif mb-6">
-                {t('stitchedTeddies.hero.title')}
+                Compañeros de verdad
               </h1>
               <p className="text-lg md:text-xl mb-8 text-white/90">
-                {t('stitchedTeddies.hero.subtitle')}
+                La verdad, no son solo juguetes. Son amigos que aguantan todo... y que hacemos a mano para que duren años.
               </p>
               <Link to="/catalog?category=Peluche" className="inline-block">
                 <button className="btn bg-white/90 hover:bg-white text-primary transition-colors duration-300">
-                  {t('stitchedTeddies.hero.cta')}
+                  Llévate uno a casa
                 </button>
               </Link>
             </div>
@@ -129,49 +78,39 @@ export default function StitchedTeddiesPage() {
         </div>
       </div>
 
-      {/* Teddies Collection Section */}
+      {/* Collection Section */}
       <div className="animate-slide-up" style={{ animationDelay: "0.4s" }}>
         <div className="py-16">
           <div className="max-w-7xl mx-auto px-4">
             <h2 className="text-3xl font-serif text-primary text-center mb-12">
-              {t('stitchedTeddies.collection.title')}
+              Los que están listos ahora
             </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-              {teddies.map((teddy, index) => (
-                <div
-                  key={teddy.id}
-                  className="animate-slide-up group relative"
-                  style={{ animationDelay: `${index * 0.1 + 0.4}s` }}
-                >
-                  <div className="bg-white rounded-lg shadow p-4">
-                    <div className="relative">
-                      <img
-                        src={teddy.images[0]}
-                        alt={teddy.name}
-                        className="w-full h-48 object-cover rounded-t-lg"
-                      />
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <button
-                          onClick={() => handleQuickView(teddy)}
-                          className="bg-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                          aria-label={t('catalog.quickView')}
-                        >
-                          <Eye className="w-5 h-5 text-primary" />
-                        </button>
-                      </div>
-                    </div>
-                    <div className="flex p-4">
-                      <div>
-                        <h3 className="text-lg font-semibold text-primary">
-                          {teddy.name}
-                        </h3>
-                        <p className="text-primary/80">{teddy.description}</p>
-                      </div>
-                    </div>
+
+            {loading ? (
+              <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                {[...Array(4)].map((_, i) => (
+                  <div key={i} className="animate-pulse">
+                    <div className="bg-gray-200 h-64 rounded-lg mb-4"></div>
+                    <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
+                    <div className="h-4 bg-gray-200 rounded w-1/2"></div>
                   </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            ) : products.length > 0 ? (
+              <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                {products.map((product) => (
+                  <ProductCard
+                    key={product.id}
+                    product={product}
+                    onQuickView={() => handleQuickView(product)}
+                  />
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-12">
+                <p className="text-lg text-primary/80 italic">Estamos cosiendo nuevos amigos. No queremos correr, queremos que queden bien. Honestamente.</p>
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -189,44 +128,44 @@ export default function StitchedTeddiesPage() {
           <div className="max-w-7xl mx-auto px-4">
             <div className="text-center mb-16">
               <h2 className="text-3xl md:text-4xl font-serif text-primary mb-6">
-                {t('stitchedTeddies.whyChoose.title')}
+                ¿Por qué Diky?
               </h2>
-              <p className="text-lg text-primary/80 max-w-2xl mx-auto">
-                {t('stitchedTeddies.whyChoose.subtitle')}
+              <p className="text-lg text-primary/80 max-w-2xl mx-auto font-light">
+                Es simple: nos preocupamos por lo que hacemos. Y por quién lo recibe.
               </p>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-              <div className="text-center">
+              <div className="text-center p-8 rounded-3xl bg-white shadow-soft transition-transform hover:-translate-y-2">
                 <div className="w-16 h-16 bg-accent/10 rounded-full flex items-center justify-center mx-auto mb-6">
                   <Leaf className="w-8 h-8 text-accent" />
                 </div>
                 <h3 className="text-xl font-serif text-primary mb-4">
-                  {t('stitchedTeddies.whyChoose.features.sustainable.title')}
+                  Todo <span className="text-accent font-semibold italic">Eco Friendly</span>
                 </h3>
-                <p className="text-primary/80">
-                  {t('stitchedTeddies.whyChoose.features.sustainable.description')}
+                <p className="text-primary/80 font-light leading-relaxed">
+                  Usamos fibras naturales. Sin químicos raros. Creo que la seguridad de un niño es lo primero, ¿no?
                 </p>
               </div>
-              <div className="text-center">
+              <div className="text-center p-8 rounded-3xl bg-white shadow-soft transition-transform hover:-translate-y-2">
                 <div className="w-16 h-16 bg-accent/10 rounded-full flex items-center justify-center mx-auto mb-6">
                   <Heart className="w-8 h-8 text-accent" />
                 </div>
                 <h3 className="text-xl font-serif text-primary mb-4">
-                  {t('stitchedTeddies.whyChoose.features.handcrafted.title')}
+                  Cero máquinas, pura mano
                 </h3>
-                <p className="text-primary/80">
-                  {t('stitchedTeddies.whyChoose.features.handcrafted.description')}
+                <p className="text-primary/80 font-light leading-relaxed">
+                  Nada de fábricas gigantes. Solo nosotros cosiendo con paciencia. Se siente la diferencia, en serio.
                 </p>
               </div>
-              <div className="text-center">
+              <div className="text-center p-8 rounded-3xl bg-white shadow-soft transition-transform hover:-translate-y-2">
                 <div className="w-16 h-16 bg-accent/10 rounded-full flex items-center justify-center mx-auto mb-6">
                   <Users className="w-8 h-8 text-accent" />
                 </div>
                 <h3 className="text-xl font-serif text-primary mb-4">
-                  {t('stitchedTeddies.whyChoose.features.community.title')}
+                  Gente real, trabajo real
                 </h3>
-                <p className="text-primary/80">
-                  {t('stitchedTeddies.whyChoose.features.community.description')}
+                <p className="text-primary/80 font-light leading-relaxed">
+                  Trabajamos con artesanas de aquí. Es justicia... y es amor por lo local. Nada más.
                 </p>
               </div>
             </div>

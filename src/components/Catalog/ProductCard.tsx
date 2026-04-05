@@ -35,6 +35,8 @@ export default function ProductCard({ product, onQuickView, isHovered: propHover
     onQuickView();
   };
 
+  const hasPromo = product.sale_price != null && product.sale_price < product.price;
+
   return (
     <div
       className="group relative"
@@ -55,6 +57,15 @@ export default function ProductCard({ product, onQuickView, isHovered: propHover
             loading="lazy"
             decoding="async"
           />
+
+          {/* Promotion Badge */}
+          {hasPromo && (
+            <div className="absolute top-2 left-2 z-10">
+              <span className="bg-[#ff6b9a] text-white text-[10px] font-black uppercase tracking-widest px-2 py-1 rounded-full shadow-md animate-pulse">
+                {product.promotion?.label || `${Math.round((1 - product.sale_price! / product.price) * 100)}% OFF`}
+              </span>
+            </div>
+          )}
 
           {/* Quick View Button Overlay */}
           <div
@@ -82,6 +93,17 @@ export default function ProductCard({ product, onQuickView, isHovered: propHover
           <h3 className="font-serif text-base sm:text-lg text-primary line-clamp-2 group-hover:text-accent transition-colors duration-300">
             {product.name}
           </h3>
+          <div className="mt-1 flex items-center gap-2 flex-wrap">
+            <span className="text-xs font-semibold text-primary/50 uppercase tracking-wider">Precio:</span>
+            {hasPromo ? (
+              <>
+                <span className="text-sm line-through text-primary/40">${product.price.toFixed(2)}</span>
+                <span className="text-sm font-bold text-[#ff6b9a]">${product.sale_price!.toFixed(2)} MXN</span>
+              </>
+            ) : (
+              <span className="text-sm font-bold text-primary/80">${product.price.toFixed(2)} MXN</span>
+            )}
+          </div>
         </div>
       </div>
     </div>

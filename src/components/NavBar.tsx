@@ -25,7 +25,7 @@ type SearchInputProps = {
 
 // ── Updated: SearchInput component with suggestions ──────────────────────
 function SearchInput({ searchQuery, setSearchQuery, onSearch, isSearchOpen }: SearchInputProps) {
-  
+
   const suggestions = [
     'Bolso Floral Elegante',
     'Bolso de Cuero Clásico',
@@ -126,18 +126,34 @@ export default function NavBar() {
       href: '/courses',
     },
     {
-      label: 'Productos',
+      label: 'Repostería',
       href: '#',
       children: [
-        {
-          label: 'Postres',
-          href: '/sweets',
-          description: 'Explora nuestra deliciosa colección de postres artesanales'
-        },
         {
           label: 'Mesa Dulce',
           href: '/sweet-table',
           description: 'Explora nuestras hermosas decoraciones para mesa dulce'
+        },
+        {
+          label: 'Postres / Pasteles',
+          href: '/sweets',
+          description: 'Explora nuestra deliciosa colección de postres artesanales'
+        },
+        {
+          label: 'Delicias de Chocolate',
+          href: '/chocolate-delice',
+          description: 'Disfruta de nuestros chocolates artesanales'
+        }
+      ]
+    },
+    {
+      label: 'Artesanías',
+      href: '#',
+      children: [
+        {
+          label: 'Bolsos',
+          href: '/purses',
+          description: 'Elegante colección de bolsos'
         },
         {
           label: 'Peluches Cosidos',
@@ -145,14 +161,19 @@ export default function NavBar() {
           description: 'Ositos de peluche cosidos a mano'
         },
         {
-          label: 'Bolsos',
-          href: '/purses',
-          description: 'Elegante colección de bolsos'
+          label: 'Tricotín',
+          href: '/tricotin',
+          description: 'Nombres y figuras personalizadas'
         },
         {
-          label: 'Delicias de Chocolate',
-          href: '/chocolate-delice',
-          description: 'Disfruta de nuestros chocolates artesanales hechos con pasión y tradición'
+          label: 'Tejido',
+          href: '/tejido',
+          description: 'Bufandas, gorros y bolsas tejidas a mano'
+        },
+        {
+          label: 'Cobijas',
+          href: '/cobijas',
+          description: 'Cobijas personalizadas y de patchwork'
         }
       ]
     },
@@ -323,11 +344,11 @@ export default function NavBar() {
       const focusableElements = sidebarRef.current?.querySelectorAll(
         'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
       );
-      
+
       if (focusableElements?.length) {
         const firstElement = focusableElements[0] as HTMLElement;
         const lastElement = focusableElements[focusableElements.length - 1] as HTMLElement;
-        
+
         firstElement.focus();
 
         const handleTabKey = (e: KeyboardEvent) => {
@@ -361,7 +382,7 @@ export default function NavBar() {
                 <Logo />
               </Link>
             </div>
-            
+
             <div className="hidden md:flex items-center space-x-1 lg:space-x-2">
               <Link
                 to="/"
@@ -373,7 +394,7 @@ export default function NavBar() {
               {navItems.map((item) => (
                 <div
                   key={item.label}
-                  className="relative"
+                  className="relative nav-item"
                   onMouseEnter={() => handleDropdownEnter(item.label)}
                   onMouseLeave={handleDropdownLeave}
                 >
@@ -399,15 +420,15 @@ export default function NavBar() {
                   )}
 
                   {item.children && (
-                    <div 
+                    <div
                       className={`absolute left-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5
                                  transform transition-all duration-200 ease-out
                                  ${activeDropdown === item.label ? 'opacity-100 scale-100' : 'opacity-0 scale-95 pointer-events-none'}`}
                       onMouseEnter={handleContentEnter}
                       onMouseLeave={handleContentLeave}
                     >
-                      <div 
-                        className="py-1" 
+                      <div
+                        className="py-1"
                         role="menu"
                         onMouseEnter={handleContentEnter}
                         onMouseLeave={handleContentLeave}
@@ -450,7 +471,7 @@ export default function NavBar() {
               </div>
 
               <Tooltip content="Search" position="bottom">
-                <button 
+                <button
                   ref={searchButtonRef}
                   className="text-primary/80 hover:text-primary"
                   onClick={() => {
@@ -469,7 +490,7 @@ export default function NavBar() {
               </Tooltip>
 
               <Tooltip content={`Abrir menú (${navigator.platform.includes('Mac') ? '⌘' : 'Ctrl'}+M)`} position="bottom">
-                <button 
+                <button
                   ref={menuButtonRef}
                   className="text-primary/80 hover:text-primary"
                   onClick={() => setIsMenuOpen(true)}
@@ -485,18 +506,16 @@ export default function NavBar() {
 
       {/* Overlay */}
       <div
-        className={`fixed inset-0 bg-black/30 backdrop-blur-sm transition-opacity z-50 ${
-          isMenuOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
-        }`}
+        className={`fixed inset-0 bg-black/30 backdrop-blur-sm transition-opacity z-50 ${isMenuOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
+          }`}
         onClick={() => setIsMenuOpen(false)}
       />
 
       {/* Sidebar */}
       <div
         ref={sidebarRef}
-        className={`fixed top-0 right-0 h-full w-full sm:w-96 bg-white shadow-xl z-50 transform transition-transform duration-300 ease-in-out ${
-          isMenuOpen ? 'translate-x-0' : 'translate-x-full'
-        }`}
+        className={`fixed top-0 right-0 h-full w-full sm:w-96 bg-white shadow-xl z-50 transform transition-transform duration-300 ease-in-out ${isMenuOpen ? 'translate-x-0' : 'translate-x-full'
+          }`}
       >
         <div className="h-full flex flex-col">
           <div className="p-4 border-b border-primary/10 flex justify-between items-center">
@@ -524,7 +543,7 @@ export default function NavBar() {
             {/* Navigation */}
             <div className="py-6 px-4 space-y-4">
               {navItems.map((item) => (
-                <div key={item.label}>
+                <div key={item.label} className="nav-item">
                   {item.children ? (
                     <div>
                       <button
@@ -533,9 +552,8 @@ export default function NavBar() {
                       >
                         <span>{item.label}</span>
                         <ChevronRight
-                          className={`h-4 w-4 transform transition-transform ${
-                            expandedMobileItems.includes(item.label) ? 'rotate-90' : ''
-                          }`}
+                          className={`h-4 w-4 transform transition-transform ${expandedMobileItems.includes(item.label) ? 'rotate-90' : ''
+                            }`}
                         />
                       </button>
                       {expandedMobileItems.includes(item.label) && (

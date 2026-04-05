@@ -1,9 +1,4 @@
-# *
 User-agent: *
 Allow: /
 
-# Host
-Host: https://yoursite.com
-
-# Sitemaps
-Sitemap: https://yoursite.com/sitemap.xml
+Sitemap: https://diky-frontend.vercel.app/sitemap.xml

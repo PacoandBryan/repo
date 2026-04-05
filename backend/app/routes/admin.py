@@ -5,7 +5,8 @@ from flask_jwt_extended import (
     jwt_required, create_access_token, get_jwt_identity
 )
 from werkzeug.utils import secure_filename
-from ..catalog_models import db, Product, Category, ProductImage, User
+from ..catalog_models import db, Product, Category, ProductImage, User, Promotion
+from sqlalchemy.orm import joinedload
 
 admin_bp = Blueprint('catalog_admin', __name__, url_prefix='/api/admin')
 
@@ -284,6 +285,7 @@ def get_stats():
         categories_total = Category.query.count()
         categories_active = Category.query.filter_by(is_active=True).count()
         total_inventory = db.session.query(db.func.sum(Product.inventory)).scalar() or 0
+        promotions_total = Promotion.query.count()
         
         return jsonify({
             'products': {
@@ -297,6 +299,9 @@ def get_stats():
                 'total': categories_total,
                 'active': categories_active,
                 'inactive': categories_total - categories_active
+            },
+            'promotions': {
+                'total': promotions_total
             }
         }), 200
     except Exception as e:
@@ -413,7 +418,7 @@ def get_products():
     limit = min(int(request.args.get('limit', 100)), 1000)
     skip = int(request.args.get('skip', 0))
     
-    query = Product.query
+    query = Product.query.options(joinedload(Product.promotions))
     
     if category_id:
         query = query.filter_by(category_id=category_id)
@@ -440,7 +445,14 @@ def get_products():
         'is_active': p.is_active,
         'category_id': p.category_id,
         'created_at': p.created_at.isoformat(),
-        'updated_at': p.updated_at.isoformat()
+        'updated_at': p.updated_at.isoformat(),
+        'active_promotion': {
+            'id': p.active_promotion.id,
+            'label': p.active_promotion.label,
+            'discount_type': p.active_promotion.discount_type,
+            'discount_value': float(p.active_promotion.discount_value),
+            'ends_at': p.active_promotion.ends_at.isoformat() if p.active_promotion.ends_at else None,
+        } if p.active_promotion else None,
     } for p in products]), 200
 
 @admin_bp.route('/catalog/products', methods=['POST'])
@@ -890,4 +902,131 @@ def delete_category(category_id):
     except Exception as e:
         db.session.rollback()
         current_app.logger.error(f"Error deleting category: {e}")
-        return jsonify({'error': 'Failed to delete category'}), 500 
+        return jsonify({'error': 'Failed to delete category'}), 500
+
+
+# ---------------------------------------------------------------------------
+# Promotions Management
+# ---------------------------------------------------------------------------
+
+def _promo_dict(promo):
+    """Serialize a Promotion for API response."""
+    return {
+        'id': promo.id,
+        'product_id': promo.product_id,
+        'label': promo.label,
+        'discount_type': promo.discount_type,
+        'discount_value': float(promo.discount_value),
+        'starts_at': promo.starts_at.isoformat() if promo.starts_at else None,
+        'ends_at': promo.ends_at.isoformat() if promo.ends_at else None,
+        'is_active': promo.is_active,
+        'created_at': promo.created_at.isoformat(),
+    }
+
+
+@admin_bp.route('/promotions', methods=['GET'])
+@jwt_required()
+def list_promotions():
+    """List all promotions (admin)."""
+    product_id = request.args.get('product_id', type=int)
+    query = Promotion.query
+    if product_id:
+        query = query.filter_by(product_id=product_id)
+    promos = query.order_by(Promotion.created_at.desc()).all()
+    return jsonify({'promotions': [_promo_dict(p) for p in promos], 'total': len(promos)}), 200
+
+
+@admin_bp.route('/promotions', methods=['POST'])
+@jwt_required()
+def create_promotion():
+    """Create a new promotion."""
+    data = request.get_json()
+    if not data:
+        return jsonify({'error': 'No data provided'}), 400
+
+    required = ['product_id', 'label', 'discount_type', 'discount_value']
+    for field in required:
+        if field not in data or data[field] is None:
+            return jsonify({'error': f'{field} is required'}), 400
+
+    if data['discount_type'] not in ('percentage', 'fixed'):
+        return jsonify({'error': 'discount_type must be "percentage" or "fixed"'}), 400
+
+    if not Product.query.get(data['product_id']):
+        return jsonify({'error': 'Product not found'}), 404
+
+    try:
+        from datetime import datetime
+        starts_at = datetime.fromisoformat(data['starts_at']) if data.get('starts_at') else None
+        ends_at = datetime.fromisoformat(data['ends_at']) if data.get('ends_at') else None
+
+        promo = Promotion(
+            product_id=data['product_id'],
+            label=data['label'],
+            discount_type=data['discount_type'],
+            discount_value=float(data['discount_value']),
+            starts_at=starts_at,
+            ends_at=ends_at,
+            is_active=data.get('is_active', True),
+        )
+        db.session.add(promo)
+        db.session.commit()
+        return jsonify(_promo_dict(promo)), 201
+    except Exception as e:
+        db.session.rollback()
+        current_app.logger.error(f"Error creating promotion: {e}")
+        return jsonify({'error': 'Failed to create promotion'}), 500
+
+
+@admin_bp.route('/promotions/<int:promo_id>', methods=['PUT'])
+@jwt_required()
+def update_promotion(promo_id):
+    """Update an existing promotion."""
+    promo = Promotion.query.get(promo_id)
+    if not promo:
+        return jsonify({'error': 'Promotion not found'}), 404
+
+    data = request.get_json()
+    if not data:
+        return jsonify({'error': 'No data provided'}), 400
+
+    try:
+        from datetime import datetime
+        if 'label' in data:
+            promo.label = data['label']
+        if 'discount_type' in data:
+            if data['discount_type'] not in ('percentage', 'fixed'):
+                return jsonify({'error': 'discount_type must be "percentage" or "fixed"'}), 400
+            promo.discount_type = data['discount_type']
+        if 'discount_value' in data:
+            promo.discount_value = float(data['discount_value'])
+        if 'starts_at' in data:
+            promo.starts_at = datetime.fromisoformat(data['starts_at']) if data['starts_at'] else None
+        if 'ends_at' in data:
+            promo.ends_at = datetime.fromisoformat(data['ends_at']) if data['ends_at'] else None
+        if 'is_active' in data:
+            promo.is_active = bool(data['is_active'])
+
+        db.session.commit()
+        return jsonify(_promo_dict(promo)), 200
+    except Exception as e:
+        db.session.rollback()
+        current_app.logger.error(f"Error updating promotion: {e}")
+        return jsonify({'error': 'Failed to update promotion'}), 500
+
+
+@admin_bp.route('/promotions/<int:promo_id>', methods=['DELETE'])
+@jwt_required()
+def delete_promotion(promo_id):
+    """Delete a promotion."""
+    promo = Promotion.query.get(promo_id)
+    if not promo:
+        return jsonify({'error': 'Promotion not found'}), 404
+    try:
+        db.session.delete(promo)
+        db.session.commit()
+        return jsonify({'message': 'Promotion deleted successfully'}), 200
+    except Exception as e:
+        db.session.rollback()
+        current_app.logger.error(f"Error deleting promotion: {e}")
+        return jsonify({'error': 'Failed to delete promotion'}), 500 

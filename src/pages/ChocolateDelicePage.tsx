@@ -1,110 +1,65 @@
-import React, { useState } from 'react';
+
+import React, { useState, useEffect } from 'react';
 import QuickViewModal from '../components/Catalog/QuickViewModal';
+import ProductCard from '../components/Catalog/ProductCard';
 import { Eye, Leaf, Heart as HeartIcon, Users } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import Image1 from "../../assets/truffles.jpg";
-import Image2 from "../../assets/truffles2.jpg";
 import { Link } from 'react-router-dom';
-import { NextSeo } from 'next-seo';
+import SEO from '../components/SEO';
 import { JsonLd } from 'react-schemaorg';
-
-
-
-interface Chocolate {
-  id: number;
-  name: string;
-  price: number;
-  description: string;
-  ingredients: string;
-  chocolatier: {
-    name: string;
-    location: string;
-    image: string;
-    quote: string;
-  };
-  images: string[];
-  category: string;
-  artisan: string;
-  technique: string;
-}
+import { Product } from '../components/Catalog/types';
+import { PublicCatalogService } from '../services/PublicCatalogService';
 
 export default function ChocolateDelicePage() {
   const { t } = useTranslation();
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const [selectedChocolate, setSelectedChocolate] = useState<Chocolate | null>(null);
-  const [activeFilter, setActiveFilter] = useState('all');
-  const handleQuickView = (chocolate: Chocolate) => {
-    setSelectedChocolate(chocolate);
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        setLoading(true);
+        // Using 'Chocolate' as category name which seems common in the codebase link
+        const data = await PublicCatalogService.fetchProducts({ category: 'chocolate' });
+        setProducts(data.products);
+      } catch (error) {
+        console.error("Error fetching chocolate products:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, []);
+
+  const handleQuickView = (product: Product) => {
+    setSelectedProduct(product);
   };
 
-  const chocolates: Chocolate[] = [
-    {
-      id: 1,
-      name: t('chocolates.products.chocolate1.name'),
-      price: 150,
-      description: t('chocolates.products.chocolate1.description'),
-      ingredients: t('chocolates.products.chocolate1.ingredients'),
-      chocolatier: {
-        name: t('chocolates.products.chocolate1.chocolatier.name'),
-        location: t('chocolates.products.chocolate1.chocolatier.location'),
-        image: "https://cdn.pixabay.com/photo/2016/11/14/17/39/person-1824144_1280.png",
-        quote: t('chocolates.products.chocolate1.chocolatier.quote')
-      },
-      images: [
-        Image1,
-        Image2
-      ],
-      category: t('catalog.categories.dessert'),
-      artisan: t('chocolates.products.chocolate1.chocolatier.name'),
-      technique: t('chocolates.products.chocolate1.technique')
-    }
-  ];
-
-  // Get all chocolates for structured data
-  const structuredDataItems = chocolates.map(chocolate => ({
+  const structuredDataItems = products.map(product => ({
     "@type": "Product",
-    name: chocolate.name,
-    description: chocolate.description,
-    image: chocolate.images[0],
+    name: product.name,
+    description: product.description,
+    image: product.image,
     offers: {
       "@type": "Offer",
-      price: chocolate.price,
-      priceCurrency: "USD",
+      price: product.price,
+      priceCurrency: "MXN",
       availability: "https://schema.org/InStock"
     },
     brand: {
       "@type": "Brand",
       name: "ChocoDelice"
-    },
-    manufacturer: {
-      "@type": "Person",
-      name: chocolate.chocolatier.name,
-      address: {
-        "@type": "PostalAddress",
-        addressLocality: chocolate.chocolatier.location
-      }
     }
   }));
 
   return (
     <>
-      <NextSeo
-        title="Exquisite Chocolate Delights | ChocoDelice"
-        description="Indulge in our exquisite collection of handcrafted chocolates made by skilled chocolatiers. Each piece is a work of art."
-        canonical="https://yoursite.com/chocolates"
-        openGraph={{
-          url: 'https://yoursite.com/chocolates',
-          title: 'Exquisite Chocolate Delights | ChocoDelice',
-          description: 'Indulge in our exquisite collection of handcrafted chocolates made by skilled chocolatiers. Each piece is a work of art.',
-          images: [
-            {
-              url: Image1,
-              width: 1200,
-              height: 630,
-              alt: 'Exquisite Chocolate Delights',
-            },
-          ],
-        }}
+      <SEO
+        title="Chocolates Artesanales y Delicias"
+        description="Chocolates finos y postres artesanales hechos a mano. El regalo perfecto o el antojo ideal."
+        canonical="https://diky.com/chocolates"
       />
       <JsonLd
         item={{
@@ -143,57 +98,50 @@ export default function ChocolateDelicePage() {
           </div>
         </div>
 
-        {/* Chocolates Collection Section */}
+        {/* Collection Section */}
         <div className="animate-slide-up" style={{ animationDelay: "0.4s" }}>
           <div className="py-16">
             <div className="max-w-7xl mx-auto px-4">
               <h2 className="text-3xl font-serif text-primary text-center mb-12">
                 {t('chocolates.collection.title')}
               </h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-                {chocolates.map((chocolate, index) => (
-                  <div
-                    key={chocolate.id}
-                    className="animate-slide-up group relative"
-                    style={{ animationDelay: `${index * 0.1 + 0.4}s` }}
-                  >
-                    <div className="bg-white rounded-lg shadow p-4">
-                      <div className="relative">
-                        <img
-                          src={chocolate.images[0]}
-                          alt={chocolate.name}
-                          className="w-full h-48 object-cover rounded-t-lg"
-                        />
-                        <div className="absolute inset-0 flex items-center justify-center">
-                          <button
-                            onClick={() => handleQuickView(chocolate)}
-                            className="bg-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                            aria-label={t('catalog.quickView')}
-                          >
-                            <Eye className="w-5 h-5 text-primary" />
-                          </button>
-                        </div>
-                      </div>
-                      <div className="p-4">
-                        <h3 className="text-lg font-semibold text-primary">
-                          {chocolate.name}
-                        </h3>
-                        <p className="text-primary/80">{chocolate.description}</p>
-                      </div>
+
+              {loading ? (
+                <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                  {[...Array(4)].map((_, i) => (
+                    <div key={i} className="animate-pulse">
+                      <div className="bg-gray-200 h-64 rounded-lg mb-4"></div>
+                      <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
+                      <div className="h-4 bg-gray-200 rounded w-1/2"></div>
                     </div>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+              ) : products.length > 0 ? (
+                <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                  {products.map((product) => (
+                    <ProductCard
+                      key={product.id}
+                      product={product}
+                      onQuickView={() => handleQuickView(product)}
+                    />
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-12">
+                  <p className="text-lg text-primary/80">No hay chocolates en la base de datos por el momento.</p>
+                </div>
+              )}
             </div>
           </div>
         </div>
 
-        {selectedChocolate && (
+        {selectedProduct && (
           <QuickViewModal
-            product={selectedChocolate}
-            onClose={() => setSelectedChocolate(null)}
+            product={selectedProduct}
+            onClose={() => setSelectedProduct(null)}
           />
         )}
+
         {/* Why Choose Us Section */}
         <div className="animate-slide-up" style={{ animationDelay: "0.1s" }}>
           <div className="bg-secondary-light py-24">
@@ -244,33 +192,6 @@ export default function ChocolateDelicePage() {
             </div>
           </div>
         </div>
-
-        {/* History of Chocolate Truffles and Enjambres Section */}
-        <div className="animate-slide-up" style={{ animationDelay: "0.3s" }}>
-          <div className="py-16 bg-secondary-light">
-            <div className="max-w-7xl mx-auto px-4">
-              <h2 className="text-3xl font-serif text-primary text-center mb-12">
-                {t('chocolates.history.title')}
-              </h2>
-              <div className="text-lg text-primary/80 max-w-3xl mx-auto">
-                <p className="mb-6">
-                  {t('chocolates.history.truffles')}
-                </p>
-                <p>
-                  {t('chocolates.history.enjambres')}
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Quick View Modal */}
-        {selectedChocolate && (
-          <QuickViewModal
-            product={selectedChocolate}
-            onClose={() => setSelectedChocolate(null)}
-          />
-        )}
       </div>
     </>
   );

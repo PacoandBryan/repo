@@ -5,10 +5,10 @@ import FeaturedProducts from '../components/FeaturedProducts';
 import Story from '../components/Story';
 import Testimonials from '../components/Testimonials';
 import FAQ from '../components/FAQ';
-import { NextSeo } from 'next-seo';
+import SEO from '../components/SEO';
 import { JsonLd } from 'react-schemaorg';
 import { useScrollAnimations } from '../hooks/useScrollAnimations';
-import Newsletter from '../components/Newsletter';
+
 
 export default function HomePage() {
   // Call the custom scroll animations hook
@@ -16,20 +16,17 @@ export default function HomePage() {
 
   return (
     <>
-      <NextSeo
-        title="Home"
-        description="Welcome to our website. Find the best content here."
-        canonical="https://yoursite.com"
+      <SEO
+        title="Authentic Mexican Crafts"
+        description="Discover authentic handmade Mexican bags, purses, and knitted accessories at Diky. Unique craftsmanship telling a story in every piece."
+        canonical="https://diky.com"
         openGraph={{
-          url: 'https://yoursite.com',
-          title: 'Home',
-          description: 'Welcome to our website. Find the best content here.',
+          title: 'Authentic Mexican Crafts | Diky',
+          description: 'Discover authentic handmade Mexican bags, purses, and knitted accessories at Diky. Unique craftsmanship telling a story in every piece.',
           images: [
             {
-              url: 'https://yoursite.com/og-image.jpg',
-              width: 4800, // Doubled the width
-              height: 2400, // Doubled the height
-              alt: 'Site Homepage',
+              url: 'https://diky.com/og-image.jpg',
+              alt: 'Diky - Handmade Mexican Crafts',
             },
           ],
         }}
@@ -38,11 +35,11 @@ export default function HomePage() {
         item={{
           "@context": "https://schema.org",
           "@type": "WebSite",
-          name: "Your Site Name",
-          url: "https://yoursite.com",
+          name: "Diky",
+          url: "https://diky.com",
           potentialAction: {
             "@type": "SearchAction",
-            target: "https://yoursite.com/search?q={search_term_string}",
+            target: "https://diky.com/search?q={search_term_string}",
             "query-input": "required name=search_term_string"
           }
         }}
@@ -66,9 +63,7 @@ export default function HomePage() {
         <div data-animate className="animate-slide-up" style={{ animationDelay: '2.5s' }}>
           <FAQ />
         </div>
-        <div className="animate-slide-up" style={{ animationDelay: '3s' }}>
-          <Newsletter />
-        </div>
+
       </div>
     </>
   );

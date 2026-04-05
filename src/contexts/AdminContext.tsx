@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import API_URLS from '../config/api';
 
 interface AdminContextType {
   isAuthenticated: boolean;
@@ -49,7 +50,7 @@ export const AdminProvider: React.FC<AdminProviderProps> = ({ children }) => {
     try {
       // Call a simple protected endpoint to validate the token
       console.log("Validating token with backend...");
-      const response = await fetch('/api/admin/validate-token', {
+      const response = await fetch(API_URLS.ADMIN.TOKEN_VALIDATE, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
@@ -116,9 +117,9 @@ export const AdminProvider: React.FC<AdminProviderProps> = ({ children }) => {
       setLoading(true);
 
       // Log the request details for debugging
-      console.log("Making request to:", '/api/admin/auth', "with method: POST");
+      console.log("Making request to:", API_URLS.ADMIN.AUTH, "with method: POST");
 
-      const response = await fetch('/api/admin/auth', {
+      const response = await fetch(API_URLS.ADMIN.AUTH, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -230,8 +231,8 @@ export const AdminProvider: React.FC<AdminProviderProps> = ({ children }) => {
     try {
       // The backend already has '/api/admin' as the url_prefix, so we shouldn't duplicate it
       const url = endpoint.startsWith('/')
-        ? `/api/admin${endpoint}`
-        : `/api/admin/${endpoint}`;
+        ? `${API_URLS.BASE}/api/admin${endpoint}`
+        : `${API_URLS.BASE}/api/admin/${endpoint}`;
 
       const response = await fetch(url, options);
 

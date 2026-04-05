@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Heart, Download, Share2, ChevronRight, Instagram } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { NextSeo } from 'next-seo';
+import SEO from '../components/SEO';
 import { JsonLd } from 'react-schemaorg';
 import Image1 from "../../assets/SweetTable1.jpg";
 import Image2 from "../../assets/SweetTable2.jpg";
@@ -42,7 +42,7 @@ export default function SweetTablePage() {
   const [confettiActive, setConfettiActive] = useState(false);
 
   const sweetTableImages = [Image1, Image2, Image3, Image4, Image5, Image6, Image7, Image8];
-  
+
   const inspirationSteps: InspirationStep[] = [
     {
       title: t('sweetTable.inspiration.steps.step1.title'),
@@ -192,7 +192,7 @@ export default function SweetTablePage() {
   const handleSubscribe = (e: React.FormEvent) => {
     e.preventDefault();
     setShowNewsletter(false);
-    
+
     // Create confetti element
     const confettiContainer = document.createElement('div');
     confettiContainer.className = 'confetti-container animate-fade-in';
@@ -218,32 +218,19 @@ export default function SweetTablePage() {
 
   return (
     <>
-      <NextSeo
-        title="Sweet Table Designs & Inspiration | Paco & Bryan"
-        description="Discover our stunning sweet table designs for weddings and special events. Get inspired by our creative Mexican candy displays, traditional dessert arrangements, and custom table setups."
-        canonical="https://yoursite.com/sweet-table"
+      <SEO
+        title="Mesas de Dulces y Decoración"
+        description="Diseños exclusivos de mesas de dulces para bodas y eventos. Inspiración mexicana y postres deliciosos."
+        canonical="https://diky.com/sweet-table"
         openGraph={{
-          url: 'https://yoursite.com/sweet-table',
-          title: 'Sweet Table Designs & Inspiration ',
-          description: 'Create magical moments with our stunning sweet table designs. Perfect for weddings and special events.',
+          url: 'https://diky.com/sweet-table',
+          title: 'Mesas de Dulces y Decoración | Diky',
+          description: 'Diseños exclusivos de mesas de dulces para bodas y eventos.',
           images: sweetTableImages.map(image => ({
             url: image,
-            width: 1200,
-            height: 630,
-            alt: 'Sweet Table Design Inspiration',
+            alt: 'Mesa de Dulces Diky',
           })),
-          type: 'article'
         }}
-        additionalMetaTags={[
-          {
-            name: 'keywords',
-            content: 'sweet table, candy buffet, mexican desserts, wedding desserts, event planning, dessert display, candy bar'
-          },
-          {
-            name: 'robots',
-            content: 'index, follow'
-          }
-        ]}
       />
       <JsonLd
         item={{
@@ -254,14 +241,14 @@ export default function SweetTablePage() {
           image: sweetTableImages,
           author: {
             "@type": "Organization",
-            name: "Paco & Bryan"
+            name: "Diky"
           },
           publisher: {
             "@type": "Organization",
-            name: "Paco & Bryan",
+            name: "Diky",
             logo: {
               "@type": "ImageObject",
-              url: "https://yoursite.com/logo.png"
+              url: "https://diky.com/logo.png"
             }
           },
           mainEntity: {
@@ -270,20 +257,20 @@ export default function SweetTablePage() {
             description: "Learn how to create a stunning sweet table for your special event",
             image: Image1,
             step: howToSteps
-          },
+          } as any,
           about: {
             "@type": "Service",
             name: "Sweet Table Design",
             description: "Professional sweet table design and setup services for special events",
             provider: {
               "@type": "Organization",
-              name: "Paco & Bryan"
+              name: "Diky"
             }
-          },
+          } as any,
           associatedMedia: {
             "@type": "ImageGallery",
             associatedMedia: galleryItems
-          }
+          } as any
         }}
       />
       <div className="pt-16">
@@ -302,7 +289,7 @@ export default function SweetTablePage() {
               <p className="text-lg md:text-xl mb-8 text-white/90 animate-[fade-in-up_1s_ease-out_0.3s]">
                 {t('sweetTable.hero.subtitle')}
               </p>
-              <button 
+              <button
                 onClick={() => document.getElementById('inspiration')?.scrollIntoView({ behavior: 'smooth' })}
                 className="btn bg-white/90 hover:bg-white text-primary transition-all duration-300 animate-[fade-in-up_1s_ease-out_0.6s] hover:transform hover:scale-105"
               >
@@ -313,8 +300,8 @@ export default function SweetTablePage() {
         </div>
 
         {/* Inspiration & Mood Board */}
-        <div 
-          id="inspiration" 
+        <div
+          id="inspiration"
           data-animate
           className={`bg-secondary-light py-24 transition-all duration-1000 ${animateClass('inspiration')}`}
         >
@@ -353,7 +340,7 @@ export default function SweetTablePage() {
         </div>
 
         {/* Styling Steps */}
-        <div 
+        <div
           id="steps"
           data-animate
           className={`bg-white py-24 transition-all duration-1000 ${animateClass('steps')}`}
@@ -362,23 +349,21 @@ export default function SweetTablePage() {
             <h2 className="text-3xl md:text-4xl font-serif text-primary text-center mb-16">
               {t('sweetTable.steps.title')}
             </h2>
-            
+
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
               <div>
                 {steps.map((step, index) => (
                   <div
                     key={step.key}
-                    className={`mb-8 cursor-pointer transition-all duration-500 ${
-                      activeStep === index 
-                        ? 'scale-105 bg-secondary-light/50 p-4 rounded-lg' 
-                        : 'opacity-70 hover:opacity-100'
-                    }`}
+                    className={`mb-8 cursor-pointer transition-all duration-500 ${activeStep === index
+                      ? 'scale-105 bg-secondary-light/50 p-4 rounded-lg'
+                      : 'opacity-70 hover:opacity-100'
+                      }`}
                     onClick={() => setActiveStep(index)}
                   >
                     <div className="flex items-start space-x-4">
-                      <div className={`w-8 h-8 rounded-full bg-accent text-white flex items-center justify-center flex-shrink-0 transition-all duration-300 ${
-                        activeStep === index ? 'scale-110' : ''
-                      }`}>
+                      <div className={`w-8 h-8 rounded-full bg-accent text-white flex items-center justify-center flex-shrink-0 transition-all duration-300 ${activeStep === index ? 'scale-110' : ''
+                        }`}>
                         {index + 1}
                       </div>
                       <div>
@@ -405,8 +390,8 @@ export default function SweetTablePage() {
         </div>
 
         {/* Birthday Section */}
-        <section 
-          id="birthday-section" 
+        <section
+          id="birthday-section"
           data-animate="true"
           className={`py-12 ${visibleSections.includes('birthday-section') ? 'animate-fade-in' : 'opacity-0'}`}
         >
@@ -486,7 +471,7 @@ export default function SweetTablePage() {
         )}
 
         {/* Final CTA */}
-        <div 
+        <div
           id="cta"
           data-animate
           className={`bg-white py-24 text-center transition-all duration-1000 ${animateClass('cta')}`}
@@ -499,7 +484,7 @@ export default function SweetTablePage() {
               {t('sweetTable.download.subtitle')}
             </p>
             <div className="flex flex-col sm:flex-row justify-center gap-4">
-              <button 
+              <button
                 onClick={handleDownload}
                 className="btn bg-white group relative overflow-hidden hover:text-white transition-colors duration-300 border-2 border-pink-400"
               >

@@ -14,7 +14,7 @@ import {
   Search,
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { NextSeo } from 'next-seo';
+import SEO from '../components/SEO';
 import { JsonLd } from 'react-schemaorg';
 import { useScrollAnimations } from '../hooks/useScrollAnimations';
 
@@ -154,7 +154,7 @@ export default function CoursesPage() {
   };
 
   const filteredCategories = Object.entries(faqCategories).reduce((acc, [category, questions]) => {
-    const filteredQuestions = questions.filter(faq => 
+    const filteredQuestions = questions.filter(faq =>
       faq.question.toLowerCase().includes(searchQuery.toLowerCase()) ||
       faq.answer.toLowerCase().includes(searchQuery.toLowerCase())
     );
@@ -222,38 +222,27 @@ export default function CoursesPage() {
 
   return (
     <>
-      <NextSeo
-        title="Traditional Mexican Crafts Courses | Paco & Bryan"
-        description="Learn authentic Mexican crafting techniques from master artisans. Online courses in embroidery, weaving, and traditional crafts. Join our community of artisans."
-        canonical="https://yoursite.com/courses"
+      <SEO
+        title="Cursos de Artesanía Mexicana"
+        description="Aprende técnicas tradicionales de bordado y tejido con maestros artesanos. Cursos online para todos los niveles."
+        canonical="https://diky.com/courses"
         openGraph={{
-          url: 'https://yoursite.com/courses',
-          title: 'Traditional Mexican Crafts Courses | Paco & Bryan',
-          description:
-            'Learn authentic Mexican crafting techniques from master artisans. Online courses in embroidery, weaving, and traditional crafts.',
+          url: 'https://diky.com/courses',
+          title: 'Cursos de Artesanía Mexicana | Diky',
+          description: 'Aprende técnicas tradicionales de bordado y tejido con maestros artesanos.',
           images: [
             {
               url: currentCourse?.image || courses[0].image,
-              width: 1200,
-              height: 630,
-              alt: 'Traditional Mexican Crafts Courses',
+              alt: 'Cursos Diky',
             },
           ],
-          type: 'website',
         }}
-        additionalMetaTags={[
-          {
-            name: 'keywords',
-            content:
-              'mexican crafts, embroidery course, traditional weaving, artisan skills, online courses',
-          },
-        ]}
       />
       <JsonLd
         item={{
           '@context': 'https://schema.org',
           '@type': 'ItemList',
-          itemListElement: courseStructuredData,
+          itemListElement: courseStructuredData as any,
           numberOfItems: courses.length,
           name: 'Traditional Mexican Crafts Courses',
           description:
@@ -462,15 +451,13 @@ export default function CoursesPage() {
                       >
                         <h3 className="text-lg font-medium text-primary">{category}</h3>
                         <ChevronDown
-                          className={`w-5 h-5 text-primary/60 transition-transform duration-300 ${
-                            openCategory === category ? 'transform rotate-180' : ''
-                          }`}
+                          className={`w-5 h-5 text-primary/60 transition-transform duration-300 ${openCategory === category ? 'transform rotate-180' : ''
+                            }`}
                         />
                       </button>
                       <div
-                        className={`mt-2 space-y-4 transition-all duration-300 ${
-                          openCategory === category ? 'max-h-[1000px] opacity-100' : 'max-h-0 opacity-0 overflow-hidden'
-                        }`}
+                        className={`mt-2 space-y-4 transition-all duration-300 ${openCategory === category ? 'max-h-[1000px] opacity-100' : 'max-h-0 opacity-0 overflow-hidden'
+                          }`}
                       >
                         {questions.map((faq, index) => (
                           <div
@@ -515,7 +502,8 @@ export default function CoursesPage() {
         </div>
       </div>
 
-      <style jsx>{`
+      <style dangerouslySetInnerHTML={{
+        __html: `
         @keyframes scrollDown {
           0% {
             transform: translateY(0);
@@ -544,7 +532,7 @@ export default function CoursesPage() {
             opacity: 1;
           }
         }
-      `}</style>
+      `}} />
     </>
   );
 }

@@ -1,120 +1,71 @@
-import React, { useState } from 'react';
-import QuickViewModal from '../components/Catalog/QuickViewModal';
-import { Eye } from 'lucide-react';
-import { Heart, Download, Share2, ChevronRight, Star, Leaf, Heart as HeartIcon, Users } from 'lucide-react';
-import { useTranslation } from 'react-i18next';
-import Image1 from "../../assets/purse1.jpg";
-import Image2 from "../../assets/purse2.jpg";
-import Image3 from "../../assets/purse2-V2.jpg"
-import { Link } from 'react-router-dom';
-import { NextSeo } from 'next-seo';
-import { JsonLd } from 'react-schemaorg';
 
-interface Purse {
-  id: number;
-  name: string;
-  price: number;
-  description: string;
-  technique: string;
-  artisan: {
-    name: string;
-    location: string;
-    image: string;
-    quote: string;
-  };
-  images: string[];
-  category: string;
-}
+import { useState, useEffect } from 'react';
+import QuickViewModal from '../components/Catalog/QuickViewModal';
+import ProductCard from '../components/Catalog/ProductCard';
+import { Leaf, Heart, Users, ArrowRight } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
+import SEO from '../components/SEO';
+import { JsonLd } from 'react-schemaorg';
+import { Product } from '../components/Catalog/types';
+import { PublicCatalogService } from '../services/PublicCatalogService';
 
 export default function PursesPage() {
   const { t } = useTranslation();
+  const [selectedPurse, setSelectedPurse] = useState<Product | null>(null);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const [selectedPurse, setSelectedPurse] = useState<Purse | null>(null);
-  const [activeFilter, setActiveFilter] = useState('all');
-  const handleQuickView = (purse: Purse) => {
-    setSelectedPurse(purse);
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        setLoading(true);
+        const data = await PublicCatalogService.fetchProducts({ category: 'bolsos' });
+        setProducts(data.products);
+      } catch (error) {
+        console.error("Error fetching purse products:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, []);
+
+  const handleQuickView = (product: Product) => {
+    setSelectedPurse(product);
   };
 
-  const purses: Purse[] = [
-    {
-      id: 1,
-      name: t('purses.products.purse1.name'),
-      price: 2800,
-      description: t('purses.products.purse1.description'),
-      technique: t('purses.products.purse1.technique'),
-      artisan: {
-        name: t('purses.products.purse1.artisan.name'),
-        location: t('purses.products.purse1.artisan.location'),
-        image: "https://cdn.pixabay.com/photo/2016/11/14/17/39/person-1824144_1280.png",
-        quote: t('purses.products.purse1.artisan.quote')
-      },
-      images: [
-        Image1
-      ],
-      category: t('purses.filters.crossbody')
-    },
-    {
-      id: 2,
-      name: t('purses.products.purse2.name'),
-      price: 1950,
-      description: t('purses.products.purse2.description'),
-      technique: t('purses.products.purse2.technique'),
-      artisan: {
-        name: t('purses.products.purse2.artisan.name'),
-        location: t('purses.products.purse2.artisan.location'),
-        image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&q=80&w=400",
-        quote: t('purses.products.purse2.artisan.quote')
-      },
-      images: [
-        Image2,
-        Image3
-      ],
-      category: t('purses.filters.clutch')
-    }
-  ];
-
-  // Get all purses for structured data
-  const structuredDataItems = purses.map(purse => ({
+  const structuredDataItems = products.map(product => ({
     "@type": "Product",
-    name: purse.name,
-    description: purse.description,
-    image: purse.images[0],
+    name: product.name,
+    description: product.description,
+    image: product.image,
     offers: {
       "@type": "Offer",
-      price: purse.price,
+      price: product.price,
       priceCurrency: "MXN",
       availability: "https://schema.org/InStock"
     },
     brand: {
       "@type": "Brand",
       name: "Paco & Bryan"
-    },
-    manufacturer: {
-      "@type": "Person",
-      name: purse.artisan.name,
-      address: {
-        "@type": "PostalAddress",
-        addressLocality: purse.artisan.location
-      }
     }
   }));
 
   return (
     <>
-      <NextSeo
-        title="Handcrafted Purses Collection | Paco & Bryan"
-        description="Discover our unique collection of handcrafted purses made by skilled Mexican artisans. Each piece tells a story of tradition and craftsmanship."
-        canonical="https://yoursite.com/purses"
+      <SEO
+        title="Bolsas Artesanales y Tejidas"
+        description="Colección exclusiva de bolsas artesanales mexicanas, tejidas a mano con materiales sostenibles. Moda lenta y ética."
+        canonical="https://diky.com/purses"
         openGraph={{
-          url: 'https://yoursite.com/purses',
-          title: 'Handcrafted Purses Collection | Paco & Bryan',
-          description: 'Discover our unique collection of handcrafted purses made by skilled Mexican artisans. Each piece tells a story of tradition and craftsmanship.',
+          title: 'Bolsas Artesanales | Diky',
+          description: 'Bolsas hechas a mano. Sin prisas. Con materiales conscientes.',
           images: [
             {
-              url: Image1,
-              width: 1200,
-              height: 630,
-              alt: 'Handcrafted Purses Collection',
+              url: 'https://cdn.pixabay.com/photo/2015/09/16/05/57/embroidery-942255_1280.jpg',
+              alt: 'Bolsas Artesanales Diky',
             },
           ],
         }}
@@ -123,9 +74,9 @@ export default function PursesPage() {
         item={{
           "@context": "https://schema.org",
           "@type": "CollectionPage",
-          name: "Handcrafted Purses Collection",
-          description: "Discover our unique collection of handcrafted purses made by skilled Mexican artisans.",
-          url: "https://yoursite.com/purses",
+          name: "Bolsas Artesanales Reales",
+          description: "Nuestra colección de bolsas hechas con manos mexicanas y materiales honestos.",
+          url: "https://diky.com/purses",
           itemListElement: structuredDataItems
         }}
       />
@@ -135,20 +86,20 @@ export default function PursesPage() {
           <div className="relative h-[70vh] overflow-hidden">
             <img
               src="https://cdn.pixabay.com/photo/2015/09/16/05/57/embroidery-942255_1280.jpg"
-              alt="Handcrafted purses collection"
+              alt="Bolsas artesanales"
               className="w-full h-full object-cover"
             />
             <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
               <div className="text-center text-white max-w-4xl px-4">
                 <h1 className="text-4xl md:text-6xl font-serif mb-6">
-                  {t('purses.hero.title')}
+                  Bolsas con historia propia
                 </h1>
-                <p className="text-lg md:text-xl mb-8 text-white/90">
-                  {t('purses.hero.subtitle')}
+                <p className="text-lg md:text-xl mb-8 text-white/90 font-light leading-relaxed">
+                  Lleva algo que signifique algo. Honestamente, lo industrial aburre. Esto es tradición que puedes usar todos los días.
                 </p>
                 <Link to="/catalog?category=Bolso" className="inline-block">
                   <button className="btn bg-white/90 hover:bg-white text-primary transition-colors duration-300">
-                    {t('purses.hero.cta')}
+                    Mira lo que hay pronto
                   </button>
                 </Link>
               </div>
@@ -156,47 +107,40 @@ export default function PursesPage() {
           </div>
         </div>
 
-        {/* Purses Collection Section */}
+        {/* Collection Section */}
         <div className="animate-slide-up" style={{ animationDelay: "0.4s" }}>
           <div className="py-16">
             <div className="max-w-7xl mx-auto px-4">
-              <h2 className="text-3xl font-serif text-primary text-center mb-12">
-                {t('purses.collection.title')}
+              <h2 className="text-3xl font-serif text-primary text-center mb-4">
+                Lo que acabamos de soltar
               </h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-                {purses.map((purse, index) => (
-                  <div
-                    key={purse.id}
-                    className="animate-slide-up group relative"
-                    style={{ animationDelay: `${index * 0.1 + 0.4}s` }}
-                  >
-                    <div className="bg-white rounded-lg shadow p-4">
-                      <div className="relative">
-                        <img
-                          src={purse.images[0]}
-                          alt={purse.name}
-                          className="w-full h-48 object-cover rounded-t-lg"
-                        />
-                        <div className="absolute inset-0 flex items-center justify-center">
-                          <button
-                            onClick={() => handleQuickView(purse)}
-                            className="bg-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                            aria-label={t('catalog.quickView')}
-                          >
-                            <Eye className="w-5 h-5 text-primary" />
-                          </button>
-                        </div>
-                      </div>
-                      <div className="p-4">
-                        <h3 className="text-lg font-semibold text-primary">
-                          {purse.name}
-                        </h3>
-                        <p className="text-primary/80">{purse.description}</p>
-                      </div>
+              <p className="text-center text-primary/60 mb-12 italic">Cero filtros. Solo buen trabajo manual.</p>
+
+              {loading ? (
+                <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                  {[...Array(4)].map((_, i) => (
+                    <div key={i} className="animate-pulse">
+                      <div className="bg-gray-200 h-64 rounded-lg mb-4"></div>
+                      <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
+                      <div className="h-4 bg-gray-200 rounded w-1/2"></div>
                     </div>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+              ) : products.length > 0 ? (
+                <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                  {products.map((product) => (
+                    <ProductCard
+                      key={product.id}
+                      product={product}
+                      onQuickView={() => handleQuickView(product)}
+                    />
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-12 bg-secondary-light/20 rounded-3xl">
+                  <p className="text-lg text-primary/80 italic">Estamos terminando unas bolsas maestras. Paciencia, en serio. Lo bueno toma tiempo.</p>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -207,64 +151,57 @@ export default function PursesPage() {
             onClose={() => setSelectedPurse(null)}
           />
         )}
+
         {/* Why Choose Us Section */}
         <div className="animate-slide-up" style={{ animationDelay: "0.1s" }}>
           <div className="bg-secondary-light py-24">
             <div className="max-w-7xl mx-auto px-4">
               <div className="text-center mb-16">
                 <h2 className="text-3xl md:text-4xl font-serif text-primary mb-6">
-                  {t('purses.whyChoose.title')}
+                  Bolsas reales, materiales conscientes
                 </h2>
-                <p className="text-lg text-primary/80 max-w-2xl mx-auto">
-                  {t('purses.whyChoose.subtitle')}
+                <p className="text-lg text-primary/80 max-w-2xl mx-auto font-light">
+                  Creo que la moda tiene que ser más lenta. Menos tirar, más cuidar.
                 </p>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-                <div className="text-center">
+                <div className="text-center p-8 bg-white rounded-[2rem] shadow-soft transition-all hover:scale-[1.02]">
                   <div className="w-16 h-16 bg-accent/10 rounded-full flex items-center justify-center mx-auto mb-6">
                     <Leaf className="w-8 h-8 text-accent" />
                   </div>
                   <h3 className="text-xl font-serif text-primary mb-4">
-                    {t('purses.whyChoose.features.sustainable.title')}
+                    Puro <span className="text-accent font-semibold italic decoration-accent/30 underline underline-offset-4">Eco Friendly</span>
                   </h3>
-                  <p className="text-primary/80">
-                    {t('purses.whyChoose.features.sustainable.description')}
+                  <p className="text-primary/80 leading-relaxed font-light">
+                    Hilos naturales. Ética real. No es marketing, es que de verdad nos importa el planeta.
                   </p>
                 </div>
-                <div className="text-center">
+                <div className="text-center p-8 bg-white rounded-[2rem] shadow-soft transition-all hover:scale-[1.02]">
                   <div className="w-16 h-16 bg-accent/10 rounded-full flex items-center justify-center mx-auto mb-6">
-                    <HeartIcon className="w-8 h-8 text-accent" />
+                    <Heart className="w-8 h-8 text-accent" />
                   </div>
                   <h3 className="text-xl font-serif text-primary mb-4">
-                    {t('purses.whyChoose.features.handcrafted.title')}
+                    Paciencia real
                   </h3>
-                  <p className="text-primary/80">
-                    {t('purses.whyChoose.features.handcrafted.description')}
+                  <p className="text-primary/80 leading-relaxed font-light">
+                    Cada bolsa nos toma días. No hay máquinas gigantes haciendo miles por hora. Solo nosotros.
                   </p>
                 </div>
-                <div className="text-center">
+                <div className="text-center p-8 bg-white rounded-[2rem] shadow-soft transition-all hover:scale-[1.02]">
                   <div className="w-16 h-16 bg-accent/10 rounded-full flex items-center justify-center mx-auto mb-6">
                     <Users className="w-8 h-8 text-accent" />
                   </div>
                   <h3 className="text-xl font-serif text-primary mb-4">
-                    {t('purses.whyChoose.features.community.title')}
+                    Ayuda de verdad
                   </h3>
-                  <p className="text-primary/80">
-                    {t('purses.whyChoose.features.community.description')}
+                  <p className="text-primary/80 leading-relaxed font-light">
+                    Comercio justo... suena a frase hecha, pero para nosotros es que las artesanas coman bien y vivan mejor.
                   </p>
                 </div>
               </div>
             </div>
           </div>
         </div>
-
-        {/* Quick View Modal */}
-        {selectedPurse && (
-          <QuickViewModal
-            product={selectedPurse}
-            onClose={() => setSelectedPurse(null)}
-          />
-        )}
       </div>
     </>
   );

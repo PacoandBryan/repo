@@ -29,10 +29,10 @@ export default function QuickViewModal({ product, onClose }: QuickViewModalProps
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [direction, setDirection] = useState(0); // 1 for next, -1 for previous
   const [isTransitioning, setIsTransitioning] = useState(false);
-  
+
   // Handle both image formats (array and image/additionalImages)
-  const images = Array.isArray(product.images) 
-    ? product.images 
+  const images = Array.isArray(product.images)
+    ? product.images
     : [product.image, ...(product.additionalImages || [])];
 
   useEffect(() => {
@@ -69,7 +69,7 @@ export default function QuickViewModal({ product, onClose }: QuickViewModalProps
         className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50"
         onClick={onClose}
       />
-      
+
       <div className="fixed inset-0 z-50 overflow-y-auto">
         <div className="flex min-h-full items-center justify-center p-2 sm:p-4">
           <div className="relative bg-white rounded-lg shadow-2xl w-full max-w-5xl animate-slide-down">
@@ -135,11 +135,10 @@ export default function QuickViewModal({ product, onClose }: QuickViewModalProps
                       <button
                         key={index}
                         onClick={() => { setCurrentImageIndex(index); setDirection(index > currentImageIndex ? 1 : -1); }}
-                        className={`w-2 h-2 rounded-full transition-all ${
-                          currentImageIndex === index 
-                            ? 'bg-primary scale-125' 
+                        className={`w-2 h-2 rounded-full transition-all ${currentImageIndex === index
+                            ? 'bg-primary scale-125'
                             : 'bg-white/70 hover:bg-white'
-                        }`}
+                          }`}
                         aria-label={`Go to image ${index + 1}`}
                       />
                     ))}
@@ -153,12 +152,39 @@ export default function QuickViewModal({ product, onClose }: QuickViewModalProps
                   {product.name}
                 </h2>
 
+                {/* Price block */}
+                <div className="mb-4">
+                  <span className="text-xs font-semibold text-primary/50 uppercase tracking-wider">Precio</span>
+                  {product.sale_price != null && product.sale_price < product.price ? (
+                    <div className="mt-1">
+                      <div className="flex items-center gap-3">
+                        <span className="text-lg line-through text-primary/40">${product.price.toFixed(2)}</span>
+                        <span className="text-2xl font-bold text-[#ff6b9a]">${product.sale_price.toFixed(2)} MXN</span>
+                      </div>
+                      {(product.promotion || product.sale_price) && (
+                        <div className="flex items-center gap-2 mt-1">
+                          <span className="inline-flex items-center bg-[#ff6b9a] text-white text-xs font-black uppercase px-2 py-0.5 rounded-full">
+                            {product.promotion?.label || `${Math.round((1 - product.sale_price / product.price) * 100)}% DISCOUNT`}
+                          </span>
+                          {product.promotion?.ends_at && (
+                            <span className="text-xs text-primary/50">
+                              Válido hasta {new Date(product.promotion.ends_at).toLocaleDateString('es-MX', { day: 'numeric', month: 'short' })}
+                            </span>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  ) : (
+                    <p className="mt-1 text-2xl font-bold text-primary/80">${product.price.toFixed(2)} MXN</p>
+                  )}
+                </div>
+
                 <p className="text-base text-primary/80 leading-relaxed">
                   {product.description}
                 </p>
                 {product.category && (
                   <div className="mb-4">
-                    <span 
+                    <span
                       className="
                         inline-flex items-center px-3 py-1.5 
                         rounded-full text-sm font-medium

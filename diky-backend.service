@@ -1,0 +1,15 @@
+[Unit]
+Description=Gunicorn instance to serve Diky Backend
+After=network.target
+
+[Service]
+User=leo
+Group=www-data
+WorkingDirectory=/var/www/diky-backend
+Environment="PATH=/var/www/diky-backend/venv/bin"
+EnvironmentFile=/var/www/diky-backend/.env
+ExecStart=/var/www/diky-backend/venv/bin/gunicorn --bind 0.0.0.0:8080 --workers 2 run:app
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

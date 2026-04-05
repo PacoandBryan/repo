@@ -3,6 +3,7 @@ import { Flower, Send, X, MessageCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import API_URLS from '../config/api';
 
 const CherryBlossomChatbot: React.FC = () => {
     const [isOpen, setIsOpen] = useState(false);
@@ -39,7 +40,7 @@ const CherryBlossomChatbot: React.FC = () => {
         const timeoutId = setTimeout(() => controller.abort(), 15000); // 15 seconds timeout
 
         try {
-            const response = await fetch('http://localhost:5002/api/chat', {
+            const response = await fetch(API_URLS.CHAT, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

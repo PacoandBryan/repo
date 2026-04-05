@@ -10,6 +10,10 @@ import LoadingScreen from './components/LoadingScreen';
 import StitchedTeddiesPage from './pages/StitchedTeddiesPage';
 import SweetsPage from './pages/SweetsPage';
 import ChocolateDelicePage from './pages/ChocolateDelicePage';
+import TricotinPage from './pages/TricotinPage';
+import TejidoPage from './pages/TejidoPage';
+import CobijasPage from './pages/CobijasPage';
+import DeveloperPage from './pages/DeveloperPage';
 
 // Admin imports
 import { AdminProvider, ProtectedAdminRoute } from './contexts/AdminContext';
@@ -17,6 +21,7 @@ import FlaskLoginPage from './pages/admin/FlaskLoginPage';
 import FlaskCategoriesPage from './pages/admin/FlaskCategoriesPage';
 import FlaskProductsPage from './pages/admin/FlaskProductsPage';
 import FlaskDashboardPage from './pages/admin/FlaskDashboardPage';
+import PromotionsPage from './pages/admin/PromotionsPage';
 import CherryBlossomChatbot from './components/CherryBlossomChatbot';
 
 // Layout Components
@@ -55,6 +60,10 @@ function App() {
               <Route path="contact" element={<ContactPage />} />
               <Route path="stitched-teddies" element={<StitchedTeddiesPage />} />
               <Route path="chocolate-delice" element={<ChocolateDelicePage />} />
+              <Route path="tricotin" element={<TricotinPage />} />
+              <Route path="tejido" element={<TejidoPage />} />
+              <Route path="cobijas" element={<CobijasPage />} />
+              <Route path="developer" element={<DeveloperPage />} />
             </Route>
 
             {/* Admin Routes with Layout */}
@@ -81,6 +90,14 @@ function App() {
                 element={
                   <ProtectedAdminRoute>
                     <FlaskCategoriesPage />
+                  </ProtectedAdminRoute>
+                }
+              />
+              <Route
+                path="promotions"
+                element={
+                  <ProtectedAdminRoute>
+                    <PromotionsPage />
                   </ProtectedAdminRoute>
                 }
               />

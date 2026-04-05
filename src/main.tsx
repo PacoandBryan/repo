@@ -1,5 +1,6 @@
 import { StrictMode, Suspense, useEffect } from 'react';
 import { createRoot } from 'react-dom/client';
+import { HelmetProvider } from 'react-helmet-async';
 import App from './App.tsx';
 import LoadingScreen from './components/LoadingScreen';
 import './index.css';
@@ -21,6 +22,8 @@ const AppWithInteractions = () => {
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <AppWithInteractions />
+    <HelmetProvider>
+      <AppWithInteractions />
+    </HelmetProvider>
   </StrictMode>
 );
